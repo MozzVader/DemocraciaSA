@@ -10,6 +10,7 @@ import {
   getCurrentPhase,
 } from '@/lib/game/calculator';
 import { GENERATORS, UPGRADES, MILESTONES } from '@/lib/game/config';
+import { showAchievementToast } from '@/components/game/AchievementToast';
 
 interface GameStore extends GameState {
   productionPerSecond: () => number;
@@ -121,6 +122,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
         set((s) => ({
           unlockedMilestones: [...s.unlockedMilestones, milestone.id],
         }));
+        showAchievementToast(milestone);
       }
     }
   },

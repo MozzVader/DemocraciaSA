@@ -9,6 +9,7 @@ import { UpgradesPanel } from '@/components/game/UpgradesPanel';
 import { StatsPanel, MilestonesPanel } from '@/components/game/StatsPanel';
 import { GameHeader } from '@/components/game/GameHeader';
 import { NewsTicker } from '@/components/game/NewsTicker';
+import { AchievementToast } from '@/components/game/AchievementToast';
 import { useGameStore } from '@/store/game-store';
 import { useGameLoop } from '@/hooks/use-game-loop';
 import {
@@ -53,6 +54,7 @@ export default function Home() {
       </div>
 
       <GameHeader />
+      <NewsTicker />
 
       <main className="flex-1 relative">
         <div className="max-w-7xl mx-auto">
@@ -116,8 +118,6 @@ export default function Home() {
         </div>
       </main>
 
-      <NewsTicker />
-
       <footer className="border-t border-border/20 px-4 py-3 flex items-center justify-between"
         style={{ background: 'rgba(10, 10, 18, 0.95)' }}>
         <div className="text-[10px] text-muted-foreground/50 font-mono tracking-wider">
@@ -160,6 +160,8 @@ export default function Home() {
           </AlertDialog>
         </div>
       </footer>
+
+      <AchievementToast />
     </div>
   );
 }

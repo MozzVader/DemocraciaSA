@@ -49,10 +49,11 @@ export function useGameLoop() {
   }, [save]);
 
   // When auth state changes, trigger a save to sync cloud
+  // BUT only after the game has finished loading to avoid race condition
+  const gameLoading = useGameStore((s) => s.loading);
   useEffect(() => {
-    if (!authLoading && user) {
-      // User just logged in — save current state to cloud
+    if (!authLoading && user && !gameLoading) {
       save();
     }
-  }, [user, authLoading, save]);
+  }, [user, authLoading, save, gameLoading]);
 }

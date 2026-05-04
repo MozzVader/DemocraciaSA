@@ -11,6 +11,49 @@ export function getGeneratorCost(generatorId: string, owned: number): number {
 }
 
 /**
+ * Calculate the total cost to buy N generators of a given type starting from `owned`.
+ * Uses geometric series: baseCost * r^owned * (r^N - 1) / (r - 1)
+ */
+export function getGeneratorCostBulk(generatorId: string, owned: number, amount: number): number {
+  const config = GENERATORS.find((g) => g.id === generatorId);
+  if (!config || amount <= 0) return 0;
+  const r = config.costMultiplier;
+  const base = config.baseCost * Math.pow(r, owned);
+  const total = base * (Math.pow(r, amount) - 1) / (r - 1);
+  return Math.ceil(total);
+}
+
+/**
+ * Calculate the maximum number of generators affordable with a given resource.
+ * Uses binary search for performance.
+ */
+export function getMaxBuyable(generatorId: string, owned: number, resource: number): number {
+  const config = GENERATORS.find((g) => g.id === generatorId);
+  if (!config || resource <= 0) return 0;
+  const r = config.costMultiplier;
+  const base = config.baseCost * Math.pow(r, owned);
+  if (base > resource) return 0;
+
+  // Binary search for max N
+  let lo = 1;
+  let hi = 1;
+  // Find upper bound
+  while (getGeneratorCostBulk(generatorId, owned, hi * 2) <= resource) {
+    hi *= 2;
+  }
+  // Binary search
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (getGeneratorCostBulk(generatorId, owned, mid) <= resource) {
+      lo = mid;
+    } else {
+      hi = mid - 1;
+    }
+  }
+  return lo;
+}
+
+/**
  * Calculate the total production per second (influencia/s).
  */
 export function getProductionPerSecond(state: GameState): number {

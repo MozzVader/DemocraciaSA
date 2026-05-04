@@ -3,6 +3,8 @@ import type { GameState } from '@/lib/game/types';
 import { createInitialState, saveGame, loadGame, getOfflineDelta, loadCloudSave, checkCloudSaveExists } from '@/lib/game/save';
 import {
   getGeneratorCost,
+  getGeneratorCostBulk,
+  getMaxBuyable,
   getProductionPerSecond,
   getClickPower,
   getDineroPerSecond,
@@ -12,6 +14,8 @@ import {
 import { GENERATORS, UPGRADES, MILESTONES } from '@/lib/game/config';
 import { showAchievementToast } from '@/components/game/AchievementToast';
 
+export type BuyAmount = 1 | 10 | -1; // -1 = Max
+
 interface GameStore extends GameState {
   productionPerSecond: () => number;
   dineroPerSecond: () => number;
@@ -19,6 +23,7 @@ interface GameStore extends GameState {
   generatorCost: (id: string) => number;
   canBuyUpgrade: (id: string) => boolean;
   loading: boolean;
+  buyAmount: BuyAmount;
 
   click: () => void;
   buyGenerator: (id: string) => void;
@@ -29,16 +34,26 @@ interface GameStore extends GameState {
   load: () => boolean;
   reset: () => void;
   init: (isAuthenticated: boolean) => Promise<void>;
+  setBuyAmount: (amount: BuyAmount) => void;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
   ...createInitialState(),
   loading: true,
+  buyAmount: 1 as BuyAmount,
 
   productionPerSecond: () => getProductionPerSecond(get()),
   dineroPerSecond: () => getDineroPerSecond(get()),
   clickPower: () => getClickPower(get()),
-  generatorCost: (id: string) => getGeneratorCost(id, get().generators[id]?.owned ?? 0),
+  generatorCost: (id: string) => {
+    const state = get();
+    const owned = state.generators[id]?.owned ?? 0;
+    if (state.buyAmount === -1) {
+      const max = getMaxBuyable(id, owned, state.influencia);
+      return max > 0 ? getGeneratorCostBulk(id, owned, max) : getGeneratorCost(id, owned);
+    }
+    return getGeneratorCostBulk(id, owned, state.buyAmount);
+  },
   canBuyUpgrade: (id: string) => {
     const upgrade = UPGRADES.find((u) => u.id === id);
     if (!upgrade) return false;
@@ -56,17 +71,31 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   buyGenerator: (id: string) => {
     const state = get();
-    const cost = getGeneratorCost(id, state.generators[id]?.owned ?? 0);
-    if (state.influencia < cost) return;
+    const owned = state.generators[id]?.owned ?? 0;
+
+    let amount: number;
+    let cost: number;
+
+    if (state.buyAmount === -1) {
+      amount = getMaxBuyable(id, owned, state.influencia);
+      if (amount <= 0) return;
+      cost = getGeneratorCostBulk(id, owned, amount);
+    } else {
+      amount = state.buyAmount;
+      cost = getGeneratorCostBulk(id, owned, amount);
+      if (state.influencia < cost) return;
+    }
 
     set((s) => {
       const newGenerators = { ...s.generators };
       const gen = { ...newGenerators[id] };
-      gen.owned += 1;
+      gen.owned += amount;
       newGenerators[id] = gen;
       return { influencia: s.influencia - cost, generators: newGenerators };
     });
   },
+
+  setBuyAmount: (amount: BuyAmount) => set({ buyAmount: amount }),
 
   purchaseUpgrade: (id: string) => {
     const state = get();

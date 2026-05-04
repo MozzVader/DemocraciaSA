@@ -1,34 +1,73 @@
 'use client';
 
-import { useGameStore } from '@/store/game-store';
+import { useGameStore, type BuyAmount } from '@/store/game-store';
 import { GENERATORS } from '@/lib/game/config';
 import { formatNumber } from '@/lib/game/formatters';
-import { getGeneratorCost, isGeneratorUnlocked } from '@/lib/game/calculator';
+import { getGeneratorCost, isGeneratorUnlocked, getMaxBuyable, getGeneratorCostBulk } from '@/lib/game/calculator';
 import { Card } from '@/components/ui/card';
 import { motion, AnimatePresence } from 'framer-motion';
+
+const BUY_OPTIONS: { value: BuyAmount; label: string }[] = [
+  { value: 1, label: 'x1' },
+  { value: 10, label: 'x10' },
+  { value: -1, label: 'Max' },
+];
 
 export function GeneratorPanel() {
   const generators = useGameStore((s) => s.generators);
   const influencia = useGameStore((s) => s.influencia);
   const buyGenerator = useGameStore((s) => s.buyGenerator);
   const currentPhase = useGameStore((s) => s.currentPhase);
+  const buyAmount = useGameStore((s) => s.buyAmount);
+  const setBuyAmount = useGameStore((s) => s.setBuyAmount);
 
   return (
     <div className="space-y-2">
-      <h2 className="text-lg font-bold uppercase tracking-wider mb-3 flex items-center gap-2"
-        style={{ color: '#d4af37' }}>
-        {'\uD83D\uDE80'} Red de Influencia
-      </h2>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2"
+          style={{ color: '#d4af37' }}>
+          {'\uD83D\uDE80'} Red de Influencia
+        </h2>
+        <div className="flex items-center gap-1">
+          {BUY_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setBuyAmount(opt.value)}
+              className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded border transition-all duration-150 ${
+                buyAmount === opt.value
+                  ? 'border-[#d4af37] text-[#d4af37] bg-[#d4af37]/10'
+                  : 'border-border/40 text-muted-foreground hover:border-border/70'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 custom-scrollbar">
         {GENERATORS.map((gen) => {
           const state = generators[gen.id];
           const owned = state?.owned ?? 0;
-          const cost = getGeneratorCost(gen.id, owned);
           const unlocked = isGeneratorUnlocked(gen.id, currentPhase);
-          const canAfford = influencia >= cost;
 
           if (!unlocked) return null;
+
+          // Calculate display cost and amount based on buy mode
+          let displayAmount: number;
+          let displayCost: number;
+
+          if (buyAmount === -1) {
+            displayAmount = getMaxBuyable(gen.id, owned, influencia);
+            displayCost = displayAmount > 0
+              ? getGeneratorCostBulk(gen.id, owned, displayAmount)
+              : getGeneratorCost(gen.id, owned);
+          } else {
+            displayAmount = buyAmount;
+            displayCost = getGeneratorCostBulk(gen.id, owned, buyAmount);
+          }
+
+          const canAfford = influencia >= getGeneratorCost(gen.id, owned);
 
           return (
             <AnimatePresence key={gen.id}>
@@ -55,7 +94,7 @@ export function GeneratorPanel() {
                           {gen.name}
                         </span>
                         <span className="text-xs font-mono tabular-nums text-muted-foreground flex-shrink-0">
-                          {owned}x
+                          {owned}
                         </span>
                       </div>
                       <div className="text-xs text-muted-foreground mt-0.5 truncate italic">
@@ -63,7 +102,12 @@ export function GeneratorPanel() {
                       </div>
                       <div className="flex items-center justify-between mt-1">
                         <span className="text-xs font-mono" style={{ color: canAfford ? '#d4af37' : '#666' }}>
-                          Costo: {formatNumber(cost)}
+                          Costo: {formatNumber(displayCost)}
+                          {buyAmount !== 1 && (
+                            <span className="text-muted-foreground ml-1">
+                              ({displayAmount === 0 ? '-' : displayAmount})
+                            </span>
+                          )}
                         </span>
                         <span className="text-xs text-muted-foreground font-mono">
                           +{formatNumber(gen.baseProduction)}/s c/u

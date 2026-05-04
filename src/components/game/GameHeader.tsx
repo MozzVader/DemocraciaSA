@@ -24,7 +24,8 @@ export function GameHeader() {
 
   return (
     <>
-      <header className="border-b border-border/30 px-4 py-3" style={{ background: 'rgba(10, 10, 18, 0.95)' }}>
+      <header className="border-b border-[#d4af37]/20 px-4 py-3"
+        style={{ background: 'rgba(0, 0, 0, 0.3)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Title */}
           <div className="flex items-center gap-3 min-w-0">

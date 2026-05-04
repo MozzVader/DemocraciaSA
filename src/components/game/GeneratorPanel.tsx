@@ -80,10 +80,10 @@ export function GeneratorPanel() {
                 <Card
                   className={`p-3 cursor-pointer transition-all duration-200 border ${
                     canAfford
-                      ? 'border-[#d4af37]/40 hover:border-[#d4af37]/80 hover:bg-[#d4af37]/5'
-                      : 'border-border/50 opacity-60'
+                      ? 'border-[#d4af37]/50 hover:border-[#d4af37] hover:bg-white/10'
+                      : 'border-[#d4af37]/20 opacity-60'
                   }`}
-                  style={{ background: 'rgba(15, 23, 41, 0.8)' }}
+                  style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
                   onClick={() => buyGenerator(gen.id)}
                 >
                   <div className="flex items-center gap-3">

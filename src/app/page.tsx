@@ -34,22 +34,15 @@ export default function Home() {
   useGameLoop();
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ background: '#0a0a12' }}>
+    <div className="min-h-screen flex flex-col" style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #0369a1 30%, #1e3a5f 100%)' }}>
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
-          className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-[0.03]"
+          className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-[0.08]"
+          style={{ background: 'radial-gradient(circle, #ffffff 0%, transparent 70%)' }}
+        />
+        <div
+          className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full opacity-[0.05]"
           style={{ background: 'radial-gradient(circle, #d4af37 0%, transparent 70%)' }}
-        />
-        <div
-          className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full opacity-[0.02]"
-          style={{ background: 'radial-gradient(circle, #8b0000 0%, transparent 70%)' }}
-        />
-        <div
-          className="absolute inset-0 opacity-[0.02]"
-          style={{
-            backgroundImage: `linear-gradient(rgba(212, 175, 55, 0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(212, 175, 55, 0.3) 1px, transparent 1px)`,
-            backgroundSize: '60px 60px',
-          }}
         />
       </div>
 
@@ -118,8 +111,8 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="border-t border-border/20 px-4 py-3 flex items-center justify-between"
-        style={{ background: 'rgba(10, 10, 18, 0.95)' }}>
+      <footer className="border-t border-[#d4af37]/20 px-4 py-3 flex items-center justify-between"
+        style={{ background: 'rgba(0, 0, 0, 0.3)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
         <div className="text-[10px] text-muted-foreground/50 font-mono tracking-wider">
           DOCUMENTO CLASIFICADO &middot; DEMOCRACIA S.A. &copy; {new Date().getFullYear()}
         </div>

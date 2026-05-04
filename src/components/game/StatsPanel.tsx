@@ -37,7 +37,7 @@ export function StatsPanel() {
   return (
     <div className="space-y-4">
       {/* Phase */}
-      <Card className="p-4 border-border/50" style={{ background: 'rgba(15, 23, 41, 0.8)' }}>
+      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
         <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
           Fase Actual
         </div>
@@ -47,7 +47,7 @@ export function StatsPanel() {
       </Card>
 
       {/* Resources */}
-      <Card className="p-4 border-border/50" style={{ background: 'rgba(15, 23, 41, 0.8)' }}>
+      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
         <div className="space-y-3">
           <div>
             <div className="text-xs uppercase tracking-wider text-muted-foreground">Dinero</div>
@@ -70,7 +70,7 @@ export function StatsPanel() {
       </Card>
 
       {/* Democratic Quality */}
-      <Card className="p-4 border-border/50" style={{ background: 'rgba(15, 23, 41, 0.8)' }}>
+      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
         <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
           Calidad Democratica
         </div>
@@ -92,7 +92,7 @@ export function StatsPanel() {
       </Card>
 
       {/* Milestones Progress */}
-      <Card className="p-4 border-border/50" style={{ background: 'rgba(15, 23, 41, 0.8)' }}>
+      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
         <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
           Logros ({unlockedCount}/{totalMilestones})
         </div>
@@ -141,9 +141,9 @@ export function MilestonesPanel() {
           >
             <Card
               className={`p-3 border ${
-                isUnlocked ? 'border-[#d4af37]/40' : 'border-border/30'
+                isUnlocked ? 'border-[#d4af37]/40' : 'border-[#d4af37]/15'
               }`}
-              style={{ background: 'rgba(15, 23, 41, 0.8)' }}
+              style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl flex-shrink-0">

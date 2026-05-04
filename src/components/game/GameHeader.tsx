@@ -20,7 +20,7 @@ export function GameHeader() {
   const [authOpen, setAuthOpen] = useState(false);
 
   const isLoggedIn = !!user;
-  const userEmail = user?.email ?? '';
+  const displayName = user?.user_metadata?.full_name || user?.user_metadata?.name || user?.email || '';
 
   return (
     <>
@@ -64,7 +64,7 @@ export function GameHeader() {
                   <div className="hidden md:flex items-center gap-1.5 px-2 py-1 rounded border border-border/30" title="Guardado en la nube activo">
                     <Cloud className="w-3 h-3 text-green-400" />
                     <span className="text-[10px] text-muted-foreground font-mono max-w-[120px] truncate">
-                      {userEmail}
+                      {displayName}
                     </span>
                   </div>
                   <Button

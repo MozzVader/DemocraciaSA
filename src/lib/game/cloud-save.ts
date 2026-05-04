@@ -35,15 +35,30 @@ function supabaseHeaders(): Record<string, string> {
 export async function saveToCloud(state: GameState): Promise<void> {
   try {
     const anonId = getAnonId();
-    await fetch(SUPABASE_URL + '/rest/v1/' + TABLE, {
-      method: 'POST',
-      headers: Object.assign({}, supabaseHeaders(), { 'Prefer': 'resolution=merge-duplicates' }),
-      body: JSON.stringify({
-        anonymous_id: anonId,
-        game_state: state,
-        updated_at: new Date().toISOString(),
-      }),
-    });
+    const exists = await hasCloudSave();
+    if (exists) {
+      await fetch(
+        SUPABASE_URL + '/rest/v1/' + TABLE + '?anonymous_id=eq.' + anonId,
+        {
+          method: 'PATCH',
+          headers: supabaseHeaders(),
+          body: JSON.stringify({
+            game_state: state,
+            updated_at: new Date().toISOString(),
+          }),
+        }
+      );
+    } else {
+      await fetch(SUPABASE_URL + '/rest/v1/' + TABLE, {
+        method: 'POST',
+        headers: supabaseHeaders(),
+        body: JSON.stringify({
+          anonymous_id: anonId,
+          game_state: state,
+          updated_at: new Date().toISOString(),
+        }),
+      });
+    }
   } catch (e) {
     console.error('Cloud save error:', e);
   }

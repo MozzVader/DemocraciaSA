@@ -46,19 +46,19 @@
 :root {
   --radius: 0.625rem;
   --background: #0ea5e9;
-  --foreground: #e2e8f0;
-  --card: rgba(255, 255, 255, 0.08);
-  --card-foreground: #e2e8f0;
+  --foreground: #ffffff;
+  --card: rgba(255, 255, 255, 0.15);
+  --card-foreground: #ffffff;
   --popover: rgba(255, 255, 255, 0.1);
-  --popover-foreground: #e2e8f0;
+  --popover-foreground: #ffffff;
   --primary: #d4af37;
   --primary-foreground: #0a0a12;
   --secondary: rgba(255, 255, 255, 0.12);
-  --secondary-foreground: #e2e8f0;
+  --secondary-foreground: #ffffff;
   --muted: rgba(255, 255, 255, 0.06);
-  --muted-foreground: #94a3b8;
+  --muted-foreground: #cbd5e1;
   --accent: rgba(255, 255, 255, 0.12);
-  --accent-foreground: #e2e8f0;
+  --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --border: rgba(212, 175, 55, 0.25);
   --input: rgba(212, 175, 55, 0.15);
@@ -69,30 +69,30 @@
   --chart-4: #3b82f6;
   --chart-5: #f59e0b;
   --sidebar: rgba(0, 0, 0, 0.3);
-  --sidebar-foreground: #e2e8f0;
+  --sidebar-foreground: #ffffff;
   --sidebar-primary: #d4af37;
   --sidebar-primary-foreground: #0a0a12;
   --sidebar-accent: rgba(255, 255, 255, 0.1);
-  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(212, 175, 55, 0.2);
   --sidebar-ring: #d4af37;
 }
 
 .dark {
   --background: #0ea5e9;
-  --foreground: #e2e8f0;
-  --card: rgba(255, 255, 255, 0.08);
-  --card-foreground: #e2e8f0;
+  --foreground: #ffffff;
+  --card: rgba(255, 255, 255, 0.15);
+  --card-foreground: #ffffff;
   --popover: rgba(255, 255, 255, 0.1);
-  --popover-foreground: #e2e8f0;
+  --popover-foreground: #ffffff;
   --primary: #d4af37;
   --primary-foreground: #0a0a12;
   --secondary: rgba(255, 255, 255, 0.12);
-  --secondary-foreground: #e2e8f0;
+  --secondary-foreground: #ffffff;
   --muted: rgba(255, 255, 255, 0.06);
-  --muted-foreground: #94a3b8;
+  --muted-foreground: #cbd5e1;
   --accent: rgba(255, 255, 255, 0.12);
-  --accent-foreground: #e2e8f0;
+  --accent-foreground: #ffffff;
   --destructive: #ef4444;
   --border: rgba(212, 175, 55, 0.25);
   --input: rgba(212, 175, 55, 0.15);
@@ -103,11 +103,11 @@
   --chart-4: #3b82f6;
   --chart-5: #f59e0b;
   --sidebar: rgba(0, 0, 0, 0.3);
-  --sidebar-foreground: #e2e8f0;
+  --sidebar-foreground: #ffffff;
   --sidebar-primary: #d4af37;
   --sidebar-primary-foreground: #0a0a12;
   --sidebar-accent: rgba(255, 255, 255, 0.1);
-  --sidebar-accent-foreground: #e2e8f0;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(212, 175, 55, 0.2);
   --sidebar-ring: #d4af37;
 }

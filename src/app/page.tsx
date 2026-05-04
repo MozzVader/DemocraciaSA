@@ -112,7 +112,7 @@ export default function Home() {
       </main>
 
       <footer className="border-t border-[#d4af37]/20 px-4 py-3 flex items-center justify-between"
-        style={{ background: 'rgba(0, 0, 0, 0.3)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+        style={{ background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
         <div className="text-[10px] text-muted-foreground/50 font-mono tracking-wider">
           DOCUMENTO CLASIFICADO &middot; DEMOCRACIA S.A. &copy; {new Date().getFullYear()}
         </div>

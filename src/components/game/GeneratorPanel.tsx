@@ -83,7 +83,7 @@ export function GeneratorPanel() {
                       ? 'border-[#d4af37]/50 hover:border-[#d4af37] hover:bg-white/10'
                       : 'border-[#d4af37]/20 opacity-60'
                   }`}
-                  style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                  style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
                   onClick={() => buyGenerator(gen.id)}
                 >
                   <div className="flex items-center gap-3">

@@ -55,7 +55,7 @@ export function UpgradesPanel() {
                       ? 'border-[#d4af37]/50 hover:border-[#d4af37] hover:bg-white/10'
                       : 'border-[#d4af37]/20 opacity-70'
                   }`}
-                  style={{ background: 'rgba(255, 255, 255, 0.08)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}
+                  style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
                   onClick={() => purchaseUpgrade(upgrade.id)}
                 >
                   <div className="flex items-center gap-3">

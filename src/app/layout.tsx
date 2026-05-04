@@ -46,7 +46,7 @@ export default function RootLayout({
     <html lang="es" suppressHydrationWarning className="dark">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #0369a1 30%, #1e3a5f 100%)', color: '#e2e8f0' }}
+        style={{ background: 'linear-gradient(135deg, #0ea5e9 0%, #0369a1 30%, #1e3a5f 100%)', color: '#ffffff' }}
       >
         {children}
         <Toaster />

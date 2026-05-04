@@ -2,7 +2,7 @@
 // DEMOCRACIA S.A. — Game Type Definitions
 // ============================================
 
-export type GamePhase = 'municipal' | 'provincial' | 'hegemonic';
+export type GamePhase = 'municipal' | 'provincial' | 'imperio';
 
 export interface GeneratorConfig {
   id: string;
@@ -40,7 +40,7 @@ export interface UpgradeEffect {
 }
 
 export interface UpgradeRequirement {
-  type: 'generatorCount' | 'totalInfluencia' | 'upgradePurchased';
+  type: 'generatorCount' | 'totalInfluencia' | 'totalDinero' | 'upgradePurchased';
   targetId?: string;
   value: number;
 }

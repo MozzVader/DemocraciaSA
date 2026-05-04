@@ -184,15 +184,15 @@ export function isGeneratorUnlocked(generatorId: string, currentPhase: string): 
  * Check if a phase is unlocked.
  */
 function isPhaseUnlocked(genPhase: string, currentPhase: string): boolean {
-  const phases = ['municipal', 'provincial', 'hegemonic'];
+  const phases = ['municipal', 'provincial', 'imperio'];
   return phases.indexOf(genPhase) <= phases.indexOf(currentPhase);
 }
 
 /**
  * Get the current phase based on total influencia.
  */
-export function getCurrentPhase(totalInfluencia: number): 'municipal' | 'provincial' | 'hegemonic' {
-  if (totalInfluencia >= 20000000) return 'hegemonic';
+export function getCurrentPhase(totalInfluencia: number): 'municipal' | 'provincial' | 'imperio' {
+  if (totalInfluencia >= 20000000) return 'imperio';
   if (totalInfluencia >= 12000) return 'provincial';
   return 'municipal';
 }

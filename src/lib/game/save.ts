@@ -1,11 +1,9 @@
 import type { GameState, GeneratorState } from './types';
 import { GENERATORS } from './config';
+import { saveToCloud, loadFromCloud, hasCloudSave } from './cloud-save';
 
-const SAVE_KEY = 'democracia_sa_save';
+const LOCAL_SAVE_KEY = 'democracia_sa_save';
 
-/**
- * Create the initial game state.
- */
 export function createInitialState(): GameState {
   const generators: Record<string, GeneratorState> = {};
   for (const gen of GENERATORS) {
@@ -32,9 +30,6 @@ export function createInitialState(): GameState {
   };
 }
 
-/**
- * Save game state to localStorage.
- */
 export function saveGame(state: GameState): void {
   try {
     const saveData = {
@@ -42,22 +37,21 @@ export function saveGame(state: GameState): void {
       lastSave: Date.now(),
       lastTick: Date.now(),
     };
-    localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+    localStorage.setItem(LOCAL_SAVE_KEY, JSON.stringify(saveData));
+    // Fire and forget cloud save
+    saveToCloud(saveData);
   } catch (e) {
     console.error('Failed to save game:', e);
   }
 }
 
-/**
- * Load game state from localStorage.
- */
 export function loadGame(): GameState | null {
   try {
-    const data = localStorage.getItem(SAVE_KEY);
+    const data = localStorage.getItem(LOCAL_SAVE_KEY);
     if (!data) return null;
     const parsed = JSON.parse(data) as GameState;
 
-    // Ensure all generators exist (in case new ones were added)
+    // Ensure all generators exist
     for (const gen of GENERATORS) {
       if (!parsed.generators[gen.id]) {
         parsed.generators[gen.id] = {
@@ -75,27 +69,40 @@ export function loadGame(): GameState | null {
   }
 }
 
-/**
- * Check if a save exists.
- */
 export function hasSave(): boolean {
-  return localStorage.getItem(SAVE_KEY) !== null;
+  return localStorage.getItem(LOCAL_SAVE_KEY) !== null;
 }
 
-/**
- * Delete save data.
- */
 export function deleteSave(): void {
-  localStorage.removeItem(SAVE_KEY);
+  localStorage.removeItem(LOCAL_SAVE_KEY);
 }
 
-/**
- * Calculate offline progress (time between lastTick and now).
- * Returns the delta in milliseconds.
- */
+export async function loadCloudSave(): Promise<GameState | null> {
+  const cloudState = await loadFromCloud();
+  if (!cloudState) return null;
+
+  // Ensure all generators exist
+  for (const gen of GENERATORS) {
+    if (!cloudState.generators[gen.id]) {
+      cloudState.generators[gen.id] = {
+        id: gen.id,
+        owned: 0,
+        totalProduced: 0,
+      };
+    }
+  }
+
+  // Also save locally as backup
+  localStorage.setItem(LOCAL_SAVE_KEY, JSON.stringify(cloudState));
+  return cloudState;
+}
+
+export async function checkCloudSaveExists(): Promise<boolean> {
+  return hasCloudSave();
+}
+
 export function getOfflineDelta(lastTick: number): number {
   const now = Date.now();
   const delta = now - lastTick;
-  // Cap at 24 hours to prevent insane offline gains
   return Math.min(delta, 24 * 60 * 60 * 1000);
 }

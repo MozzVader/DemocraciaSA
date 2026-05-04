@@ -2,16 +2,25 @@ import type { GameState } from './types';
 import { supabase, SAVES_TABLE } from '@/lib/supabase';
 
 /**
- * Check if there's an authenticated user.
- * Returns the user ID if authenticated, null otherwise.
+ * Get the current authenticated session.
+ * Returns null if not authenticated.
  */
-async function getAuthUserId(): Promise<string | null> {
+async function getAuthSession() {
   try {
     const { data: { session } } = await supabase.auth.getSession();
-    return session?.user?.id ?? null;
+    return session ?? null;
   } catch {
     return null;
   }
+}
+
+/**
+ * Extract display name from user metadata.
+ */
+function extractDisplayName(session: { user: { user_metadata?: Record<string, unknown>; email?: string } } | null): string {
+  const meta = session?.user?.user_metadata;
+  if (!meta) return '';
+  return (meta.full_name as string) || (meta.name as string) || (session.user.email as string) || '';
 }
 
 /**
@@ -19,15 +28,16 @@ async function getAuthUserId(): Promise<string | null> {
  * Uses upsert for simplicity (insert or update in one call).
  */
 export async function saveToCloud(state: GameState): Promise<void> {
-  const userId = await getAuthUserId();
-  if (!userId) return;
+  const session = await getAuthSession();
+  if (!session) return;
 
   try {
     const { error } = await supabase
       .from(SAVES_TABLE)
       .upsert(
         {
-          anonymous_id: userId,
+          anonymous_id: session.user.id,
+          display_name: extractDisplayName(session),
           game_state: state,
           updated_at: new Date().toISOString(),
         },
@@ -46,14 +56,14 @@ export async function saveToCloud(state: GameState): Promise<void> {
  * Load game state from cloud — only works if authenticated.
  */
 export async function loadFromCloud(): Promise<GameState | null> {
-  const userId = await getAuthUserId();
-  if (!userId) return null;
+  const session = await getAuthSession();
+  if (!session) return null;
 
   try {
     const { data, error } = await supabase
       .from(SAVES_TABLE)
       .select('game_state')
-      .eq('anonymous_id', userId)
+      .eq('anonymous_id', session.user.id)
       .maybeSingle();
 
     if (error || !data) return null;
@@ -68,14 +78,14 @@ export async function loadFromCloud(): Promise<GameState | null> {
  * Check if a cloud save exists — only works if authenticated.
  */
 export async function hasCloudSave(): Promise<boolean> {
-  const userId = await getAuthUserId();
-  if (!userId) return false;
+  const session = await getAuthSession();
+  if (!session) return false;
 
   try {
     const { count, error } = await supabase
       .from(SAVES_TABLE)
       .select('id', { count: 'exact', head: true })
-      .eq('anonymous_id', userId);
+      .eq('anonymous_id', session.user.id);
 
     if (error) return false;
     return (count ?? 0) > 0;

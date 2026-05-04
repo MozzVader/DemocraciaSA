@@ -27,7 +27,7 @@ interface GameStore extends GameState {
   save: () => void;
   load: () => boolean;
   reset: () => void;
-  init: () => Promise<void>;
+  init: (isAuthenticated: boolean) => Promise<void>;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -149,30 +149,39 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
   },
 
-  init: async () => {
-    // First try cloud save
-    const cloudExists = await checkCloudSaveExists();
-    if (cloudExists) {
-      const cloudState = await loadCloudSave();
-      if (cloudState) {
-        set({
-          ...cloudState,
-          lastTick: Date.now(),
-          currentPhase: getCurrentPhase(cloudState.totalInfluencia),
-          loading: false,
-        });
-        const offlineDelta = getOfflineDelta(cloudState.lastTick);
-        if (offlineDelta > 5000) {
-          get().tick(offlineDelta);
+  init: async (isAuthenticated: boolean) => {
+    if (isAuthenticated) {
+      // Authenticated: try cloud first, fall back to localStorage
+      const cloudExists = await checkCloudSaveExists();
+      if (cloudExists) {
+        const cloudState = await loadCloudSave();
+        if (cloudState) {
+          set({
+            ...cloudState,
+            lastTick: Date.now(),
+            currentPhase: getCurrentPhase(cloudState.totalInfluencia),
+            loading: false,
+          });
+          const offlineDelta = getOfflineDelta(cloudState.lastTick);
+          if (offlineDelta > 5000) {
+            get().tick(offlineDelta);
+          }
+          return;
         }
-        return;
       }
+      // Cloud has no save — try localStorage as fallback
+      const loaded = get().load();
+      if (!loaded) {
+        set(createInitialState());
+      }
+      set({ loading: false });
+    } else {
+      // Not authenticated: localStorage only
+      const loaded = get().load();
+      if (!loaded) {
+        set(createInitialState());
+      }
+      set({ loading: false });
     }
-    // Fallback to localStorage
-    const loaded = get().load();
-    if (!loaded) {
-      set(createInitialState());
-    }
-    set({ loading: false });
   },
 }));

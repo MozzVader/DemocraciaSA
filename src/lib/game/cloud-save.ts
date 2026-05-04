@@ -1,96 +1,81 @@
 import type { GameState } from './types';
+import { supabase, SAVES_TABLE } from '@/lib/supabase';
 
-const SUPABASE_URL = 'https://ixhbxiwshawebxvcrwxc.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4aGJ4aXdzaGF3ZWJ4dmNyd3hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzM5NDYsImV4cCI6MjA5MzE0OTk0Nn0.XgojEBFNRMkJFMVV0n5_s1ltZChF65X0XHLkUeJO-rY';
-const TABLE = 'democracia_sa_saves';
-const ANON_ID_KEY = 'democracia_sa_anon_id';
-
-function getAnonId(): string {
-  let id = localStorage.getItem(ANON_ID_KEY);
-  if (id) return id;
-
-  const cookieMatch = document.cookie.match(new RegExp('(^| )' + ANON_ID_KEY + '=([^;]+)'));
-  if (cookieMatch) {
-    id = cookieMatch[2];
-    localStorage.setItem(ANON_ID_KEY, id);
-    return id;
-  }
-
-  id = crypto.randomUUID();
-  localStorage.setItem(ANON_ID_KEY, id);
-  const expires = new Date(Date.now() + 365 * 86400000).toUTCString();
-  document.cookie = ANON_ID_KEY + '=' + id + ';expires=' + expires + ';path=/;SameSite=Lax';
-  return id;
+/**
+ * Check if there's an authenticated user.
+ * Returns the user ID if authenticated, null otherwise.
+ */
+export function getAuthUserId(): string | null {
+  const { data: { session } } = supabase.auth.getSession();
+  // This is synchronous but the session should already be loaded by auth-store init
+  return session?.user?.id ?? null;
 }
 
-function supabaseHeaders(): Record<string, string> {
-  return {
-    'Content-Type': 'application/json',
-    'apikey': SUPABASE_ANON_KEY,
-    'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-    'Prefer': 'return=minimal',
-  };
-}
-
+/**
+ * Save game state to cloud — only works if authenticated.
+ * Uses upsert for simplicity (insert or update in one call).
+ */
 export async function saveToCloud(state: GameState): Promise<void> {
+  const userId = getAuthUserId();
+  if (!userId) return;
+
   try {
-    const anonId = getAnonId();
-    const exists = await hasCloudSave();
-    if (exists) {
-      await fetch(
-        SUPABASE_URL + '/rest/v1/' + TABLE + '?anonymous_id=eq.' + anonId,
+    const { error } = await supabase
+      .from(SAVES_TABLE)
+      .upsert(
         {
-          method: 'PATCH',
-          headers: supabaseHeaders(),
-          body: JSON.stringify({
-            game_state: state,
-            updated_at: new Date().toISOString(),
-          }),
-        }
-      );
-    } else {
-      await fetch(SUPABASE_URL + '/rest/v1/' + TABLE, {
-        method: 'POST',
-        headers: supabaseHeaders(),
-        body: JSON.stringify({
-          anonymous_id: anonId,
+          anonymous_id: userId,
           game_state: state,
           updated_at: new Date().toISOString(),
-        }),
-      });
+        },
+        { onConflict: 'anonymous_id' },
+      );
+
+    if (error) {
+      console.error('Cloud save error:', error.message);
     }
   } catch (e) {
     console.error('Cloud save error:', e);
   }
 }
 
+/**
+ * Load game state from cloud — only works if authenticated.
+ */
 export async function loadFromCloud(): Promise<GameState | null> {
+  const userId = getAuthUserId();
+  if (!userId) return null;
+
   try {
-    const anonId = getAnonId();
-    const res = await fetch(
-      SUPABASE_URL + '/rest/v1/' + TABLE + '?anonymous_id=eq.' + anonId + '&select=game_state',
-      { headers: supabaseHeaders() }
-    );
-    if (!res.ok) return null;
-    const data = await res.json();
-    if (!data || data.length === 0) return null;
-    return data[0].game_state as GameState;
+    const { data, error } = await supabase
+      .from(SAVES_TABLE)
+      .select('game_state')
+      .eq('anonymous_id', userId)
+      .maybeSingle();
+
+    if (error || !data) return null;
+    return data.game_state as GameState;
   } catch (e) {
     console.error('Cloud load error:', e);
     return null;
   }
 }
 
+/**
+ * Check if a cloud save exists — only works if authenticated.
+ */
 export async function hasCloudSave(): Promise<boolean> {
+  const userId = getAuthUserId();
+  if (!userId) return false;
+
   try {
-    const anonId = getAnonId();
-    const res = await fetch(
-      SUPABASE_URL + '/rest/v1/' + TABLE + '?anonymous_id=eq.' + anonId + '&select=id',
-      { headers: supabaseHeaders() }
-    );
-    if (!res.ok) return false;
-    const data = await res.json();
-    return Array.isArray(data) && data.length > 0;
+    const { count, error } = await supabase
+      .from(SAVES_TABLE)
+      .select('id', { count: 'exact', head: true })
+      .eq('anonymous_id', userId);
+
+    if (error) return false;
+    return (count ?? 0) > 0;
   } catch {
     return false;
   }

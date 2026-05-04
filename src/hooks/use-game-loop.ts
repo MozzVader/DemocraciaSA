@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useGameStore } from '@/store/game-store';
+import { useAuthStore } from '@/store/auth-store';
 
 const TICK_INTERVAL = 100;
 const SAVE_INTERVAL = 30000;
@@ -10,14 +11,22 @@ export function useGameLoop() {
   const tick = useGameStore((s) => s.tick);
   const save = useGameStore((s) => s.save);
   const init = useGameStore((s) => s.init);
+  const authInit = useAuthStore((s) => s.init);
+  const user = useAuthStore((s) => s.user);
+  const authLoading = useAuthStore((s) => s.loading);
   const initialized = useRef(false);
 
+  // Initialize auth first, then game
   useEffect(() => {
     if (!initialized.current) {
       initialized.current = true;
-      init();
+      authInit().then(() => {
+        // After auth is resolved, init game with auth status
+        const isAuthenticated = useAuthStore.getState().user !== null;
+        init(isAuthenticated);
+      });
     }
-  }, [init]);
+  }, [authInit, init]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,4 +47,12 @@ export function useGameLoop() {
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [save]);
+
+  // When auth state changes, trigger a save to sync cloud
+  useEffect(() => {
+    if (!authLoading && user) {
+      // User just logged in — save current state to cloud
+      save();
+    }
+  }, [user, authLoading, save]);
 }

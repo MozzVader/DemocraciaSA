@@ -37,8 +37,9 @@ export function saveGame(state: GameState): void {
       lastSave: Date.now(),
       lastTick: Date.now(),
     };
+    // Always save locally
     localStorage.setItem(LOCAL_SAVE_KEY, JSON.stringify(saveData));
-    // Fire and forget cloud save
+    // Cloud save is handled inside — it checks auth automatically
     saveToCloud(saveData);
   } catch (e) {
     console.error('Failed to save game:', e);

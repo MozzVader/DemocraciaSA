@@ -1,8 +1,9 @@
-import { supabase } from '@/lib/supabase';
 import type { GameState } from './types';
 
+const SUPABASE_URL = 'https://ixhbxiwshawebxvcrwxc.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml4aGJ4aXdzaGF3ZWJ4dmNyd3hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1NzM5NDYsImV4cCI6MjA5MzE0OTk0Nn0.XgojEBFNRMkJFMVV0n5_s1ltZChF65X0XHLkUeJO-rY';
+const TABLE = 'democracia_sa_saves';
 const ANON_ID_KEY = 'democracia_sa_anon_id';
-const SUPABASE_TABLE = 'democracia_sa_saves';
 
 function getAnonId(): string {
   let id = localStorage.getItem(ANON_ID_KEY);
@@ -13,20 +14,27 @@ function getAnonId(): string {
   return id;
 }
 
+function headers(): Record<string, string> {
+  return {
+    'Content-Type': 'application/json',
+    'apikey': SUPABASE_ANON_KEY,
+    'Authorization': `Bearer ${SUPABASE_ANON_KEY}`,
+    'Prefer': 'return=minimal',
+  };
+}
+
 export async function saveToCloud(state: GameState): Promise<void> {
   try {
     const anonId = getAnonId();
-    const { error } = await supabase
-      .from(SUPABASE_TABLE)
-      .upsert(
-        {
-          anonymous_id: anonId,
-          game_state: state as unknown as Record<string, unknown>,
-          updated_at: new Date().toISOString(),
-        },
-        { onConflict: 'anonymous_id' }
-      );
-    if (error) console.error('Cloud save failed:', error.message);
+    await fetch(`${SUPABASE_URL}/rest/v1/${TABLE}`, {
+      method: 'POST',
+      headers: { ...headers(), 'Prefer': 'resolution=merge-duplicates' },
+      body: JSON.stringify({
+        anonymous_id: anonId,
+        game_state: state,
+        updated_at: new Date().toISOString(),
+      }),
+    });
   } catch (e) {
     console.error('Cloud save error:', e);
   }
@@ -35,14 +43,14 @@ export async function saveToCloud(state: GameState): Promise<void> {
 export async function loadFromCloud(): Promise<GameState | null> {
   try {
     const anonId = getAnonId();
-    const { data, error } = await supabase
-      .from(SUPABASE_TABLE)
-      .select('game_state')
-      .eq('anonymous_id', anonId)
-      .single();
-
-    if (error || !data) return null;
-    return data.game_state as GameState;
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/${TABLE}?anonymous_id=eq.${anonId}&select=game_state`,
+      { headers: headers() }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || data.length === 0) return null;
+    return data[0].game_state as GameState;
   } catch (e) {
     console.error('Cloud load error:', e);
     return null;
@@ -52,13 +60,13 @@ export async function loadFromCloud(): Promise<GameState | null> {
 export async function hasCloudSave(): Promise<boolean> {
   try {
     const anonId = getAnonId();
-    const { count, error } = await supabase
-      .from(SUPABASE_TABLE)
-      .select('*', { count: 'exact', head: true })
-      .eq('anonymous_id', anonId);
-
-    if (error) return false;
-    return (count ?? 0) > 0;
+    const res = await fetch(
+      `${SUPABASE_URL}/rest/v1/${TABLE}?anonymous_id=eq.${anonId}&select=id`,
+      { headers: { ...headers(), 'Prefer': 'count=exact' } }
+    );
+    if (!res.ok) return false;
+    const data = await res.json();
+    return Array.isArray(data) && data.length > 0;
   } catch {
     return false;
   }

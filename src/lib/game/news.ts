@@ -47,5 +47,5 @@ export function getRandomHeadline(phase: GamePhase, exclude?: string): string {
   const pool = HEADLINES.filter(h => h.phase === phase);
   const available = exclude ? pool.filter(h => h.text !== exclude) : pool;
   if (available.length === 0) return pool[0]?.text ?? 'Sin noticias nuevas... por ahora.';
-  return available[Math.floor(Math.random() * available.length)];
+    return available[Math.floor(Math.random() * available.length)].text;
 }

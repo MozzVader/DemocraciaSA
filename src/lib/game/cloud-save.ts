@@ -5,10 +5,13 @@ import { supabase, SAVES_TABLE } from '@/lib/supabase';
  * Check if there's an authenticated user.
  * Returns the user ID if authenticated, null otherwise.
  */
-export function getAuthUserId(): string | null {
-  const { data: { session } } = supabase.auth.getSession();
-  // This is synchronous but the session should already be loaded by auth-store init
-  return session?.user?.id ?? null;
+async function getAuthUserId(): Promise<string | null> {
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.user?.id ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /**
@@ -16,7 +19,7 @@ export function getAuthUserId(): string | null {
  * Uses upsert for simplicity (insert or update in one call).
  */
 export async function saveToCloud(state: GameState): Promise<void> {
-  const userId = getAuthUserId();
+  const userId = await getAuthUserId();
   if (!userId) return;
 
   try {
@@ -43,7 +46,7 @@ export async function saveToCloud(state: GameState): Promise<void> {
  * Load game state from cloud — only works if authenticated.
  */
 export async function loadFromCloud(): Promise<GameState | null> {
-  const userId = getAuthUserId();
+  const userId = await getAuthUserId();
   if (!userId) return null;
 
   try {
@@ -65,7 +68,7 @@ export async function loadFromCloud(): Promise<GameState | null> {
  * Check if a cloud save exists — only works if authenticated.
  */
 export async function hasCloudSave(): Promise<boolean> {
-  const userId = getAuthUserId();
+  const userId = await getAuthUserId();
   if (!userId) return false;
 
   try {

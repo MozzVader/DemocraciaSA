@@ -2,8 +2,8 @@
 
 import { useGameStore } from '@/store/game-store';
 import { MILESTONES } from '@/lib/game/config';
-import { getDemocraticQuality, getDemocracyQuote } from '@/lib/game/formatters';
-import { formatTime } from '@/lib/game/formatters';
+import { getDemocraticQuality } from '@/lib/game/calculator';
+import { formatNumber, getDemocracyQuote, formatTime } from '@/lib/game/formatters';
 import { PHASE_LABELS, PHASE_EMOJIS } from '@/lib/game/config';
 import { Card } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';

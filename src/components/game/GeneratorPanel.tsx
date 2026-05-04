@@ -78,7 +78,7 @@ export function GeneratorPanel() {
                 transition={{ duration: 0.3 }}
               >
                 <Card
-                  className={`p-3 cursor-pointer transition-all duration-200 border ${
+                  className={`p-3 cursor-pointer select-none transition-all duration-200 border ${
                     canAfford
                       ? 'border-[#d4af37]/50 hover:border-[#d4af37] hover:bg-white/10'
                       : 'border-[#d4af37]/20 opacity-60'

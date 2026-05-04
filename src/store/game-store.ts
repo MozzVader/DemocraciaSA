@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import type { GameState } from '@/lib/game/types';
-import { createInitialState, saveGame, loadGame, getOfflineDelta } from '@/lib/game/save';
+import { createInitialState, saveGame, loadGame, getOfflineDelta, loadCloudSave, checkCloudSaveExists } from '@/lib/game/save';
 import {
   getGeneratorCost,
   getProductionPerSecond,
@@ -8,20 +8,17 @@ import {
   getDineroPerSecond,
   canPurchaseUpgrade,
   getCurrentPhase,
-  getDemocraticQuality,
 } from '@/lib/game/calculator';
 import { GENERATORS, UPGRADES, MILESTONES } from '@/lib/game/config';
 
 interface GameStore extends GameState {
-  // Computed getters
   productionPerSecond: () => number;
   dineroPerSecond: () => number;
   clickPower: () => number;
   generatorCost: (id: string) => number;
   canBuyUpgrade: (id: string) => boolean;
-  democraticQuality: () => number;
+  loading: boolean;
 
-  // Actions
   click: () => void;
   buyGenerator: (id: string) => void;
   purchaseUpgrade: (id: string) => void;
@@ -30,13 +27,13 @@ interface GameStore extends GameState {
   save: () => void;
   load: () => boolean;
   reset: () => void;
-  init: () => void;
+  init: () => Promise<void>;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
   ...createInitialState(),
+  loading: true,
 
-  // ---- Computed ----
   productionPerSecond: () => getProductionPerSecond(get()),
   dineroPerSecond: () => getDineroPerSecond(get()),
   clickPower: () => getClickPower(get()),
@@ -46,9 +43,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
     if (!upgrade) return false;
     return canPurchaseUpgrade(get(), upgrade);
   },
-  democraticQuality: () => getDemocraticQuality(get().totalInfluencia),
 
-  // ---- Actions ----
   click: () => {
     const power = getClickPower(get());
     set((state) => ({
@@ -61,7 +56,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
   buyGenerator: (id: string) => {
     const state = get();
     const cost = getGeneratorCost(id, state.generators[id]?.owned ?? 0);
-
     if (state.influencia < cost) return;
 
     set((s) => {
@@ -69,11 +63,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       const gen = { ...newGenerators[id] };
       gen.owned += 1;
       newGenerators[id] = gen;
-
-      return {
-        influencia: s.influencia - cost,
-        generators: newGenerators,
-      };
+      return { influencia: s.influencia - cost, generators: newGenerators };
     });
   },
 
@@ -82,22 +72,16 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const upgrade = UPGRADES.find((u) => u.id === id);
     if (!upgrade || !canPurchaseUpgrade(state, upgrade)) return;
 
-    set((s) => {
-      const newInfluencia = upgrade.costResource === 'influencia' ? s.influencia - upgrade.cost : s.influencia;
-      const newDinero = upgrade.costResource === 'dinero' ? s.dinero - upgrade.cost : s.dinero;
-
-      return {
-        influencia: newInfluencia,
-        dinero: newDinero,
-        purchasedUpgrades: [...s.purchasedUpgrades, id],
-      };
-    });
+    set((s) => ({
+      influencia: upgrade.costResource === 'influencia' ? s.influencia - upgrade.cost : s.influencia,
+      dinero: upgrade.costResource === 'dinero' ? s.dinero - upgrade.cost : s.dinero,
+      purchasedUpgrades: [...s.purchasedUpgrades, id],
+    }));
   },
 
   tick: (deltaMs: number) => {
     const state = get();
     const deltaSec = deltaMs / 1000;
-
     const infGain = getProductionPerSecond(state) * deltaSec;
     const dineroGain = getDineroPerSecond(state) * deltaSec;
 
@@ -115,13 +99,10 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
   checkMilestones: () => {
     const state = get();
-
     for (const milestone of MILESTONES) {
       if (state.unlockedMilestones.includes(milestone.id)) continue;
-
       const req = milestone.requirement;
       let met = false;
-
       switch (req.type) {
         case 'totalInfluencia':
           met = state.totalInfluencia >= req.value;
@@ -136,7 +117,6 @@ export const useGameStore = create<GameStore>((set, get) => ({
           met = state.purchasedUpgrades.length >= req.value;
           break;
       }
-
       if (met) {
         set((s) => ({
           unlockedMilestones: [...s.unlockedMilestones, milestone.id],
@@ -150,19 +130,15 @@ export const useGameStore = create<GameStore>((set, get) => ({
   load: () => {
     const loaded = loadGame();
     if (!loaded) return false;
-
     set({
       ...loaded,
       lastTick: Date.now(),
       currentPhase: getCurrentPhase(loaded.totalInfluencia),
     });
-
-    // Apply offline progress
     const offlineDelta = getOfflineDelta(loaded.lastTick);
-    if (offlineDelta > 5000) { // Only if offline for more than 5 seconds
+    if (offlineDelta > 5000) {
       get().tick(offlineDelta);
     }
-
     return true;
   },
 
@@ -173,10 +149,30 @@ export const useGameStore = create<GameStore>((set, get) => ({
     }
   },
 
-  init: () => {
+  init: async () => {
+    // First try cloud save
+    const cloudExists = await checkCloudSaveExists();
+    if (cloudExists) {
+      const cloudState = await loadCloudSave();
+      if (cloudState) {
+        set({
+          ...cloudState,
+          lastTick: Date.now(),
+          currentPhase: getCurrentPhase(cloudState.totalInfluencia),
+          loading: false,
+        });
+        const offlineDelta = getOfflineDelta(cloudState.lastTick);
+        if (offlineDelta > 5000) {
+          get().tick(offlineDelta);
+        }
+        return;
+      }
+    }
+    // Fallback to localStorage
     const loaded = get().load();
     if (!loaded) {
       set(createInitialState());
     }
+    set({ loading: false });
   },
 }));

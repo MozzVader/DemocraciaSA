@@ -1,5 +1,5 @@
 import type { GameState, UpgradeConfig } from './types';
-import { GENERATORS, UPGRADES } from './config';
+import { GENERATORS, UPGRADES, MILESTONES } from './config';
 
 /**
  * Calculate the cost to buy the next generator of a given type.
@@ -58,9 +58,11 @@ export function getClickPower(state: GameState): number {
   }
 
   // Milestone click multipliers
-  for (const upgradeId of state.purchasedUpgrades) {
-    const milestone = UPGRADES.find((u) => u.id === upgradeId);
-    // Milestones are handled separately
+  for (const milestoneId of state.unlockedMilestones) {
+    const milestone = MILESTONES.find((m) => m.id === milestoneId);
+    if (milestone && milestone.reward.type === 'clickMultiplier') {
+      power += milestone.reward.value as number;
+    }
   }
 
   return Math.floor(power);
@@ -89,9 +91,9 @@ export function getDineroPerSecond(state: GameState): number {
 function getMilestoneProductionMultiplier(state: GameState): number {
   let multiplier = 1;
   for (const milestoneId of state.unlockedMilestones) {
-    const milestone = UPGRADES.find((u) => u.id === milestoneId);
-    if (milestone && milestone.effect.type === 'productionMultiplier') {
-      multiplier *= milestone.effect.value;
+    const milestone = MILESTONES.find((m) => m.id === milestoneId);
+    if (milestone && milestone.reward.type === 'productionMultiplier') {
+      multiplier *= milestone.reward.value as number;
     }
   }
   return multiplier;

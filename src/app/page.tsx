@@ -8,6 +8,7 @@ import { GeneratorPanel } from '@/components/game/GeneratorPanel';
 import { UpgradesPanel } from '@/components/game/UpgradesPanel';
 import { StatsPanel, MilestonesPanel } from '@/components/game/StatsPanel';
 import { GameHeader } from '@/components/game/GameHeader';
+import { NewsTicker } from '@/components/game/NewsTicker';
 import { useGameStore } from '@/store/game-store';
 import { useGameLoop } from '@/hooks/use-game-loop';
 import {
@@ -29,12 +30,10 @@ export default function Home() {
   const reset = useGameStore((s) => s.reset);
   const save = useGameStore((s) => s.save);
 
-  // Initialize game loop
   useGameLoop();
 
   return (
     <div className="min-h-screen flex flex-col" style={{ background: '#0a0a12' }}>
-      {/* Background effects */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-[0.03]"
@@ -44,7 +43,6 @@ export default function Home() {
           className="absolute bottom-0 right-1/4 w-80 h-80 rounded-full opacity-[0.02]"
           style={{ background: 'radial-gradient(circle, #8b0000 0%, transparent 70%)' }}
         />
-        {/* Subtle grid pattern */}
         <div
           className="absolute inset-0 opacity-[0.02]"
           style={{
@@ -58,12 +56,9 @@ export default function Home() {
 
       <main className="flex-1 relative">
         <div className="max-w-7xl mx-auto">
-          {/* Mobile Layout */}
           <div className="md:hidden flex flex-col">
-            {/* Clicker Section */}
             <InfluenceClicker />
 
-            {/* Tabs for panels */}
             <div className="px-4 pb-6">
               <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)}>
                 <TabsList className="grid w-full grid-cols-3 bg-transparent border-b border-border/30 rounded-none h-auto p-0">
@@ -98,26 +93,21 @@ export default function Home() {
               </Tabs>
             </div>
 
-            {/* Stats */}
             <div className="px-4 pb-6">
               <StatsPanel />
             </div>
           </div>
 
-          {/* Desktop Layout */}
           <div className="hidden md:grid md:grid-cols-[280px_1fr_300px] gap-6 p-6">
-            {/* Left Sidebar - Stats */}
             <aside className="space-y-4 sticky top-4 self-start">
               <StatsPanel />
             </aside>
 
-            {/* Center - Clicker + Generators */}
             <div className="space-y-6">
               <InfluenceClicker />
               <GeneratorPanel />
             </div>
 
-            {/* Right Sidebar - Upgrades + Milestones */}
             <aside className="space-y-6 sticky top-4 self-start">
               <UpgradesPanel />
               <MilestonesPanel />
@@ -126,7 +116,8 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
+      <NewsTicker />
+
       <footer className="border-t border-border/20 px-4 py-3 flex items-center justify-between"
         style={{ background: 'rgba(10, 10, 18, 0.95)' }}>
         <div className="text-[10px] text-muted-foreground/50 font-mono tracking-wider">

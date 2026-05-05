@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { basePath } from 'next/navigation';
 import { useGameStore } from '@/store/game-store';
 import { formatNumber, formatPerSecond } from '@/lib/game/formatters';
 
@@ -97,7 +98,7 @@ export function InfluenceClicker() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/sol-de-mayo.png"
+            src={`${basePath}/sol-de-mayo.png`}
             alt="Sol de Mayo"
             className="w-28 h-28 md:w-36 md:h-36 pointer-events-none"
             draggable={false}

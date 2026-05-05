@@ -71,9 +71,19 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
   return (
     <Dialog open={open} onOpenChange={(v) => { resetForm(); onOpenChange(v); }}>
       <DialogContent
-        className="sm:max-w-md border-border/50"
-        style={{ background: 'rgba(15, 23, 41, 0.98)' }}
+        className="sm:max-w-md border-0 p-0 overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, rgba(15, 23, 41, 0.97) 0%, rgba(20, 15, 5, 0.97) 100%)',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.08), inset 0 1px 0 rgba(212, 175, 55, 0.15)',
+        }}
       >
+        {/* Gold top accent line */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[2px]"
+          style={{ background: 'linear-gradient(90deg, transparent 0%, #d4af37 30%, #f59e0b 50%, #d4af37 70%, transparent 100%)' }}
+        />
+
+        <div className="p-5">
         <DialogHeader>
           <DialogTitle className="text-center" style={{ color: '#d4af37' }}>
             Acceso Clasificado
@@ -105,7 +115,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
           <Button
             type="button"
             variant="outline"
-            className="w-full h-10 gap-2 cursor-pointer border-border/50 bg-background/50 hover:bg-background/80 mb-4"
+            className="w-full h-10 gap-2 cursor-pointer border-[#d4af37]/30 bg-[#d4af37]/5 hover:bg-[#d4af37]/10 mb-4"
             onClick={() => signInWithGoogle()}
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -120,7 +130,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
           {/* Divider */}
           <div className="relative mb-4">
             <Separator className="border-border/30" />
-            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#0f1729] px-2 text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+            <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-2 text-[10px] text-muted-foreground/50 uppercase tracking-wider">
               o con email
             </span>
           </div>
@@ -137,14 +147,14 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-border/50 bg-background/50"
+                className="border-[#d4af37]/20 bg-[#d4af37]/5 focus:border-[#d4af37]/40"
                 autoComplete="email"
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="auth-password" className="text-xs uppercase tracking-wider text-muted-foreground">
-                Contraseña
+                Contrasena
               </Label>
               <Input
                 id="auth-password"
@@ -154,7 +164,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="border-border/50 bg-background/50"
+                className="border-[#d4af37]/20 bg-[#d4af37]/5 focus:border-[#d4af37]/40"
                 autoComplete={tab === 'register' ? 'new-password' : 'current-password'}
               />
               {tab === 'register' && (
@@ -194,6 +204,13 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
             Sin cuenta? Juga de todos modos. El guardado local siempre funciona.
           </p>
         )}
+        </div>
+
+        {/* Gold bottom accent line */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[1px]"
+          style={{ background: 'linear-gradient(90deg, transparent 0%, #d4af37 30%, #f59e0b 50%, #d4af37 70%, transparent 100%)' }}
+        />
       </DialogContent>
     </Dialog>
   );

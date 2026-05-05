@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { BookOpen } from 'lucide-react';
 import { InfluenceClicker } from '@/components/game/InfluenceClicker';
 import { GeneratorPanel } from '@/components/game/GeneratorPanel';
 import { UpgradesPanel } from '@/components/game/UpgradesPanel';
@@ -10,6 +11,7 @@ import { StatsPanel, MilestonesPanel } from '@/components/game/StatsPanel';
 import { GameHeader } from '@/components/game/GameHeader';
 import { NewsTicker } from '@/components/game/NewsTicker';
 import { AchievementToast } from '@/components/game/AchievementToast';
+import { GuideDialog } from '@/components/game/GuideDialog';
 import { useGameStore } from '@/store/game-store';
 import { useGameLoop } from '@/hooks/use-game-loop';
 import {
@@ -28,6 +30,7 @@ type TabValue = 'generadores' | 'operaciones' | 'logros';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<TabValue>('generadores');
+  const [guideOpen, setGuideOpen] = useState(false);
   const reset = useGameStore((s) => s.reset);
   const save = useGameStore((s) => s.save);
 
@@ -121,6 +124,15 @@ export default function Home() {
             variant="ghost"
             size="sm"
             className="h-7 text-xs text-muted-foreground hover:text-foreground"
+            onClick={() => setGuideOpen(true)}
+          >
+            <BookOpen className="w-3.5 h-3.5 sm:mr-1.5" />
+            <span className="hidden sm:inline">Guia</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-7 text-xs text-muted-foreground hover:text-foreground"
             onClick={() => save()}
           >
             Guardar
@@ -155,6 +167,7 @@ export default function Home() {
       </footer>
 
       <AchievementToast />
+      <GuideDialog open={guideOpen} onOpenChange={setGuideOpen} />
     </div>
   );
 }

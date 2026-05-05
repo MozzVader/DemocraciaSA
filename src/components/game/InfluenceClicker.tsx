@@ -95,9 +95,13 @@ export function InfluenceClicker() {
             boxShadow: '0 0 40px rgba(212, 175, 55, 0.15), inset 0 0 30px rgba(212, 175, 55, 0.05)',
           }}
         >
-          <span className="text-6xl md:text-7xl" role="img" aria-label="influencia">
-            {'\uD83C\uDFAF'}
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/sol-de-mayo.png"
+            alt="Sol de Mayo"
+            className="w-28 h-28 md:w-36 md:h-36 pointer-events-none"
+            draggable={false}
+          />
           <span className="text-sm font-bold tracking-wider uppercase"
             style={{ color: '#d4af37' }}>
             INFLUENCIAR

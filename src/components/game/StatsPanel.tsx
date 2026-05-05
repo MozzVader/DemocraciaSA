@@ -6,6 +6,7 @@ import { getDemocraticQuality } from '@/lib/game/calculator';
 import { formatNumber, getDemocracyQuote, formatTime } from '@/lib/game/formatters';
 import { PHASE_LABELS, PHASE_EMOJIS } from '@/lib/game/config';
 import { Card } from '@/components/ui/card';
+import { FileteadoCorner } from '@/components/game/FileteadoCorner';
 import { Progress } from '@/components/ui/progress';
 import { motion } from 'framer-motion';
 
@@ -37,7 +38,10 @@ export function StatsPanel() {
   return (
     <div className="space-y-4">
       {/* Phase */}
-      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <Card className="relative overflow-hidden p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+        <div className="absolute bottom-1 right-1.5 pointer-events-none text-[#d4af37]/[0.3]">
+          <FileteadoCorner />
+        </div>
         <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
           Fase Actual
         </div>
@@ -47,7 +51,10 @@ export function StatsPanel() {
       </Card>
 
       {/* Resources */}
-      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <Card className="relative overflow-hidden p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+        <div className="absolute bottom-1 right-1.5 pointer-events-none text-[#d4af37]/[0.3]">
+          <FileteadoCorner />
+        </div>
         <div className="space-y-3">
           <div>
             <div className="text-xs uppercase tracking-wider text-muted-foreground">Dinero</div>
@@ -70,7 +77,10 @@ export function StatsPanel() {
       </Card>
 
       {/* Democratic Quality */}
-      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <Card className="relative overflow-hidden p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+        <div className="absolute bottom-1 right-1.5 pointer-events-none text-[#d4af37]/[0.3]">
+          <FileteadoCorner />
+        </div>
         <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
           Calidad Democratica
         </div>
@@ -92,7 +102,10 @@ export function StatsPanel() {
       </Card>
 
       {/* Milestones Progress */}
-      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <Card className="relative overflow-hidden p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+        <div className="absolute bottom-1 right-1.5 pointer-events-none text-[#d4af37]/[0.3]">
+          <FileteadoCorner />
+        </div>
         <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
           Logros ({unlockedCount}/{totalMilestones})
         </div>
@@ -140,11 +153,14 @@ export function MilestonesPanel() {
             transition={{ duration: 0.5 }}
           >
             <Card
-              className={`p-3 border ${
+              className={`relative overflow-hidden p-3 border ${
                 isUnlocked ? 'border-[#d4af37]/40' : 'border-[#d4af37]/15'
               }`}
               style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
             >
+              <div className="absolute bottom-0.5 right-1 pointer-events-none text-[#d4af37]/[0.25]">
+                <FileteadoCorner />
+              </div>
               <div className="flex items-center gap-3">
                 <span className="text-xl flex-shrink-0">
                   {isUnlocked ? milestone.emoji : '\uD83D\uDD12'}

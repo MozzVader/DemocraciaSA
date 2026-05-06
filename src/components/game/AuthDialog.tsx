@@ -70,22 +70,13 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
 
   return (
     <Dialog open={open} onOpenChange={(v) => { resetForm(); onOpenChange(v); }}>
-      <DialogContent
-        className="sm:max-w-md border-0 p-0 overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, rgba(15, 23, 41, 0.97) 0%, rgba(20, 15, 5, 0.97) 100%)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.08), inset 0 1px 0 rgba(212, 175, 55, 0.15)',
-        }}
-      >
+      <DialogContent className="sm:max-w-md border-0 p-0 overflow-hidden glass-dialog">
         {/* Gold top accent line */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: 'linear-gradient(90deg, transparent 0%, #d4af37 30%, #f59e0b 50%, #d4af37 70%, transparent 100%)' }}
-        />
+        <div className="absolute top-0 left-0 right-0 h-[2px] gold-accent-line" />
 
         <div className="p-5">
         <DialogHeader>
-          <DialogTitle className="text-center" style={{ color: '#d4af37' }}>
+          <DialogTitle className="text-center text-gold">
             Acceso Clasificado
           </DialogTitle>
           <DialogDescription className="text-center text-sm text-muted-foreground">
@@ -99,13 +90,13 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
           <TabsList className="grid w-full grid-cols-2 bg-transparent border-b border-border/30 rounded-none h-auto p-0 mb-4">
             <TabsTrigger
               value="login"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#d4af37] data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-[#d4af37] pb-2 text-sm font-semibold"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-gold data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-gold pb-2 text-sm font-semibold"
             >
               Ingresar
             </TabsTrigger>
             <TabsTrigger
               value="register"
-              className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#d4af37] data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-[#d4af37] pb-2 text-sm font-semibold"
+              className="rounded-none border-b-2 border-transparent data-[state=active]:border-gold data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-gold pb-2 text-sm font-semibold"
             >
               Registrarse
             </TabsTrigger>
@@ -115,7 +106,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
           <Button
             type="button"
             variant="outline"
-            className="w-full h-10 gap-2 cursor-pointer border-[#d4af37]/30 bg-[#d4af37]/5 hover:bg-[#d4af37]/10 mb-4"
+            className="w-full h-10 gap-2 cursor-pointer border-gold/30 bg-gold/5 hover:bg-gold/10 mb-4"
             onClick={() => signInWithGoogle()}
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
@@ -147,7 +138,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="border-[#d4af37]/20 bg-[#d4af37]/5 focus:border-[#d4af37]/40"
+                className="border-gold/20 bg-gold/5 focus:border-gold/40"
                 autoComplete="email"
               />
             </div>
@@ -164,7 +155,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="border-[#d4af37]/20 bg-[#d4af37]/5 focus:border-[#d4af37]/40"
+                className="border-gold/20 bg-gold/5 focus:border-gold/40"
                 autoComplete={tab === 'register' ? 'new-password' : 'current-password'}
               />
               {tab === 'register' && (
@@ -187,8 +178,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full cursor-pointer"
-              style={{ background: '#d4af37', color: '#0a0a12' }}
+              className="w-full cursor-pointer bg-gold text-[#0a0a12]"
             >
               {loading
                 ? 'Procesando...'
@@ -207,10 +197,7 @@ export function AuthDialog({ open, onOpenChange }: AuthDialogProps) {
         </div>
 
         {/* Gold bottom accent line */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-[1px]"
-          style={{ background: 'linear-gradient(90deg, transparent 0%, #d4af37 30%, #f59e0b 50%, #d4af37 70%, transparent 100%)' }}
-        />
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] gold-accent-line" />
       </DialogContent>
     </Dialog>
   );

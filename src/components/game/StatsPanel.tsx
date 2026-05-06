@@ -42,17 +42,17 @@ export function StatsPanel() {
   return (
     <div className="space-y-4">
       {/* Phase */}
-      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <Card className="p-4 border-gold/30 glass-card">
         <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
           Fase Actual
         </div>
-        <div className="text-lg font-bold" style={{ color: '#d4af37' }}>
+        <div className="text-lg font-bold text-gold">
           {PHASE_EMOJIS[currentPhase]} {PHASE_LABELS[currentPhase]}
         </div>
       </Card>
 
       {/* Resources */}
-      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <Card className="p-4 border-gold/30 glass-card">
         <div className="space-y-3">
           <div>
             <div className="text-xs uppercase tracking-wider text-muted-foreground">Dinero</div>
@@ -67,7 +67,7 @@ export function StatsPanel() {
             <div className="text-xs uppercase tracking-wider text-muted-foreground">
               Produccion Total
             </div>
-            <div className="text-lg font-bold font-mono tabular-nums" style={{ color: '#d4af37' }}>
+            <div className="text-lg font-bold font-mono tabular-nums text-gold">
               {formatNumber(productionPerSecond)}/s
             </div>
           </div>
@@ -75,7 +75,7 @@ export function StatsPanel() {
       </Card>
 
       {/* Democratic Quality */}
-      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <Card className="p-4 border-gold/30 glass-card">
         <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
           Calidad Democratica
         </div>
@@ -97,7 +97,7 @@ export function StatsPanel() {
       </Card>
 
       {/* Milestones Progress */}
-      <Card className="p-4 border-[#d4af37]/30" style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <Card className="p-4 border-gold/30 glass-card">
         <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
           Logros ({unlockedCount}/{totalMilestones})
         </div>
@@ -108,7 +108,7 @@ export function StatsPanel() {
           </div>
         )}
         {unlockedCount === totalMilestones && (
-          <div className="text-sm font-bold" style={{ color: '#d4af37' }}>
+          <div className="text-sm font-bold text-gold">
             {'\uD83C\uDFC6'} Todos los logros desbloqueados
           </div>
         )}
@@ -127,8 +127,7 @@ export function MilestonesPanel() {
 
   return (
     <div className="space-y-3">
-      <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2"
-        style={{ color: '#d4af37' }}>
+      <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-gold">
         {'\uD83C\uDFC6'} Logros
       </h2>
 
@@ -145,18 +144,14 @@ export function MilestonesPanel() {
             transition={{ duration: 0.5 }}
           >
             <Card
-              className={`p-3 border ${
-                isUnlocked ? 'border-[#d4af37]/40' : 'border-[#d4af37]/15'
-              }`}
-              style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
+              className={`p-3 border ${isUnlocked ? 'border-gold/40' : 'border-gold/15'} glass-card`}
             >
               <div className="flex items-center gap-3">
                 <span className="text-xl flex-shrink-0">
                   {isUnlocked ? milestone.emoji : '\uD83D\uDD12'}
                 </span>
                 <div className="flex-1 min-w-0">
-                  <div className={`text-sm font-semibold ${isUnlocked ? '' : 'text-muted-foreground'}`}
-                    style={isUnlocked ? { color: '#d4af37' } : undefined}>
+                  <div className={`text-sm font-semibold ${isUnlocked ? 'text-gold' : 'text-muted-foreground'}`}>
                     {milestone.name}
                   </div>
                   <div className="text-xs text-muted-foreground mt-0.5">

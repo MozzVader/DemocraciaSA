@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { MilestoneConfig } from '@/lib/game/types';
 
@@ -11,6 +11,10 @@ interface ToastData {
 
 let toastId = 0;
 const TOAST_DURATION = 5000;
+const MAX_VISIBLE_TOASTS = 3;
+
+const queue: MilestoneConfig[] = [];
+let isProcessing = false;
 
 function formatReward(milestone: MilestoneConfig): string {
   const r = milestone.reward;
@@ -28,14 +32,43 @@ function formatReward(milestone: MilestoneConfig): string {
 
 export function AchievementToast() {
   const [toasts, setToasts] = useState<ToastData[]>([]);
+  const processingRef = useRef(false);
 
   const addToast = useCallback((milestone: MilestoneConfig) => {
-    const id = ++toastId;
-    setToasts((prev) => [...prev, { id, milestone }]);
-    setTimeout(() => {
-      setToasts((prev) => prev.filter((t) => t.id !== id));
-    }, TOAST_DURATION);
+    queue.push(milestone);
+    if (!processingRef.current) {
+      processQueue();
+    }
   }, []);
+
+  function processQueue() {
+    if (queue.length === 0) {
+      processingRef.current = false;
+      return;
+    }
+    processingRef.current = true;
+
+    // Only add from queue if we have room
+    setToasts((prev) => {
+      const available = MAX_VISIBLE_TOASTS - prev.length;
+      if (available <= 0) return prev;
+
+      const toAdd = queue.splice(0, available);
+      const newToasts = [...prev];
+      for (const milestone of toAdd) {
+        const id = ++toastId;
+        const data: ToastData = { id, milestone };
+        newToasts.push(data);
+        setTimeout(() => {
+          setToasts((p) => p.filter((t) => t.id !== id));
+        }, TOAST_DURATION);
+      }
+      return newToasts;
+    });
+
+    // Check queue again after a short delay
+    setTimeout(() => processQueue(), 200);
+  }
 
   // Expose addToast globally so game-store can call it
   useEffect(() => {
@@ -59,7 +92,7 @@ export function AchievementToast() {
               stiffness: 300,
               damping: 25,
             }}
-            className="pointer-events-auto w-80"
+            className="pointer-events-auto w-80 max-w-[calc(100vw-2rem)]"
           >
             <div
               className="relative overflow-hidden rounded-lg border"
@@ -70,29 +103,21 @@ export function AchievementToast() {
               }}
             >
               {/* Gold top accent line */}
-              <div
-                className="absolute top-0 left-0 right-0 h-[2px]"
-                style={{ background: 'linear-gradient(90deg, transparent 0%, #d4af37 30%, #f59e0b 50%, #d4af37 70%, transparent 100%)' }}
-              />
+              <div className="absolute top-0 left-0 right-0 h-[2px] gold-accent-line" />
 
               <div className="p-3 pl-4">
                 {/* Header */}
                 <div className="flex items-start gap-3">
                   {/* Icon */}
                   <div
-                    className="flex-shrink-0 w-12 h-12 rounded-md flex items-center justify-center text-2xl"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%)',
-                      border: '1px solid rgba(212, 175, 55, 0.2)',
-                    }}
+                    className="flex-shrink-0 w-12 h-12 rounded-md flex items-center justify-center text-2xl gold-icon-box"
                   >
                     {toast.milestone.emoji}
                   </div>
 
                   {/* Content */}
                   <div className="flex-1 min-w-0 pt-0.5">
-                    <div className="text-[9px] uppercase tracking-[0.2em] font-bold mb-0.5"
-                      style={{ color: '#d4af37' }}>
+                    <div className="text-[9px] uppercase tracking-[0.2em] font-bold mb-0.5 text-gold">
                       Logro Desbloqueado
                     </div>
                     <div className="text-sm font-bold text-foreground leading-tight truncate">
@@ -111,7 +136,7 @@ export function AchievementToast() {
                         border: '1px solid rgba(34, 197, 94, 0.2)',
                       }}
                     >
-                      {formatReward(toast.milestone)}
+                      {formatReward(toast)}
                     </div>
                   </div>
                 </div>
@@ -119,8 +144,7 @@ export function AchievementToast() {
 
               {/* Progress bar that shrinks over duration */}
               <motion.div
-                className="absolute bottom-0 left-0 h-[2px]"
-                style={{ background: '#d4af37' }}
+                className="absolute bottom-0 left-0 h-[2px] bg-gold"
                 initial={{ width: '100%' }}
                 animate={{ width: '0%' }}
                 transition={{ duration: TOAST_DURATION / 1000, ease: 'linear' }}

@@ -38,10 +38,7 @@ export function InfluenceClicker() {
         </div>
         <div
           className="text-5xl md:text-7xl font-bold tabular-nums"
-          style={{
-            color: '#d4af37',
-            textShadow: '0 0 30px rgba(212, 175, 55, 0.3)',
-          }}
+          style={{ color: '#d4af37', textShadow: '0 0 30px rgba(212, 175, 55, 0.3)' }}
         >
           {formatNumber(influencia)}
         </div>
@@ -99,8 +96,7 @@ export function InfluenceClicker() {
             className="w-28 h-28 md:w-36 md:h-36 pointer-events-none"
             draggable={false}
           />
-          <span className="text-sm font-bold tracking-wider uppercase"
-            style={{ color: '#d4af37' }}>
+          <span className="text-sm font-bold tracking-wider uppercase text-gold">
             INFLUENCIAR
           </span>
         </motion.button>

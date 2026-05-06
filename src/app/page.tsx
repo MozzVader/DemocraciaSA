@@ -62,19 +62,19 @@ export default function Home() {
                 <TabsList className="grid w-full grid-cols-3 bg-transparent border-b border-border/30 rounded-none h-auto p-0">
                   <TabsTrigger
                     value="generadores"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#d4af37] data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-[#d4af37] pb-2 text-xs font-semibold uppercase tracking-wider"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-gold data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-gold pb-2 text-xs font-semibold uppercase tracking-wider"
                   >
                     {'\uD83D\uDE80'} Generadores
                   </TabsTrigger>
                   <TabsTrigger
                     value="operaciones"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#d4af37] data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-[#d4af37] pb-2 text-xs font-semibold uppercase tracking-wider"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-gold data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-gold pb-2 text-xs font-semibold uppercase tracking-wider"
                   >
                     {'\u2B50'} Operaciones
                   </TabsTrigger>
                   <TabsTrigger
                     value="logros"
-                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-[#d4af37] data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-[#d4af37] pb-2 text-xs font-semibold uppercase tracking-wider"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-gold data-[state=active]:bg-transparent data-[state=active]:shadow-none text-muted-foreground data-[state=active]:text-gold pb-2 text-xs font-semibold uppercase tracking-wider"
                   >
                     {'\uD83C\uDFC6'} Logros
                   </TabsTrigger>
@@ -97,7 +97,7 @@ export default function Home() {
           </div>
 
           <div className="hidden md:grid md:grid-cols-[280px_1fr_300px] gap-6 p-6">
-            <aside className="space-y-4 sticky top-4 self-start">
+            <aside className="space-y-4 sticky top-16 self-start max-h-[calc(100vh-5rem)] overflow-y-auto pr-1 custom-scrollbar">
               <StatsPanel />
             </aside>
 
@@ -106,7 +106,7 @@ export default function Home() {
               <GeneratorPanel />
             </div>
 
-            <aside className="space-y-6 sticky top-4 self-start">
+            <aside className="space-y-6 sticky top-16 self-start max-h-[calc(100vh-5rem)] overflow-y-auto pr-1 custom-scrollbar">
               <UpgradesPanel />
               <MilestonesPanel />
             </aside>
@@ -114,8 +114,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer className="sticky bottom-0 z-40 border-t border-[#d4af37]/20 px-4 py-3 flex items-center justify-between"
-        style={{ background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <footer className="sticky bottom-0 z-40 border-t border-gold/20 px-4 py-3 flex items-center justify-between glass-dark">
         <div className="text-[10px] text-muted-foreground/50 font-mono tracking-wider">
           DOCUMENTO CLASIFICADO &middot; DEMOCRACIA S.A. &copy; {new Date().getFullYear()}
         </div>

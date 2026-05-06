@@ -24,13 +24,12 @@ export function GameHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 border-b border-[#d4af37]/20 px-4 py-3"
-        style={{ background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+      <header className="sticky top-0 z-40 border-b border-gold/20 px-4 py-3 glass-dark">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Title */}
           <div className="flex items-center gap-3 min-w-0">
             <h1 className="text-lg md:text-xl font-bold tracking-wide flex-shrink-0">
-              <span style={{ color: '#d4af37' }}>DEMOCRACIA</span>
+              <span className="text-gold">DEMOCRACIA</span>
               <span className="text-muted-foreground">.SA</span>
             </h1>
             <span className="hidden sm:inline text-xs px-2 py-0.5 rounded-full border border-border/50 text-muted-foreground font-mono">
@@ -44,7 +43,7 @@ export function GameHeader() {
               <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono hidden sm:block">
                 Influencia
               </div>
-              <div className="text-sm md:text-base font-bold tabular-nums" style={{ color: '#d4af37' }}>
+              <div className="text-sm md:text-base font-bold tabular-nums text-gold">
                 {formatNumber(influencia)}
                 <span className="text-xs text-muted-foreground ml-1 hidden sm:inline">(+{formatPerSecond(productionPerSecond)}/s)</span>
               </div>

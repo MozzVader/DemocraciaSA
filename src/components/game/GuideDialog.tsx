@@ -51,22 +51,13 @@ const SECTIONS = [
 export function GuideDialog({ open, onOpenChange }: GuideDialogProps) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        className="sm:max-w-lg border-0 p-0 overflow-hidden"
-        style={{
-          background: 'linear-gradient(135deg, rgba(15, 23, 41, 0.97) 0%, rgba(20, 15, 5, 0.97) 100%)',
-          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 175, 55, 0.08), inset 0 1px 0 rgba(212, 175, 55, 0.15)',
-        }}
-      >
+      <DialogContent className="sm:max-w-lg border-0 p-0 overflow-hidden glass-dialog">
         {/* Gold top accent line */}
-        <div
-          className="absolute top-0 left-0 right-0 h-[2px]"
-          style={{ background: 'linear-gradient(90deg, transparent 0%, #d4af37 30%, #f59e0b 50%, #d4af37 70%, transparent 100%)' }}
-        />
+        <div className="absolute top-0 left-0 right-0 h-[2px] gold-accent-line" />
 
         <div className="p-5">
           <DialogHeader className="mb-4">
-            <DialogTitle className="text-center flex items-center justify-center gap-2" style={{ color: '#d4af37' }}>
+            <DialogTitle className="text-center flex items-center justify-center gap-2 text-gold">
               <BookOpen className="w-5 h-5" />
               Como Se Juega
             </DialogTitle>
@@ -79,17 +70,11 @@ export function GuideDialog({ open, onOpenChange }: GuideDialogProps) {
             {SECTIONS.map((section, i) => (
               <div key={i}>
                 <div className="flex items-start gap-3">
-                  <div
-                    className="flex-shrink-0 w-10 h-10 rounded-md flex items-center justify-center text-xl"
-                    style={{
-                      background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%)',
-                      border: '1px solid rgba(212, 175, 55, 0.2)',
-                    }}
-                  >
+                  <div className="flex-shrink-0 w-10 h-10 rounded-md flex items-center justify-center text-xl gold-icon-box">
                     {section.emoji}
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-bold" style={{ color: '#d4af37' }}>
+                    <div className="text-sm font-bold text-gold">
                       {section.title}
                     </div>
                     <div className="text-xs text-muted-foreground mt-0.5 leading-relaxed">
@@ -98,13 +83,13 @@ export function GuideDialog({ open, onOpenChange }: GuideDialogProps) {
                   </div>
                 </div>
                 {i < SECTIONS.length - 1 && (
-                  <Separator className="mt-4 border-[#d4af37]/10" />
+                  <Separator className="mt-4 border-gold/10" />
                 )}
               </div>
             ))}
           </div>
 
-          <div className="mt-5 pt-3 border-t border-[#d4af37]/15 text-center">
+          <div className="mt-5 pt-3 border-t border-gold/15 text-center">
             <div className="text-[10px] text-muted-foreground/60 italic">
               &quot;El poder no se pregunta, se toma. Pero primero hay que leer el manual.&quot;
             </div>
@@ -112,10 +97,7 @@ export function GuideDialog({ open, onOpenChange }: GuideDialogProps) {
         </div>
 
         {/* Gold bottom accent line */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-[1px]"
-          style={{ background: 'linear-gradient(90deg, transparent 0%, #d4af37 30%, #f59e0b 50%, #d4af37 70%, transparent 100%)' }}
-        />
+        <div className="absolute bottom-0 left-0 right-0 h-[1px] gold-accent-line" />
       </DialogContent>
     </Dialog>
   );

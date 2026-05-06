@@ -27,8 +27,7 @@ export function UpgradesPanel() {
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2"
-          style={{ color: '#d4af37' }}>
+        <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-gold">
           {'\u2B50'} Operaciones Especiales
         </h2>
         <Badge variant="secondary" className="text-xs font-mono">
@@ -58,24 +57,23 @@ export function UpgradesPanel() {
                 transition={{ duration: 0.2 }}
               >
                 <Card
-                  className={`p-3 cursor-pointer select-none transition-all duration-200 border ${
+                  className={`p-3 cursor-pointer select-none transition-all duration-200 border glass-card ${
                     hasResource
-                      ? 'border-[#d4af37]/50 hover:border-[#d4af37] hover:bg-white/10'
-                      : 'border-[#d4af37]/20 opacity-70'
+                      ? 'border-gold/50 hover:border-gold hover:bg-white/10'
+                      : 'border-gold/20 opacity-70'
                   }`}
-                  style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
                   onClick={() => purchaseUpgrade(upgrade.id)}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl flex-shrink-0">{upgrade.emoji}</span>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-sm truncate" style={{ color: hasResource ? '#d4af37' : undefined }}>
+                      <div className={`font-semibold text-sm truncate ${hasResource ? 'text-gold' : ''}`}>
                         {upgrade.name}
                       </div>
                       <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
                         {upgrade.description}
                       </div>
-                      <div className="text-xs font-mono mt-1" style={{ color: hasResource ? '#d4af37' : '#666' }}>
+                      <div className={`text-xs font-mono mt-1 ${hasResource ? 'text-gold' : 'text-[#666]'}`}>
                         Costo: {costDisplay}
                         {upgrade.costResource === 'dinero' && ' (dinero)'}
                       </div>

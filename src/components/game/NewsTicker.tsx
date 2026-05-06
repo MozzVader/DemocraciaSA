@@ -25,8 +25,7 @@ export function NewsTicker() {
   }, [currentPhase, headline]);
 
   return (
-    <div className="border-t border-[#d4af37]/20"
-      style={{ background: 'rgba(0, 0, 0, 0.4)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+    <div className="border-t border-gold/20 glass-dark-subtle">
       <div className="max-w-7xl mx-auto px-4 py-2 flex items-center gap-3">
         <div className="flex-shrink-0 flex items-center gap-2">
           <span className="relative flex h-2.5 w-2.5">

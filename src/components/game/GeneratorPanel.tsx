@@ -5,7 +5,7 @@ import { GENERATORS } from '@/lib/game/config';
 import { formatNumber } from '@/lib/game/formatters';
 import { getGeneratorCost, isGeneratorUnlocked, getMaxBuyable, getGeneratorCostBulk } from '@/lib/game/calculator';
 import { Card } from '@/components/ui/card';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const BUY_OPTIONS: { value: BuyAmount; label: string }[] = [
   { value: 1, label: 'x1' },
@@ -24,8 +24,7 @@ export function GeneratorPanel() {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2"
-          style={{ color: '#d4af37' }}>
+        <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-gold">
           {'\uD83D\uDE80'} Red de Influencia
         </h2>
         <div className="flex items-center gap-1">
@@ -35,7 +34,7 @@ export function GeneratorPanel() {
               onClick={() => setBuyAmount(opt.value)}
               className={`px-2 py-0.5 text-[10px] font-mono font-bold rounded border transition-all duration-150 ${
                 buyAmount === opt.value
-                  ? 'border-[#d4af37] text-[#d4af37] bg-[#d4af37]/10'
+                  ? 'border-gold text-gold bg-gold/10'
                   : 'border-border/40 text-muted-foreground hover:border-border/70'
               }`}
             >
@@ -70,27 +69,25 @@ export function GeneratorPanel() {
           const canAfford = influencia >= displayCost;
 
           return (
-            <AnimatePresence key={gen.id}>
-              <motion.div
-                layout
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-              >
+            <motion.div
+              key={gen.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+            >
                 <Card
-                  className={`p-3 cursor-pointer select-none transition-all duration-200 border ${
+                  className={`p-3 cursor-pointer select-none transition-all duration-200 border glass-card ${
                     canAfford
-                      ? 'border-[#d4af37]/50 hover:border-[#d4af37] hover:bg-white/10'
-                      : 'border-[#d4af37]/20 opacity-60'
+                      ? 'border-gold/50 hover:border-gold hover:bg-white/10'
+                      : 'border-gold/20 opacity-60'
                   }`}
-                  style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
                   onClick={() => buyGenerator(gen.id)}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl flex-shrink-0">{gen.emoji}</span>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-semibold text-sm truncate" style={{ color: canAfford ? '#d4af37' : undefined }}>
+                        <span className={`font-semibold text-sm truncate ${canAfford ? 'text-gold' : ''}`}>
                           {gen.name}
                         </span>
                         <span className="text-xs font-mono tabular-nums text-muted-foreground flex-shrink-0">
@@ -101,7 +98,7 @@ export function GeneratorPanel() {
                         {gen.quote}
                       </div>
                       <div className="flex items-center justify-between mt-1">
-                        <span className="text-xs font-mono" style={{ color: canAfford ? '#d4af37' : '#666' }}>
+                        <span className={`text-xs font-mono ${canAfford ? 'text-gold' : 'text-[#666]'}`}>
                           Costo: {formatNumber(displayCost)}
                           {buyAmount !== 1 && (
                             <span className="text-muted-foreground ml-1">
@@ -117,7 +114,6 @@ export function GeneratorPanel() {
                   </div>
                 </Card>
               </motion.div>
-            </AnimatePresence>
           );
         })}
       </div>

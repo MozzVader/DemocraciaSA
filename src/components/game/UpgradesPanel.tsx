@@ -25,7 +25,7 @@ export function UpgradesPanel() {
   const purchasedCount = state.purchasedUpgrades.length;
 
   return (
-    <div className="flex flex-col gap-3 min-h-0 flex-1">
+    <div className="flex flex-col gap-3 min-h-0">
       <div className="flex items-center justify-between flex-shrink-0">
         <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-gold">
           {'\u2B50'} Operaciones Especiales

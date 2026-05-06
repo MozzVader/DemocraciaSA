@@ -52,8 +52,8 @@ export default function Home() {
       <GameHeader />
       <NewsTicker />
 
-      <main className="flex-1 flex flex-col overflow-hidden">
-        <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col">
+      <main className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full flex-1 min-h-0 flex flex-col">
           <div className="md:hidden flex flex-col">
             <InfluenceClicker />
 

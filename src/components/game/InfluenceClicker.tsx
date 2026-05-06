@@ -36,10 +36,7 @@ export function InfluenceClicker() {
         <div className="text-sm uppercase tracking-[0.3em] text-muted-foreground mb-1 font-mono">
           Influencia Total
         </div>
-        <motion.div
-          key={Math.floor(influencia)}
-          initial={{ scale: 1.05, opacity: 0.8 }}
-          animate={{ scale: 1, opacity: 1 }}
+        <div
           className="text-5xl md:text-7xl font-bold tabular-nums"
           style={{
             color: '#d4af37',
@@ -47,7 +44,7 @@ export function InfluenceClicker() {
           }}
         >
           {formatNumber(influencia)}
-        </motion.div>
+        </div>
         <div className="text-xs text-muted-foreground mt-2 font-mono">
           {formatPerSecond(productionPerSecond)}/s &middot; {formatPerSecond(clickPowerVal)}/click
         </div>

@@ -11,26 +11,31 @@ import { Progress } from '@/components/ui/progress';
 import { motion } from 'framer-motion';
 
 export function StatsPanel() {
-  const state = useGameStore();
-  const quality = getDemocraticQuality(state.totalInfluencia);
-  const quote = getDemocracyQuote(quality);
+  const currentPhase = useGameStore((s) => s.currentPhase);
+  const dinero = useGameStore((s) => s.dinero);
+  const totalInfluencia = useGameStore((s) => s.totalInfluencia);
+  const totalDinero = useGameStore((s) => s.totalDinero);
+  const unlockedMilestones = useGameStore((s) => s.unlockedMilestones);
+  const playTime = useGameStore((s) => s.playTime);
   const productionPerSecond = useGameStore((s) => s.productionPerSecond());
   const dineroPerSecond = useGameStore((s) => s.dineroPerSecond());
 
-  const unlockedCount = state.unlockedMilestones.length;
+  const quality = getDemocraticQuality(totalInfluencia);
+  const quote = getDemocracyQuote(quality);
+  const unlockedCount = unlockedMilestones.length;
   const totalMilestones = MILESTONES.length;
 
   // Next milestone
-  const nextMilestone = MILESTONES.find((m) => !state.unlockedMilestones.includes(m.id));
+  const nextMilestone = MILESTONES.find((m) => !unlockedMilestones.includes(m.id));
   let nextProgress = 0;
   if (nextMilestone) {
     const req = nextMilestone.requirement;
     switch (req.type) {
       case 'totalInfluencia':
-        nextProgress = Math.min(100, (state.totalInfluencia / req.value) * 100);
+        nextProgress = Math.min(100, (totalInfluencia / req.value) * 100);
         break;
       case 'totalDinero':
-        nextProgress = Math.min(100, (state.totalDinero / req.value) * 100);
+        nextProgress = Math.min(100, (totalDinero / req.value) * 100);
         break;
     }
   }
@@ -46,7 +51,7 @@ export function StatsPanel() {
           Fase Actual
         </div>
         <div className="text-lg font-bold" style={{ color: '#d4af37' }}>
-          {PHASE_EMOJIS[state.currentPhase]} {PHASE_LABELS[state.currentPhase]}
+          {PHASE_EMOJIS[currentPhase]} {PHASE_LABELS[currentPhase]}
         </div>
       </Card>
 
@@ -59,7 +64,7 @@ export function StatsPanel() {
           <div>
             <div className="text-xs uppercase tracking-wider text-muted-foreground">Dinero</div>
             <div className="text-xl font-bold text-green-400 font-mono tabular-nums">
-              ${formatNumber(state.dinero).replace('$', '')}
+              ${formatNumber(dinero).replace('$', '')}
             </div>
             <div className="text-xs text-muted-foreground font-mono">
               +${formatNumber(dineroPerSecond)}/s
@@ -124,7 +129,7 @@ export function StatsPanel() {
 
       {/* Play time */}
       <div className="text-xs text-muted-foreground font-mono text-center">
-        Tiempo de juego: {formatTime(state.playTime)}
+        Tiempo de juego: {formatTime(playTime)}
       </div>
     </div>
   );

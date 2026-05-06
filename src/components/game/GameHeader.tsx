@@ -24,7 +24,7 @@ export function GameHeader() {
 
   return (
     <>
-      <header className="border-b border-[#d4af37]/20 px-4 py-3"
+      <header className="sticky top-0 z-40 border-b border-[#d4af37]/20 px-4 py-3"
         style={{ background: 'rgba(0, 0, 0, 0.6)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
           {/* Title */}
@@ -40,17 +40,17 @@ export function GameHeader() {
 
           {/* Resources + Auth */}
           <div className="flex items-center gap-3 md:gap-6">
-            <div className="hidden sm:block text-right">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono">
+            <div className="text-right">
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono hidden sm:block">
                 Influencia
               </div>
               <div className="text-sm md:text-base font-bold tabular-nums" style={{ color: '#d4af37' }}>
                 {formatNumber(influencia)}
-                <span className="text-xs text-muted-foreground ml-1">(+{formatPerSecond(productionPerSecond)}/s)</span>
+                <span className="text-xs text-muted-foreground ml-1 hidden sm:inline">(+{formatPerSecond(productionPerSecond)}/s)</span>
               </div>
             </div>
-            <div className="hidden sm:block text-right">
-              <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono">
+            <div className="text-right">
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground font-mono hidden sm:block">
                 Dinero
               </div>
               <div className="text-sm md:text-base font-bold text-green-400 tabular-nums">

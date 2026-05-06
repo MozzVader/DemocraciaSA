@@ -68,7 +68,7 @@ export function GeneratorPanel() {
             displayCost = getGeneratorCostBulk(gen.id, owned, buyAmount);
           }
 
-          const canAfford = influencia >= getGeneratorCost(gen.id, owned);
+          const canAfford = influencia >= displayCost;
 
           return (
             <AnimatePresence key={gen.id}>

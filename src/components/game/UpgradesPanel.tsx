@@ -1,6 +1,7 @@
 'use client';
 
 import { useGameStore } from '@/store/game-store';
+import { useShallow } from 'zustand/react/shallow';
 import { UPGRADES } from '@/lib/game/config';
 import { formatNumber, formatDinero } from '@/lib/game/formatters';
 import { canPurchaseUpgrade } from '@/lib/game/calculator';
@@ -10,7 +11,14 @@ import { Badge } from '@/components/ui/badge';
 import { motion } from 'framer-motion';
 
 export function UpgradesPanel() {
-  const state = useGameStore();
+  const state = useGameStore(useShallow((s) => ({
+    purchasedUpgrades: s.purchasedUpgrades,
+    influencia: s.influencia,
+    dinero: s.dinero,
+    totalInfluencia: s.totalInfluencia,
+    totalDinero: s.totalDinero,
+    generators: s.generators,
+  })));
   const purchaseUpgrade = useGameStore((s) => s.purchaseUpgrade);
 
   // Get available upgrades (not yet purchased and requirements met)

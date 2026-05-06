@@ -22,8 +22,8 @@ export function GeneratorPanel() {
   const setBuyAmount = useGameStore((s) => s.setBuyAmount);
 
   return (
-    <div className="space-y-2">
-      <div className="flex items-center justify-between mb-3">
+    <div className="flex flex-col gap-2 min-h-0 flex-1">
+      <div className="flex items-center justify-between mb-3 flex-shrink-0">
         <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-gold">
           {'\uD83D\uDE80'} Red de Influencia
         </h2>
@@ -44,7 +44,7 @@ export function GeneratorPanel() {
         </div>
       </div>
 
-      <div className="space-y-2 max-h-[60vh] overflow-y-auto pr-1 custom-scrollbar">
+      <div className="flex-1 min-h-0 overflow-y-auto pr-1 custom-scrollbar space-y-2">
         {GENERATORS.map((gen) => {
           const state = generators[gen.id];
           const owned = state?.owned ?? 0;

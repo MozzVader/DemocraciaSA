@@ -37,7 +37,7 @@ export default function Home() {
   useGameLoop();
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen flex flex-col overflow-hidden">
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute top-0 left-1/4 w-96 h-96 rounded-full opacity-[0.08]"
@@ -52,8 +52,8 @@ export default function Home() {
       <GameHeader />
       <NewsTicker />
 
-      <main className="flex-1 relative">
-        <div className="max-w-7xl mx-auto">
+      <main className="flex-1 flex flex-col overflow-hidden">
+        <div className="max-w-7xl mx-auto w-full flex-1 flex flex-col">
           <div className="md:hidden flex flex-col">
             <InfluenceClicker />
 
@@ -96,17 +96,17 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hidden md:grid md:grid-cols-[280px_1fr_300px] gap-6 p-6">
-            <aside className="space-y-4 sticky top-16 self-start max-h-[calc(100vh-5rem)] overflow-y-auto pr-1 custom-scrollbar">
-              <StatsPanel />
+          <div className="hidden md:grid md:grid-cols-[280px_1fr_300px] flex-1 min-h-0 gap-4 p-4">
+            <aside className="flex flex-col min-h-0">
+              <GeneratorPanel />
             </aside>
 
-            <div className="space-y-6">
+            <div className="flex flex-col overflow-y-auto min-h-0">
               <InfluenceClicker />
-              <GeneratorPanel />
+              <StatsPanel />
             </div>
 
-            <aside className="space-y-6 sticky top-16 self-start max-h-[calc(100vh-5rem)] overflow-y-auto pr-1 custom-scrollbar">
+            <aside className="flex flex-col min-h-0 gap-6">
               <UpgradesPanel />
               <MilestonesPanel />
             </aside>

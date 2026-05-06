@@ -40,82 +40,83 @@ export function StatsPanel() {
   }
 
   return (
-    <div className="space-y-4">
-      {/* Phase */}
-      <Card className="p-4 border-gold/30 glass-card">
-        <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">
-          Fase Actual
-        </div>
-        <div className="text-lg font-bold text-gold">
-          {PHASE_EMOJIS[currentPhase]} {PHASE_LABELS[currentPhase]}
-        </div>
-      </Card>
-
-      {/* Resources */}
-      <Card className="p-4 border-gold/30 glass-card">
-        <div className="space-y-3">
-          <div>
-            <div className="text-xs uppercase tracking-wider text-muted-foreground">Dinero</div>
-            <div className="text-xl font-bold text-green-400 font-mono tabular-nums">
-              ${formatNumber(dinero).replace('$', '')}
-            </div>
-            <div className="text-xs text-muted-foreground font-mono">
-              +${formatNumber(dineroPerSecond)}/s
-            </div>
+    <div className="space-y-3">
+      {/* 2x2 Stats Grid */}
+      <div className="grid grid-cols-2 gap-3">
+        {/* Dinero — top left */}
+        <Card className="p-3 border-gold/30 glass-card">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            Dinero
           </div>
-          <div className="border-t border-border/50 pt-3">
-            <div className="text-xs uppercase tracking-wider text-muted-foreground">
-              Produccion Total
+          <div className="text-lg font-bold text-green-400 font-mono tabular-nums mt-0.5">
+            ${formatNumber(dinero).replace('$', '')}
+          </div>
+          <div className="text-[10px] text-muted-foreground font-mono">
+            +${formatNumber(dineroPerSecond)}/s
+          </div>
+          <div className="border-t border-border/50 mt-2 pt-2">
+            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+              Produccion
             </div>
-            <div className="text-lg font-bold font-mono tabular-nums text-gold">
+            <div className="text-sm font-bold font-mono tabular-nums text-gold">
               {formatNumber(productionPerSecond)}/s
             </div>
           </div>
-        </div>
-      </Card>
+        </Card>
 
-      {/* Democratic Quality */}
-      <Card className="p-4 border-gold/30 glass-card">
-        <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
-          Calidad Democratica
-        </div>
-        <div className="flex items-center gap-3 mb-2">
-          <div className="text-3xl font-bold tabular-nums"
+        {/* Calidad Democratica — top right */}
+        <Card className="p-3 border-gold/30 glass-card">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+            Calidad Democratica
+          </div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <div className="text-2xl font-bold tabular-nums"
+              style={{
+                color: quality > 60 ? '#22c55e' : quality > 30 ? '#f59e0b' : '#ef4444',
+              }}>
+              {quality}%
+            </div>
+          </div>
+          <Progress value={quality} className="h-1.5 mb-1.5"
             style={{
-              color: quality > 60 ? '#22c55e' : quality > 30 ? '#f59e0b' : '#ef4444',
-            }}>
-            {quality}%
+              '--progress-color': quality > 60 ? '#22c55e' : quality > 30 ? '#f59e0b' : '#ef4444',
+            } as React.CSSProperties} />
+          <div className="text-[10px] italic text-muted-foreground leading-tight">
+            {quote}
           </div>
-        </div>
-        <Progress value={quality} className="h-2 mb-2"
-          style={{
-            '--progress-color': quality > 60 ? '#22c55e' : quality > 30 ? '#f59e0b' : '#ef4444',
-          } as React.CSSProperties} />
-        <div className="text-xs italic text-muted-foreground">
-          {quote}
-        </div>
-      </Card>
+        </Card>
 
-      {/* Milestones Progress */}
-      <Card className="p-4 border-gold/30 glass-card">
-        <div className="text-xs uppercase tracking-wider text-muted-foreground mb-2">
-          Logros ({unlockedCount}/{totalMilestones})
-        </div>
-        {nextMilestone && (
-          <div className="space-y-1">
-            <div className="text-sm font-medium">{nextMilestone.emoji} {nextMilestone.name}</div>
-            <Progress value={nextProgress} className="h-1.5" />
+        {/* Fase Actual — bottom left */}
+        <Card className="p-3 border-gold/30 glass-card">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground">
+            Fase Actual
           </div>
-        )}
-        {unlockedCount === totalMilestones && (
-          <div className="text-sm font-bold text-gold">
-            {'\uD83C\uDFC6'} Todos los logros desbloqueados
+          <div className="text-base font-bold text-gold mt-0.5">
+            {PHASE_EMOJIS[currentPhase]} {PHASE_LABELS[currentPhase]}
           </div>
-        )}
-      </Card>
+        </Card>
+
+        {/* Logros — bottom right */}
+        <Card className="p-3 border-gold/30 glass-card">
+          <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+            Logros ({unlockedCount}/{totalMilestones})
+          </div>
+          {nextMilestone && (
+            <div className="space-y-1">
+              <div className="text-xs font-medium">{nextMilestone.emoji} {nextMilestone.name}</div>
+              <Progress value={nextProgress} className="h-1.5" />
+            </div>
+          )}
+          {unlockedCount === totalMilestones && (
+            <div className="text-xs font-bold text-gold">
+              {'\uD83C\uDFC6'} Todos desbloqueados
+            </div>
+          )}
+        </Card>
+      </div>
 
       {/* Play time */}
-      <div className="text-xs text-muted-foreground font-mono text-center">
+      <div className="text-[10px] text-muted-foreground font-mono text-center">
         Tiempo de juego: {formatTime(playTime)}
       </div>
     </div>
@@ -126,11 +127,12 @@ export function MilestonesPanel() {
   const unlockedMilestones = useGameStore((s) => s.unlockedMilestones);
 
   return (
-    <div className="space-y-3">
-      <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-gold">
+    <div className="flex flex-col flex-1 min-h-0 gap-3">
+      <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-gold flex-shrink-0">
         {'\uD83C\uDFC6'} Logros
       </h2>
 
+      <div className="flex-1 min-h-0 overflow-y-auto pr-1 custom-scrollbar space-y-3">
       {MILESTONES.map((milestone) => {
         const isUnlocked = unlockedMilestones.includes(milestone.id);
         return (
@@ -166,6 +168,7 @@ export function MilestonesPanel() {
           </motion.div>
         );
       })}
+      </div>
     </div>
   );
 }

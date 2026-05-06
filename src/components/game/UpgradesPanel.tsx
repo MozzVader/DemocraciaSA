@@ -25,8 +25,8 @@ export function UpgradesPanel() {
   const purchasedCount = state.purchasedUpgrades.length;
 
   return (
-    <div className="space-y-3">
-      <div className="flex items-center justify-between">
+    <div className="flex flex-col gap-3 min-h-0 flex-1">
+      <div className="flex items-center justify-between flex-shrink-0">
         <h2 className="text-lg font-bold uppercase tracking-wider flex items-center gap-2 text-gold">
           {'\u2B50'} Operaciones Especiales
         </h2>
@@ -40,7 +40,7 @@ export function UpgradesPanel() {
           &quot;Ninguna operación disponible todavía, seguí construyendo influencia...&quot;
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-2 max-h-[40vh] overflow-y-auto pr-1 custom-scrollbar">
+        <div className="grid grid-cols-1 gap-2 flex-1 min-h-0 overflow-y-auto pr-1 custom-scrollbar">
           {availableUpgrades.map((upgrade) => {
             const costDisplay = upgrade.costResource === 'influencia'
               ? formatNumber(upgrade.cost)

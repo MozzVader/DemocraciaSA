@@ -31,18 +31,18 @@ export function InfluenceClicker() {
   }, [click, clickPowerVal]);
 
   return (
-    <div className="flex flex-col items-center gap-6 py-8">
+    <div className="flex flex-col items-center gap-4 py-4">
       <div className="text-center">
-        <div className="text-sm uppercase tracking-[0.3em] text-muted-foreground mb-1 font-mono">
+        <div className="text-xs uppercase tracking-[0.3em] text-muted-foreground mb-0.5 font-mono">
           Influencia Total
         </div>
         <div
-          className="text-5xl md:text-7xl font-bold tabular-nums"
+          className="text-4xl md:text-5xl font-bold tabular-nums"
           style={{ color: '#d4af37', textShadow: '0 0 30px rgba(212, 175, 55, 0.3)' }}
         >
           {formatNumber(influencia)}
         </div>
-        <div className="text-xs text-muted-foreground mt-2 font-mono">
+        <div className="text-[10px] text-muted-foreground mt-1 font-mono">
           {formatPerSecond(productionPerSecond)}/s &middot; {formatPerSecond(clickPowerVal)}/click
         </div>
       </div>
@@ -80,8 +80,8 @@ export function InfluenceClicker() {
           onClick={handleClick}
           whileTap={{ scale: 0.92 }}
           whileHover={{ scale: 1.05 }}
-          className="relative w-48 h-48 md:w-56 md:h-56 rounded-full cursor-pointer
-            flex flex-col items-center justify-center gap-2
+          className="relative w-40 h-40 md:w-48 md:h-48 rounded-full cursor-pointer
+            flex flex-col items-center justify-center gap-1
             transition-all duration-150 select-none"
           style={{
             background: 'radial-gradient(circle at 35% 35%, #2a1f0a 0%, #0f1729 60%, #060a14 100%)',
@@ -93,10 +93,10 @@ export function InfluenceClicker() {
           <img
             src="/DemocraciaSA/sol-de-mayo.png"
             alt="Sol de Mayo"
-            className="w-28 h-28 md:w-36 md:h-36 pointer-events-none"
+            className="w-24 h-24 md:w-32 md:h-32 pointer-events-none"
             draggable={false}
           />
-          <span className="text-sm font-bold tracking-wider uppercase text-gold">
+          <span className="text-xs font-bold tracking-wider uppercase text-gold">
             INFLUENCIAR
           </span>
         </motion.button>

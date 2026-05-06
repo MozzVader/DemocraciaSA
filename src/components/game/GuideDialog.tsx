@@ -59,7 +59,7 @@ export function GuideDialog({ open, onOpenChange }: GuideDialogProps) {
           <DialogHeader className="mb-4">
             <DialogTitle className="text-center flex items-center justify-center gap-2 text-gold">
               <BookOpen className="w-5 h-5" />
-              Como Se Juega
+              Cómo Se Juega
             </DialogTitle>
             <DialogDescription className="text-center text-sm text-muted-foreground italic">
               &quot;Todo lo que necesitas saber para conquistar el sistema.&quot;

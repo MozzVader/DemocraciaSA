@@ -81,39 +81,7 @@
   --sidebar-ring: #d4af37;
 }
 
-.dark {
-  --background: #0ea5e9;
-  --foreground: #ffffff;
-  --card: rgba(255, 255, 255, 0.15);
-  --card-foreground: #ffffff;
-  --popover: rgba(255, 255, 255, 0.1);
-  --popover-foreground: #ffffff;
-  --primary: #d4af37;
-  --primary-foreground: #0a0a12;
-  --secondary: rgba(255, 255, 255, 0.12);
-  --secondary-foreground: #ffffff;
-  --muted: rgba(255, 255, 255, 0.06);
-  --muted-foreground: #cbd5e1;
-  --accent: rgba(255, 255, 255, 0.12);
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
-  --border: rgba(212, 175, 55, 0.25);
-  --input: rgba(212, 175, 55, 0.15);
-  --ring: #d4af37;
-  --chart-1: #d4af37;
-  --chart-2: #22c55e;
-  --chart-3: #8b0000;
-  --chart-4: #3b82f6;
-  --chart-5: #f59e0b;
-  --sidebar: rgba(0, 0, 0, 0.3);
-  --sidebar-foreground: #ffffff;
-  --sidebar-primary: #d4af37;
-  --sidebar-primary-foreground: #0a0a12;
-  --sidebar-accent: rgba(255, 255, 255, 0.1);
-  --sidebar-accent-foreground: #ffffff;
-  --sidebar-border: rgba(212, 175, 55, 0.2);
-  --sidebar-ring: #d4af37;
-}
+/* .dark intentionally omitted — :root colors are used for all themes */
 
 @layer base {
   * {
@@ -158,6 +126,11 @@
 }
 
 /* Custom scrollbar for game panels */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(212, 175, 55, 0.3) transparent;
+}
+
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }

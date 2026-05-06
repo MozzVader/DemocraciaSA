@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Democracia S.A. — El Juego del Poder Real",
   description:
-    "Un juego incremental de estrategia politica. Compra influencia, corrompe el sistema y convirte la democracia en tu empresa personal.",
+    "Un juego incremental de estrategia politica. Compra influencia, corrompe el sistema y convierte la democracia en tu empresa personal.",
   keywords: [
     "juego incremental",
     "cookie clicker",

@@ -37,7 +37,7 @@ export function UpgradesPanel() {
 
       {availableUpgrades.length === 0 ? (
         <div className="text-center text-sm text-muted-foreground py-6 italic">
-          &quot;Ninguna operacion disponible todavia. Segu\u00ED construyendo influencia...&quot;
+          &quot;Ninguna operación disponible todavía, seguí construyendo influencia...&quot;
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-2 max-h-[40vh] overflow-y-auto pr-1 custom-scrollbar">

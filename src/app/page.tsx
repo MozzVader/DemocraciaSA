@@ -126,7 +126,7 @@ export default function Home() {
             onClick={() => setGuideOpen(true)}
           >
             <BookOpen className="w-3.5 h-3.5 sm:mr-1.5" />
-            <span className="hidden sm:inline">Guia</span>
+            <span className="hidden sm:inline">Guía</span>
           </Button>
           <Button
             variant="ghost"

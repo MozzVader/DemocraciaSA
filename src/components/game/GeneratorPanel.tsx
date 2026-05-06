@@ -5,7 +5,6 @@ import { GENERATORS } from '@/lib/game/config';
 import { formatNumber } from '@/lib/game/formatters';
 import { getGeneratorCost, isGeneratorUnlocked, getMaxBuyable, getGeneratorCostBulk } from '@/lib/game/calculator';
 import { Card } from '@/components/ui/card';
-import { FileteadoCorner } from '@/components/game/FileteadoCorner';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const BUY_OPTIONS: { value: BuyAmount; label: string }[] = [
@@ -79,7 +78,7 @@ export function GeneratorPanel() {
                 transition={{ duration: 0.3 }}
               >
                 <Card
-                  className={`relative overflow-hidden p-3 cursor-pointer select-none transition-all duration-200 border ${
+                  className={`p-3 cursor-pointer select-none transition-all duration-200 border ${
                     canAfford
                       ? 'border-[#d4af37]/50 hover:border-[#d4af37] hover:bg-white/10'
                       : 'border-[#d4af37]/20 opacity-60'
@@ -87,9 +86,6 @@ export function GeneratorPanel() {
                   style={{ background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}
                   onClick={() => buyGenerator(gen.id)}
                 >
-                  <div className="absolute bottom-1 right-1.5 pointer-events-none text-[#d4af37]/[0.35]">
-                    <FileteadoCorner />
-                  </div>
                   <div className="flex items-center gap-3">
                     <span className="text-2xl flex-shrink-0">{gen.emoji}</span>
                     <div className="flex-1 min-w-0">

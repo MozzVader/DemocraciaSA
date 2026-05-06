@@ -96,8 +96,8 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="hidden md:grid md:grid-cols-[280px_1fr_300px] flex-1 min-h-0 gap-4 p-4">
-            <aside className="flex flex-col min-h-0 overflow-hidden">
+          <div className="hidden md:grid md:grid-cols-[280px_1fr_300px] md:grid-rows-[1fr] flex-1 min-h-0 gap-4 p-4">
+            <aside className="flex flex-col min-h-0">
               <GeneratorPanel />
             </aside>
 
@@ -106,7 +106,7 @@ export default function Home() {
               <StatsPanel />
             </div>
 
-            <aside className="flex flex-col min-h-0 overflow-hidden gap-3">
+            <aside className="flex flex-col min-h-0 gap-3">
               <UpgradesPanel />
               <MilestonesPanel />
             </aside>

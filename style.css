@@ -484,7 +484,7 @@ body {
   position: relative;
 }
 
-.click-button {
+.influence-button {
   position: relative;
   width: 10rem;
   height: 10rem;
@@ -506,34 +506,34 @@ body {
 }
 
 @media (min-width: 768px) {
-  .click-button {
+  .influence-button {
     width: 12rem;
     height: 12rem;
   }
 }
 
-.click-button:hover {
+.influence-button:hover {
   transform: scale(1.05);
 }
 
-.click-button:active {
+.influence-button:active {
   transform: scale(0.92);
 }
 
-.click-button img {
+.influence-button img {
   width: 6rem;
   height: 6rem;
   pointer-events: none;
 }
 
 @media (min-width: 768px) {
-  .click-button img {
+  .influence-button img {
     width: 8rem;
     height: 8rem;
   }
 }
 
-.click-button-label {
+.influence-button-label {
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.1em;

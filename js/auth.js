@@ -76,7 +76,13 @@ var SupabaseAuth = (function() {
     return currentUser ? (currentUser.email || '') : '';
   }
 
-  // ---- Cloud Save / Load ----
+  function getUserDisplayName() {
+    if (!currentUser) return '';
+    var meta = currentUser.user_metadata || {};
+    return meta.full_name || meta.name || currentUser.email || '';
+  }
+
+  // ---- Cloud Save / Load (tabla: democracia_sa_saves) ----
 
   function cloudSave(gameState) {
     if (!client || !currentUser) return Promise.resolve(false);
@@ -84,11 +90,17 @@ var SupabaseAuth = (function() {
       lastSave: Date.now(),
       lastTick: Date.now()
     });
+    var displayName = getUserDisplayName();
     return client
-      .from('saves')
+      .from('democracia_sa_saves')
       .upsert(
-        { user_id: currentUser.id, state: saveData, updated_at: new Date().toISOString() },
-        { onConflict: 'user_id' }
+        {
+          anonymous_id: currentUser.id,
+          game_state: saveData,
+          display_name: displayName,
+          updated_at: new Date().toISOString()
+        },
+        { onConflict: 'anonymous_id' }
       )
       .then(function(result) {
         if (result.error) {
@@ -102,13 +114,13 @@ var SupabaseAuth = (function() {
   function cloudLoad() {
     if (!client || !currentUser) return Promise.resolve(null);
     return client
-      .from('saves')
-      .select('state')
-      .eq('user_id', currentUser.id)
+      .from('democracia_sa_saves')
+      .select('game_state')
+      .eq('anonymous_id', currentUser.id)
       .single()
       .then(function(result) {
         if (result.error || !result.data) return null;
-        return result.data.state;
+        return result.data.game_state;
       });
   }
 
@@ -134,6 +146,7 @@ var SupabaseAuth = (function() {
     getUser: getUser,
     isLoggedIn: isLoggedIn,
     getUserEmail: getUserEmail,
+    getUserDisplayName: getUserDisplayName,
     cloudSave: cloudSave,
     cloudLoad: cloudLoad,
     setOnAuthChange: setOnAuthChange,

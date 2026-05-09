@@ -374,11 +374,13 @@
 
   function updateAuthButton() {
     if (SupabaseAuth.isLoggedIn()) {
+      var name = SupabaseAuth.getUserDisplayName();
       var email = SupabaseAuth.getUserEmail();
-      var short = email.split('@')[0];
+      var short = name.split(' ')[0];
+      if (short.length > 10) short = email.split('@')[0];
       dom.authLabel.textContent = short;
       dom.authBtn.classList.add('auth-logged-in');
-      dom.authBtn.title = email + ' — Click para cerrar sesion';
+      dom.authBtn.title = name + ' (' + email + ') — Click para cerrar sesion';
     } else {
       dom.authLabel.textContent = 'Entrar';
       dom.authBtn.classList.remove('auth-logged-in');

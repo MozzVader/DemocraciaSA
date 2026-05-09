@@ -22,6 +22,24 @@
     dom.dineroDisplay = document.getElementById('dinero-amount');
     dom.phaseLabel = document.getElementById('current-phase');
 
+    // Auth
+    dom.authBtn = document.getElementById('auth-btn');
+    dom.authLabel = document.getElementById('auth-label');
+    dom.loginModal = document.getElementById('login-modal');
+    dom.authTabLogin = document.getElementById('auth-tab-login');
+    dom.authTabRegister = document.getElementById('auth-tab-register');
+    dom.authFormLogin = document.getElementById('auth-form-login');
+    dom.authFormRegister = document.getElementById('auth-form-register');
+    dom.loginEmail = document.getElementById('login-email');
+    dom.loginPassword = document.getElementById('login-password');
+    dom.loginError = document.getElementById('login-error');
+    dom.loginSubmit = document.getElementById('login-submit');
+    dom.registerEmail = document.getElementById('register-email');
+    dom.registerPassword = document.getElementById('register-password');
+    dom.registerError = document.getElementById('register-error');
+    dom.registerSubmit = document.getElementById('register-submit');
+    dom.googleLoginBtn = document.getElementById('google-login-btn');
+
     // Mobile clicker
     dom.totalInfluencia = document.getElementById('clicker-influencia');
     dom.prodPerSec = document.getElementById('clicker-rate');
@@ -352,6 +370,148 @@
     }, 5000);
   }
 
+  // ---- Auth UI ----
+
+  function updateAuthButton() {
+    if (SupabaseAuth.isLoggedIn()) {
+      var email = SupabaseAuth.getUserEmail();
+      var short = email.split('@')[0];
+      dom.authLabel.textContent = short;
+      dom.authBtn.classList.add('auth-logged-in');
+      dom.authBtn.title = email + ' — Click para cerrar sesion';
+    } else {
+      dom.authLabel.textContent = 'Entrar';
+      dom.authBtn.classList.remove('auth-logged-in');
+      dom.authBtn.title = 'Iniciar sesion';
+    }
+  }
+
+  function switchAuthTab(tab) {
+    dom.authTabLogin.classList.toggle('active', tab === 'login');
+    dom.authTabRegister.classList.toggle('active', tab === 'register');
+    dom.authFormLogin.style.display = tab === 'login' ? '' : 'none';
+    dom.authFormRegister.style.display = tab === 'register' ? '' : 'none';
+    dom.loginError.textContent = '';
+    dom.registerError.textContent = '';
+  }
+
+  function handleAuthBtnClick() {
+    if (SupabaseAuth.isLoggedIn()) {
+      // Logout
+      SupabaseAuth.signOut().then(function() {
+        updateAuthButton();
+      });
+    } else {
+      // Open login dialog
+      openDialog('login-modal');
+    }
+  }
+
+  function handleLogin() {
+    var email = dom.loginEmail.value.trim();
+    var password = dom.loginPassword.value;
+    if (!email || !password) {
+      dom.loginError.textContent = 'Completá email y contrasena.';
+      return;
+    }
+    dom.loginSubmit.disabled = true;
+    dom.loginSubmit.textContent = 'Ingresando...';
+    dom.loginError.textContent = '';
+    SupabaseAuth.signInWithEmail(email, password).then(function(result) {
+      dom.loginSubmit.disabled = false;
+      dom.loginSubmit.textContent = 'Ingresar';
+      if (result.error) {
+        var msg = result.error.message;
+        if (msg.indexOf('Invalid login') !== -1 || msg.indexOf('Invalid credentials') !== -1) {
+          msg = 'Email o contrasena incorrectos.';
+        } else if (msg.indexOf('Email not confirmed') !== -1) {
+          msg = 'Verificá tu email antes de iniciar sesion.';
+        }
+        dom.loginError.textContent = msg;
+      } else {
+        closeDialog('login-modal');
+        dom.loginEmail.value = '';
+        dom.loginPassword.value = '';
+        loadCloudSave();
+      }
+    }).catch(function() {
+      dom.loginSubmit.disabled = false;
+      dom.loginSubmit.textContent = 'Ingresar';
+      dom.loginError.textContent = 'Error de conexion. Intentá de nuevo.';
+    });
+  }
+
+  function handleRegister() {
+    var email = dom.registerEmail.value.trim();
+    var password = dom.registerPassword.value;
+    if (!email || !password) {
+      dom.registerError.textContent = 'Completá email y contrasena.';
+      return;
+    }
+    if (password.length < 6) {
+      dom.registerError.textContent = 'La contrasena debe tener al menos 6 caracteres.';
+      return;
+    }
+    dom.registerSubmit.disabled = true;
+    dom.registerSubmit.textContent = 'Creando...';
+    dom.registerError.textContent = '';
+    SupabaseAuth.signUpWithEmail(email, password).then(function(result) {
+      dom.registerSubmit.disabled = false;
+      dom.registerSubmit.textContent = 'Crear Cuenta';
+      if (result.error) {
+        var msg = result.error.message;
+        if (msg.indexOf('already registered') !== -1 || msg.indexOf('already in use') !== -1) {
+          msg = 'Ese email ya está registrado.';
+        }
+        dom.registerError.textContent = msg;
+      } else {
+        dom.registerError.textContent = '';
+        dom.registerEmail.value = '';
+        dom.registerPassword.value = '';
+        switchAuthTab('login');
+        dom.loginEmail.value = email;
+        dom.loginError.textContent = '';
+        dom.loginError.style.color = '#4ade80';
+        dom.loginError.textContent = 'Cuenta creada. Verificá tu email e iniciá sesion.';
+        setTimeout(function() { dom.loginError.style.color = ''; }, 4000);
+      }
+    }).catch(function() {
+      dom.registerSubmit.disabled = false;
+      dom.registerSubmit.textContent = 'Crear Cuenta';
+      dom.registerError.textContent = 'Error de conexion. Intentá de nuevo.';
+    });
+  }
+
+  function handleGoogleLogin() {
+    SupabaseAuth.signInWithGoogle();
+  }
+
+  function loadCloudSave() {
+    if (!SupabaseAuth.isLoggedIn()) return;
+    SupabaseAuth.cloudLoad().then(function(cloudState) {
+      if (!cloudState) return;
+      // Merge: use cloud data if it has more totalInfluencia
+      if (cloudState.totalInfluencia > engine.state.totalInfluencia) {
+        engine.state = cloudState;
+        engine.state.lastTick = Date.now();
+        engine.state.currentPhase = getCurrentPhase(engine.state.totalInfluencia);
+        // Ensure all generators exist
+        for (var i = 0; i < GENERATORS.length; i++) {
+          if (!engine.state.generators[GENERATORS[i].id]) {
+            engine.state.generators[GENERATORS[i].id] = { id: GENERATORS[i].id, owned: 0, totalProduced: 0 };
+          }
+        }
+        saveGame(engine.state);
+        engine.notify();
+      }
+    });
+  }
+
+  function saveToCloud() {
+    if (!SupabaseAuth.isLoggedIn()) return;
+    SupabaseAuth.cloudSave(engine.state);
+  }
+
   // ---- Buy Amount ----
 
   function updateBuyAmountBtns() {
@@ -388,6 +548,17 @@
   // ---- Event Binding ----
 
   function bindEvents() {
+    // Auth
+    dom.authBtn.addEventListener('click', handleAuthBtnClick);
+    dom.authTabLogin.addEventListener('click', function() { switchAuthTab('login'); });
+    dom.authTabRegister.addEventListener('click', function() { switchAuthTab('register'); });
+    dom.loginSubmit.addEventListener('click', handleLogin);
+    dom.registerSubmit.addEventListener('click', handleRegister);
+    dom.googleLoginBtn.addEventListener('click', handleGoogleLogin);
+    // Enter key on forms
+    dom.loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') handleLogin(); });
+    dom.registerPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') handleRegister(); });
+
     // Mobile clicker
     dom.clickerBtn.addEventListener('click', function(e) {
       engine.click();
@@ -413,7 +584,10 @@
     }
 
     // Footer
-    dom.footerSave.addEventListener('click', function() { engine.save(); });
+    dom.footerSave.addEventListener('click', function() {
+      engine.save();
+      saveToCloud();
+    });
     dom.footerGuide.addEventListener('click', function() { openDialog('help-modal'); });
     dom.footerReset.addEventListener('click', function() { openDialog('confirm-modal'); });
 
@@ -421,6 +595,7 @@
     document.getElementById('confirm-cancel').addEventListener('click', function() { closeDialog('confirm-modal'); });
     document.getElementById('confirm-accept').addEventListener('click', function() {
       engine.reset();
+      saveToCloud();
       closeDialog('confirm-modal');
     });
 
@@ -445,14 +620,20 @@
     engine.onMilestone = showToast;
 
     // Before unload
-    window.addEventListener('beforeunload', function() { engine.save(); });
+    window.addEventListener('beforeunload', function() {
+      engine.save();
+      saveToCloud();
+    });
   }
 
   // ---- Game Loop ----
 
   function startGameLoop() {
     setInterval(function() { engine.tick(TICK_INTERVAL); }, TICK_INTERVAL);
-    setInterval(function() { engine.save(); }, SAVE_INTERVAL);
+    setInterval(function() {
+      engine.save();
+      saveToCloud();
+    }, SAVE_INTERVAL);
     setInterval(updateNews, NEWS_INTERVAL);
   }
 
@@ -460,9 +641,25 @@
 
   function init() {
     cacheDom();
+
+    // Init Supabase Auth
+    if (typeof SupabaseAuth !== 'undefined') {
+      SupabaseAuth.init();
+      SupabaseAuth.setOnAuthChange(function(user) {
+        updateAuthButton();
+        if (user) {
+          // Logged in: try loading cloud save
+          loadCloudSave();
+        }
+      });
+    }
+
+    // Load game from localStorage
     var loaded = engine.load();
     if (!loaded) engine.state = createInitialState();
+
     updateBuyAmountBtns();
+    updateAuthButton();
     bindEvents();
     renderAll();
     updateNews();

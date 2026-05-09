@@ -1191,6 +1191,188 @@ body {
   background: #f59e0b;
 }
 
+/* ---- Auth Section (Header) ---- */
+
+.auth-section {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.auth-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #cbd5e1;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.auth-btn:hover {
+  color: #d4af37;
+  border-color: rgba(212, 175, 55, 0.4);
+  background: rgba(212, 175, 55, 0.08);
+}
+
+.auth-btn.auth-logged-in {
+  border-color: rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+}
+
+.auth-btn.auth-logged-in:hover {
+  border-color: rgba(239, 68, 68, 0.5);
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.auth-icon {
+  flex-shrink: 0;
+}
+
+.auth-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 10rem;
+}
+
+@media (max-width: 639px) {
+  .auth-label { max-width: 5rem; }
+}
+
+/* ---- Auth Tabs ---- */
+
+.auth-tabs {
+  display: flex;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 0.375rem;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 0.5rem 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #cbd5e1;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  border-right: 1px solid rgba(212, 175, 55, 0.2);
+  transition: all 0.15s ease;
+}
+
+.auth-tab:last-child {
+  border-right: none;
+}
+
+.auth-tab.active {
+  color: #0a0a12;
+  background: #d4af37;
+}
+
+.auth-tab:hover:not(.active) {
+  color: #d4af37;
+  background: rgba(212, 175, 55, 0.08);
+}
+
+/* ---- Auth Form ---- */
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.auth-field-label {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #cbd5e1;
+  font-family: 'Geist Mono', monospace;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.375rem;
+  outline: none;
+  transition: all 0.15s ease;
+  font-family: inherit;
+}
+
+.auth-input:focus {
+  border-color: #d4af37;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.15);
+}
+
+.auth-input::placeholder {
+  color: rgba(203, 213, 225, 0.4);
+}
+
+.auth-error {
+  font-size: 0.75rem;
+  color: #ef4444;
+  min-height: 1rem;
+  text-align: center;
+}
+
+.auth-submit-btn {
+  margin-top: 0.25rem;
+}
+
+/* ---- Google OAuth Button ---- */
+
+.auth-google-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.auth-google-btn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+.auth-hint {
+  font-size: 0.625rem;
+  color: rgba(203, 213, 225, 0.5);
+  text-align: center;
+  margin-top: 0.75rem;
+  font-style: italic;
+}
+
 /* ---- Toasts ---- */
 
 .notification-area {

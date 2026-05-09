@@ -264,7 +264,7 @@ body {
   color: #cbd5e1;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .mobile-tabs { display: none; }
 }
 
@@ -282,10 +282,10 @@ body {
 }
 
 /* Desktop: 3-column grid */
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .game-main {
     display: grid;
-    grid-template-columns: 280px 24px 1fr 24px 300px;
+    grid-template-columns: 420px 24px 1fr 24px 450px;
     padding: 0.75rem 0;
     gap: 0;
   }
@@ -308,8 +308,8 @@ body {
   overflow: hidden;
 }
 
-/* Mobile: only show active panel */
-@media (max-width: 767px) {
+/* Mobile/tablet: only show active panel */
+@media (max-width: 1023px) {
   .panel {
     display: none;
   }
@@ -319,7 +319,7 @@ body {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .panel {
     display: flex;
   }
@@ -400,7 +400,7 @@ body {
   align-self: stretch;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .doric-column {
     display: flex;
     flex-direction: column;

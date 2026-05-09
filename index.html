@@ -7,17 +7,658 @@
   <meta name="description" content="Un juego incremental de satira politica argentina. Desde puntero a presidente.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1F3DB;&#xFE0F;</text></svg>">
   <link rel="stylesheet" href="css/main.css">
-  <style>
-    body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #0a1628; color: #cbd5e1; }
-    .container { text-align: center; padding: 2rem; }
-    h1 { color: #d4af37; font-size: 2rem; margin-bottom: 0.5rem; }
-    p { font-size: 1rem; color: #94a3b8; }
-  </style>
+  <link rel="stylesheet" href="css/componentes.css">
 </head>
 <body>
-  <div class="container">
-    <h1>DEMOCRACIA S.A.</h1>
-    <p>V1 en desarrollo. Volva pronto.</p>
+
+<div class="game-wrapper">
+
+  <!-- ========== HEADER ========== -->
+  <header class="header">
+    <div class="header-inner">
+      <!-- Left: Brand -->
+      <div class="header-brand">
+        <span class="header-icon">&#x1F3DB;&#xFE0F;</span>
+        <h1 class="header-title">DEMOCRACIA<span class="brand-dot">.SA</span></h1>
+        <span class="phase-badge">Fase 2 &mdash; Provincial</span>
+      </div>
+      <!-- Center: Ticker -->
+      <div class="header-ticker">
+        <span class="ticker-dot"></span>
+        <span class="ticker-label">NOTICIAS</span>
+        <p class="ticker-text" id="ticker-headline">"Senador pide investigar interferencia extranjera en las elecciones. Su financista es suizo."</p>
+      </div>
+      <!-- Right: Auth -->
+      <div class="header-auth">
+        <button class="btn-login" id="btn-login">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Login</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== MOBILE TABS ========== -->
+  <nav class="mobile-tabs" id="mobile-tabs">
+    <button class="mobile-tab active" data-panel="generators">Generadores</button>
+    <button class="mobile-tab" data-panel="center">Juego</button>
+    <button class="mobile-tab" data-panel="upgrades">Operaciones</button>
+  </nav>
+
+  <!-- ========== MAIN GAME ========== -->
+  <main class="game-main">
+
+    <!-- LEFT: Generators -->
+    <section class="panel panel-generators" id="panel-generators">
+      <div class="panel-head">
+        <h2 class="panel-title">RECURSOS</h2>
+        <div class="quantity-selector">
+          <button class="qty-btn active" data-qty="1">x1</button>
+          <button class="qty-btn" data-qty="10">x10</button>
+          <button class="qty-btn" data-qty="-1">Max</button>
+        </div>
+      </div>
+      <div class="panel-body custom-scroll">
+
+        <!-- Generator 1: Owned -->
+        <div class="gen-card can-afford">
+          <div class="gen-icon">&#x1F5F3;&#xFE0F;</div>
+          <div class="gen-info">
+            <div class="gen-top">
+              <span class="gen-name">El Puntero</span>
+              <span class="gen-count">25</span>
+            </div>
+            <p class="gen-desc">"Te anot&aacute;s en el plan? Tra&eacute; a la familia."</p>
+            <div class="gen-bottom">
+              <span class="gen-cost">Costo: 3,283 &#x1F3DB;</span>
+              <span class="gen-output">+2.5/s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generator 2: Owned -->
+        <div class="gen-card can-afford">
+          <div class="gen-icon">&#x1F91D;</div>
+          <div class="gen-info">
+            <div class="gen-top">
+              <span class="gen-name">El Canje</span>
+              <span class="gen-count">14</span>
+            </div>
+            <p class="gen-desc">"Hoy por vos, ma&ntilde;ana por m&iacute;... si hubiera un ma&ntilde;ana."</p>
+            <div class="gen-bottom">
+              <span class="gen-cost">Costo: 10,513 &#x1F3DB;</span>
+              <span class="gen-output">+14/s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generator 3: Owned -->
+        <div class="gen-card can-afford">
+          <div class="gen-icon">&#x1F372;</div>
+          <div class="gen-info">
+            <div class="gen-top">
+              <span class="gen-name">La Olla Popular</span>
+              <span class="gen-count">8</span>
+            </div>
+            <p class="gen-desc">"No es clientelismo, es redistribuci&oacute;n solidaria."</p>
+            <div class="gen-bottom">
+              <span class="gen-cost">Costo: 36,193 &#x1F3DB;</span>
+              <span class="gen-output">+64/s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generator 4: Affordable (new phase) -->
+        <div class="gen-card can-afford">
+          <div class="gen-icon">&#x1F3DB;&#xFE0F;</div>
+          <div class="gen-info">
+            <div class="gen-top">
+              <span class="gen-name">La Fundaci&oacute;n Incolora</span>
+              <span class="gen-count">2</span>
+            </div>
+            <p class="gen-desc">"Nuestro informe demuestra que ten&eacute;s que darnos m&aacute;s plata."</p>
+            <div class="gen-bottom">
+              <span class="gen-cost">Costo: 14,127 &#x1F3DB;</span>
+              <span class="gen-output">+94/s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generator 5: Locked (can't afford) -->
+        <div class="gen-card">
+          <div class="gen-icon">&#x1F4FA;</div>
+          <div class="gen-info">
+            <div class="gen-top">
+              <span class="gen-name">El Focus Group</span>
+              <span class="gen-count">0</span>
+            </div>
+            <p class="gen-desc">"No es que sea antipol&iacute;tico, es que todos son iguales."</p>
+            <div class="gen-bottom">
+              <span class="gen-cost">Costo: 130,000 &#x1F3DB;</span>
+              <span class="gen-output">+260/s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generator 6: Locked -->
+        <div class="gen-card">
+          <div class="gen-icon">&#x1F4BC;</div>
+          <div class="gen-info">
+            <div class="gen-top">
+              <span class="gen-name">El Empresario Amigo</span>
+              <span class="gen-count">0</span>
+            </div>
+            <p class="gen-desc">"Competencia desleal? No, ventaja comparativa."</p>
+            <div class="gen-bottom">
+              <span class="gen-cost">Costo: 1,400,000 &#x1F3DB;</span>
+              <span class="gen-output">+1,400/s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generator 7: Locked (imperio) -->
+        <div class="gen-card locked-phase">
+          <div class="gen-icon">&#x1F4F0;</div>
+          <div class="gen-info">
+            <div class="gen-top">
+              <span class="gen-name">La Pauta</span>
+              <span class="gen-count">0</span>
+            </div>
+            <p class="gen-desc">"No somos pauteros, somos periodistas comprometidos."</p>
+            <div class="gen-bottom">
+              <span class="gen-cost">Costo: 20,000,000 &#x1F3DB;</span>
+              <span class="gen-output">+7,800/s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generator 8: Locked (imperio) -->
+        <div class="gen-card locked-phase">
+          <div class="gen-icon">&#x1F3CC;&#xFE0F;</div>
+          <div class="gen-info">
+            <div class="gen-top">
+              <span class="gen-name">La re re re elecci&oacute;n</span>
+              <span class="gen-count">0</span>
+            </div>
+            <p class="gen-desc">"Dos veces funcionario, tres veces jubilado."</p>
+            <div class="gen-bottom">
+              <span class="gen-cost">Costo: 330,000,000 &#x1F3DB;</span>
+              <span class="gen-output">+44,000/s</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generator 9: Locked (imperio) -->
+        <div class="gen-card locked-phase">
+          <div class="gen-icon">&#x1F451;</div>
+          <div class="gen-info">
+            <div class="gen-top">
+              <span class="gen-name">La Casta Eterna</span>
+              <span class="gen-count">0</span>
+            </div>
+            <p class="gen-desc">"Qu&eacute; pasa si cambiamos la ley para que podamos quedarnos?"</p>
+            <div class="gen-bottom">
+              <span class="gen-cost">Costo: 5,100,000,000 &#x1F3DB;</span>
+              <span class="gen-output">+260,000/s</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- DORIC COLUMN LEFT -->
+    <div class="doric-column" aria-hidden="true"></div>
+
+    <!-- CENTER: Clicker + Info -->
+    <section class="panel panel-center" id="panel-center">
+
+      <!-- Game Info -->
+      <div class="game-info">
+        <div class="info-phase">Fase 2 &mdash; Provincial / Nacional</div>
+        <div class="info-money">
+          <div class="money-label">Pesos</div>
+          <div class="money-amount">$ 1,234,567</div>
+          <div class="money-rate">+8,420/s &middot; 5/click</div>
+        </div>
+      </div>
+
+      <!-- Clicker -->
+      <div class="clicker-area">
+        <div class="clicker-glow"></div>
+        <button class="clicker-btn" aria-label="Influir">
+          <img src="public/sol-de-mayo.png" alt="Sol de Mayo" draggable="false">
+        </button>
+      </div>
+
+      <!-- Telegramas -->
+      <div class="telegramas-area">
+        <div class="telegrama">
+          <div class="telegrama-head">
+            <span class="telegrama-badge">
+              <span class="telegrama-pulse"></span>
+              TELEGRAMA
+            </span>
+            <span class="telegrama-timer" id="telegrama-timer">00:45</span>
+          </div>
+          <p class="telegrama-text">"El gobernador te ofrece una colectora de rutas a cambio de apoyar su ley de elecciones internas. Acept&aacute;s?"</p>
+          <div class="telegrama-actions">
+            <button class="telegrama-btn accept">Aceptar</button>
+            <button class="telegrama-btn reject">Rechazar</button>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- DORIC COLUMN RIGHT -->
+    <div class="doric-column" aria-hidden="true"></div>
+
+    <!-- RIGHT: Upgrades + Calidad -->
+    <section class="panel panel-upgrades" id="panel-upgrades">
+      <div class="panel-head">
+        <h2 class="panel-title">OPERACIONES</h2>
+        <span class="upgrade-counter" id="upgrade-counter">4/18</span>
+      </div>
+      <div class="panel-body custom-scroll">
+        <div class="upgrade-list" id="upgrade-list">
+
+          <!-- Purchased Upgrade -->
+          <div class="upgrade-card purchased">
+            <div class="upgrade-icon">&#x1F4F1;</div>
+            <div class="upgrade-info">
+              <div class="upgrade-top">
+                <span class="upgrade-name">El Grupo de WhatsApp</span>
+                <span class="upgrade-check">&#10003;</span>
+              </div>
+              <p class="upgrade-desc">Los grupos donde se decide todo sin actas ni reuniones. +2 por clic.</p>
+            </div>
+          </div>
+
+          <!-- Purchased Upgrade -->
+          <div class="upgrade-card purchased">
+            <div class="upgrade-icon">&#x1F465;</div>
+            <div class="upgrade-info">
+              <div class="upgrade-top">
+                <span class="upgrade-name">La Cuadrilla Completa</span>
+                <span class="upgrade-check">&#10003;</span>
+              </div>
+              <p class="upgrade-desc">M&aacute;s punteros, m&aacute;s votos. x2 Punteros.</p>
+            </div>
+          </div>
+
+          <!-- Purchased Upgrade -->
+          <div class="upgrade-card purchased">
+            <div class="upgrade-icon">&#x1F4B5;</div>
+            <div class="upgrade-info">
+              <div class="upgrade-top">
+                <span class="upgrade-name">Contado con Liqui</span>
+                <span class="upgrade-check">&#10003;</span>
+              </div>
+              <p class="upgrade-desc">La contabilidad que nadie entiende. x2 Canjes.</p>
+            </div>
+          </div>
+
+          <!-- Purchased Upgrade -->
+          <div class="upgrade-card purchased">
+            <div class="upgrade-icon">&#x1F4CB;</div>
+            <div class="upgrade-info">
+              <div class="upgrade-top">
+                <span class="upgrade-name">El Plan Jefazo</span>
+                <span class="upgrade-check">&#10003;</span>
+              </div>
+              <p class="upgrade-desc">Renovaci&oacute;n del plan con otro nombre. x2 Ollas.</p>
+            </div>
+          </div>
+
+          <!-- Available Upgrade -->
+          <div class="upgrade-card available">
+            <div class="upgrade-icon">&#x1F4DE;</div>
+            <div class="upgrade-info">
+              <div class="upgrade-top">
+                <span class="upgrade-name">El Llamado al Padrino</span>
+                <span class="upgrade-cost">100 &#x1F3DB;</span>
+              </div>
+              <p class="upgrade-desc">Tu primer contacto con alguien que conoce alguien. +1 por clic.</p>
+            </div>
+          </div>
+
+          <!-- Available Upgrade -->
+          <div class="upgrade-card available">
+            <div class="upgrade-icon">&#x1F3A5;</div>
+            <div class="upgrade-info">
+              <div class="upgrade-top">
+                <span class="upgrade-name">El Live de Instagram</span>
+                <span class="upgrade-cost">5,000 &#x1F3DB;</span>
+              </div>
+              <p class="upgrade-desc">Te hac&eacute;s el cercano con la gente desde un iPhone 17 Pro Max. +5 por clic.</p>
+            </div>
+          </div>
+
+          <!-- Available Upgrade -->
+          <div class="upgrade-card available">
+            <div class="upgrade-icon">&#x1F3E6;</div>
+            <div class="upgrade-info">
+              <div class="upgrade-top">
+                <span class="upgrade-name">El Cepo Selectivo</span>
+                <span class="upgrade-cost">2,000 &#x1F3DB;</span>
+              </div>
+              <p class="upgrade-desc">Solo los tuyos pueden comprar d&oacute;lares. +10% dinero pasivo.</p>
+            </div>
+          </div>
+
+          <!-- Locked Upgrade -->
+          <div class="upgrade-card">
+            <div class="upgrade-icon">&#x1F4CA;</div>
+            <div class="upgrade-info">
+              <div class="upgrade-top">
+                <span class="upgrade-name">Compra de Encuestadoras</span>
+                <span class="upgrade-cost">600,000 &#x1F3DB;</span>
+              </div>
+              <p class="upgrade-desc">Los n&uacute;meros dicen lo que vos quer&eacute;s. x2 Fundaciones.</p>
+            </div>
+          </div>
+
+          <!-- Locked Upgrade -->
+          <div class="upgrade-card">
+            <div class="upgrade-icon">&#x1F399;&#xFE0F;</div>
+            <div class="upgrade-info">
+              <div class="upgrade-top">
+                <span class="upgrade-name">El 678 24/7</span>
+                <span class="upgrade-cost">6,500,000 &#x1F3DB;</span>
+              </div>
+              <p class="upgrade-desc">M&aacute;s horas de aire, m&aacute;s opini&oacute;n, menos informaci&oacute;n. x2 Focus Groups.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Calidad Democratica (sticky bottom) -->
+      <div class="calidad-bar">
+        <div class="calidad-label">CALIDAD DEMOCR&Aacute;TICA</div>
+        <div class="calidad-track">
+          <div class="calidad-fill" style="width:62%;background:#f59e0b;"></div>
+        </div>
+        <div class="calidad-value" style="color:#f59e0b;">62%</div>
+        <p class="calidad-comment">"La democracia est&aacute; con gripecita, pero no es grave."</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span class="copyright">DOCUMENTO CLASIFICADO &middot; DEMOCRACIA S.A. &copy; 2026</span>
+      <div class="footer-buttons">
+        <button class="footer-btn" data-modal="stats">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          <span class="footer-btn-text">Stats</span>
+        </button>
+        <button class="footer-btn" data-modal="logros">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></svg>
+          <span class="footer-btn-text">Logros</span>
+          <span class="footer-badge" id="logros-badge">42</span>
+        </button>
+        <button class="footer-btn" data-modal="guia">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          <span class="footer-btn-text">Gu&iacute;a</span>
+        </button>
+        <button class="footer-btn" id="btn-save">Guardar</button>
+        <button class="footer-btn footer-btn-danger" id="btn-reset">Reiniciar</button>
+      </div>
+    </div>
+  </footer>
+
+</div><!-- /.game-wrapper -->
+
+<!-- ========== MODAL: LOGROS ========== -->
+<div class="modal-overlay" id="modal-logros">
+  <div class="modal-box modal-wide">
+    <div class="modal-gold-bar"></div>
+    <button class="modal-close" data-close="modal-logros">&times;</button>
+    <div class="modal-header">
+      <h2 class="modal-title">&#x1F3C6; Logros</h2>
+      <span class="modal-subtitle">42 de 287 desbloqueados</span>
+    </div>
+    <div class="modal-body">
+      <div class="logros-grid">
+
+        <!-- Unlocked achievements -->
+        <div class="logro-item unlocked" title="Primer Puntero — Tu primer funcionario te debe un favor. (+1/click)">
+          <span class="logro-icon">&#x1F5F3;&#xFE0F;</span>
+        </div>
+        <div class="logro-item unlocked" title="El Intendente Eterno — Tu candidato gana una elección menor. (x1.5 producción)">
+          <span class="logro-icon">&#x1F3DB;&#xFE0F;</span>
+        </div>
+        <div class="logro-item unlocked" title="El Que Pasa Facturas — Descubrís que podés cobrar por ambos lados. (x1.5 producción)">
+          <span class="logro-icon">&#x1F4B3;</span>
+        </div>
+        <div class="logro-item unlocked" title="Cliente VIP — Aceptaste tu primer telegrama. (+5% popularidad)">
+          <span class="logro-icon">&#x1F4AC;</span>
+        </div>
+        <div class="logro-item unlocked" title="Cafiecito — Pasaste 10 minutos en el juego sin comprar nada. (+2 clicks)">
+          <span class="logro-icon">&#x2615;</span>
+        </div>
+        <div class="logro-item unlocked" title="Mil Clics — 1,000 clics totales. (+1/click)">
+          <span class="logro-icon">&#x1F4AA;</span>
+        </div>
+        <div class="logro-item unlocked" title="El Llamado — Compraste tu primera operación. (+100 pesos)">
+          <span class="logro-icon">&#x1F4DE;</span>
+        </div>
+        <div class="logro-item unlocked" title="Casta Baja — Alcanzaste la fase Provincial. (desbloquea: Focus Group)">
+          <span class="logro-icon">&#x1F3E2;</span>
+        </div>
+
+        <!-- Locked achievements -->
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+        <div class="logro-item locked" title="???"></div>
+
+      </div>
+    </div>
+    <div class="modal-gold-bar"></div>
   </div>
+</div>
+
+<!-- ========== MODAL: STATS ========== -->
+<div class="modal-overlay" id="modal-stats">
+  <div class="modal-box">
+    <div class="modal-gold-bar"></div>
+    <button class="modal-close" data-close="modal-stats">&times;</button>
+    <div class="modal-header">
+      <h2 class="modal-title">&#x1F4CA; Estad&iacute;sticas</h2>
+    </div>
+    <div class="modal-body">
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-label">Influencia Total Ganada</span>
+          <span class="stat-value">5,432,109</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Pesos Totales Ganados</span>
+          <span class="stat-value">$ 12,345,678</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Clics Totales</span>
+          <span class="stat-value">8,432</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Influencia por Clic</span>
+          <span class="stat-value">5</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Producci&oacute;n por Segundo</span>
+          <span class="stat-value">8,420/s</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Generadores Comprados</span>
+          <span class="stat-value">49</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Operaciones Compradas</span>
+          <span class="stat-value">4</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Telegramas Resueltos</span>
+          <span class="stat-value">12</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Tiempo de Juego</span>
+          <span class="stat-value">1h 23m 45s</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Fase Actual</span>
+          <span class="stat-value">Provincial</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-gold-bar"></div>
+  </div>
+</div>
+
+<!-- ========== MODAL: GUIA ========== -->
+<div class="modal-overlay" id="modal-guia">
+  <div class="modal-box">
+    <div class="modal-gold-bar"></div>
+    <button class="modal-close" data-close="modal-guia">&times;</button>
+    <div class="modal-header">
+      <h2 class="modal-title">&#x1F4D6; C&oacute;mo Se Juega</h2>
+      <p class="modal-subtitle">"Todo lo que necesit&aacute;s saber para conquistar el sistema."</p>
+    </div>
+    <div class="modal-body">
+      <div class="guia-sections">
+        <div class="guia-item">
+          <div class="guia-icon">&#x1F3DB;&#xFE0F;</div>
+          <div>
+            <div class="guia-topic">Influir</div>
+            <div class="guia-text">Hac&eacute; clic en el Sol de Mayo para ganar influencia. Cuanto m&aacute;s operaciones compres, m&aacute;s rendir&aacute; cada clic.</div>
+          </div>
+        </div>
+        <div class="guia-item">
+          <div class="guia-icon">&#x1F5F3;&#xFE0F;</div>
+          <div>
+            <div class="guia-topic">Recursos</div>
+            <div class="guia-text">Los generadores producen influencia autom&aacute;ticamente. Cada uno es m&aacute;s caro pero genera m&aacute;s. Se desbloquean con las fases.</div>
+          </div>
+        </div>
+        <div class="guia-item">
+          <div class="guia-icon">&#x2B50;</div>
+          <div>
+            <div class="guia-topic">Operaciones</div>
+            <div class="guia-text">Mejoras &uacute;nicas que aparecen al cumplir condiciones. Compralas y desaparecen de la lista. Cada una otorga un bonus permanente.</div>
+          </div>
+        </div>
+        <div class="guia-item">
+          <div class="guia-icon">&#x1F4E8;</div>
+          <div>
+            <div class="guia-topic">Telegramas</div>
+            <div class="guia-text">Eventos aleatorios con un temporizador. Acept&aacute; o rechaz&aacute; &mdash; cada decisi&oacute;n tiene consecuencias en tu popularidad y tus recursos.</div>
+          </div>
+        </div>
+        <div class="guia-item">
+          <div class="guia-icon">&#x1F3C6;</div>
+          <div>
+            <div class="guia-topic">Logros</div>
+            <div class="guia-text">Se desbloquean autom&aacute;ticamente a medida que avanz&aacute;s. Hay m&aacute;s de 200. Cada uno otorga bonus permanentes.</div>
+          </div>
+        </div>
+        <div class="guia-item">
+          <div class="guia-icon">&#x1F4FA;</div>
+          <div>
+            <div class="guia-topic">El Rotativo</div>
+            <div class="guia-text">Noticias sat&iacute;ricas que cambian solas. No afectan el juego, pero mantienen el morale alto.</div>
+          </div>
+        </div>
+      </div>
+      <p class="guia-footer">"El poder no se pregunta, se toma. Pero primero hay que leer el manual."</p>
+    </div>
+    <div class="modal-gold-bar"></div>
+  </div>
+</div>
+
+<!-- ========== MODAL: LOGIN ========== -->
+<div class="modal-overlay" id="modal-login">
+  <div class="modal-box">
+    <div class="modal-gold-bar"></div>
+    <button class="modal-close" data-close="modal-login">&times;</button>
+    <div class="modal-header">
+      <h2 class="modal-title">Acceso Clasificado</h2>
+      <p class="modal-subtitle">"Inici&aacute; sesi&oacute;n para que tu influencia trascienda las fronteras del navegador."</p>
+    </div>
+    <div class="modal-body">
+      <form class="login-form">
+        <div class="login-field">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="tupartido@democracia.sa" autocomplete="email">
+        </div>
+        <div class="login-field">
+          <label for="login-password">Contrase&ntilde;a</label>
+          <input type="password" id="login-password" placeholder="Tu clave secreta" autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn-gold" style="width:100%;">Ingresar</button>
+      </form>
+      <hr class="modal-divider">
+      <button class="btn-google">
+        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continuar con Google
+      </button>
+      <p class="login-hint">Tu progreso se guarda en la nube autom&aacute;ticamente al iniciar sesi&oacute;n.</p>
+    </div>
+    <div class="modal-gold-bar"></div>
+  </div>
+</div>
+
+<!-- ========== MODAL: CONFIRM RESET ========== -->
+<div class="modal-overlay" id="modal-reset">
+  <div class="modal-box modal-sm">
+    <div class="modal-gold-bar"></div>
+    <button class="modal-close" data-close="modal-reset">&times;</button>
+    <div class="modal-header">
+      <h2 class="modal-title">Reiniciar el juego?</h2>
+    </div>
+    <div class="modal-body">
+      <p class="reset-warning">Se perder&aacute; todo tu progreso. Esta acci&oacute;n no se puede deshacer. Los votantes que influiste quedan libres... por ahora.</p>
+      <div class="modal-actions">
+        <button class="btn-cancel" data-close="modal-reset">Cancelar</button>
+        <button class="btn-danger">Reiniciar</button>
+      </div>
+    </div>
+    <div class="modal-gold-bar"></div>
+  </div>
+</div>
+
+<!-- Scripts -->
+<script src="js/ui.js"></script>
+
 </body>
 </html>

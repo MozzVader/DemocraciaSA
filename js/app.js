@@ -85,7 +85,7 @@
     dom.panelLogros = document.getElementById('panel-achievements');
 
     // Toasts
-    dom.notification-notification-toastContainer = document.getElementById('notification-area');
+    dom.toastContainer = document.getElementById('notification-area');
 
     // Footer year
     document.getElementById('current-year').textContent = new Date().getFullYear();
@@ -327,15 +327,15 @@
   // ---- Toast System ----
 
   function showToast(milestone) {
-    var notification-toast = document.createElement('div');
-    notification-toast.className = 'notification-notification-toast';
+    var notificationToast = document.createElement('div');
+    notificationToast.className = 'notification-toast';
     var rewardText = '';
     switch (milestone.reward.type) {
       case 'clickMultiplier': rewardText = '+' + milestone.reward.value + ' influencia por clic'; break;
       case 'productionMultiplier': rewardText = 'x' + milestone.reward.value + ' producci\u00F3n total'; break;
       case 'unlockedPhase': rewardText = 'Nueva fase desbloqueada'; break;
     }
-    notification-toast.innerHTML =
+    notificationToast.innerHTML =
       '<div class="notification-accent"></div>' +
       '<div class="notification-icon">' + milestone.emoji + '</div>' +
       '<div class="notification-body">' +
@@ -345,10 +345,10 @@
         '<div class="notification-reward">' + rewardText + '</div>' +
       '</div>' +
       '<div class="notification-timer"></div>';
-    dom.notification-notification-toastContainer.appendChild(notification-toast);
+    dom.toastContainer.appendChild(notificationToast);
     setTimeout(function() {
-      notification-toast.classList.add('notification-exit');
-      setTimeout(function() { if (notification-toast.parentNode) notification-toast.parentNode.removeChild(notification-toast); }, 500);
+      notificationToast.classList.add('notification-exit');
+      setTimeout(function() { if (notificationToast.parentNode) notificationToast.parentNode.removeChild(notificationToast); }, 500);
     }, 5000);
   }
 

@@ -1204,7 +1204,7 @@ body {
   pointer-events: none;
 }
 
-.notification-notification-toast {
+.notification-toast {
   pointer-events: auto;
   width: 20rem;
   max-width: calc(100vw - 2rem);

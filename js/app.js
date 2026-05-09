@@ -117,6 +117,60 @@
 
   // ---- Render Functions ----
 
+  // Lightweight: updates text values only (no DOM rebuild). Called every tick.
+  function renderNumbers() {
+    renderHeader();
+    renderClicker();
+    renderStats();
+    renderMilestones();
+  }
+
+  // Heavy: rebuilds card DOM (generators + upgrades). Called only on actions.
+  function renderCards() {
+    renderGenerators();
+    renderUpgrades();
+  }
+
+  // Full render: both numbers and cards. Called on user actions / load / reset.
+  function renderAll() {
+    renderNumbers();
+    renderCards();
+  }
+
+  // Toggle can-afford class on existing cards without rebuilding DOM
+  function updateCardAffordability() {
+    var s = engine.state;
+    var genContainers = [dom.generatorList, dom.generatorListD];
+    for (var c = 0; c < genContainers.length; c++) {
+      if (!genContainers[c]) continue;
+      var cards = genContainers[c].querySelectorAll('.generator-card');
+      for (var i = 0; i < cards.length; i++) {
+        var genId = cards[i].dataset.genId;
+        var owned = s.generators[genId] ? s.generators[genId].owned : 0;
+        var cost;
+        if (engine.buyAmount === -1) {
+          var maxBuy = getMaxBuyable(genId, owned, s.influencia);
+          cost = maxBuy > 0 ? getGeneratorCostBulk(genId, owned, maxBuy) : getGeneratorCost(genId, owned);
+        } else {
+          cost = getGeneratorCostBulk(genId, owned, engine.buyAmount);
+        }
+        cards[i].classList.toggle('can-afford', s.influencia >= cost);
+      }
+    }
+    var upContainers = [dom.upgradeList, dom.upgradeListD];
+    for (var c = 0; c < upContainers.length; c++) {
+      if (!upContainers[c]) continue;
+      var upCards = upContainers[c].querySelectorAll('.operation-card');
+      for (var i = 0; i < upCards.length; i++) {
+        var upId = upCards[i].dataset.upgradeId;
+        var config = UPGRADES.find(function(u) { return u.id === upId; });
+        if (!config) continue;
+        var hasResource = config.costResource === 'influencia' ? s.influencia >= config.cost : s.dinero >= config.cost;
+        upCards[i].classList.toggle('can-afford', hasResource);
+      }
+    }
+  }
+
   function renderHeader() {
     var s = engine.state;
     var pps = engine.getProductionPerSecond();
@@ -306,15 +360,6 @@
     }
 
     dom.playTime.textContent = 'Tiempo de juego: ' + formatTime(s.playTime);
-  }
-
-  function renderAll() {
-    renderHeader();
-    renderClicker();
-    renderGenerators();
-    renderUpgrades();
-    renderStats();
-    renderMilestones();
   }
 
   // ---- Float Numbers ----
@@ -633,7 +678,17 @@
   // ---- Game Loop ----
 
   function startGameLoop() {
-    setInterval(function() { engine.tick(TICK_INTERVAL); }, TICK_INTERVAL);
+    setInterval(function() {
+      var prevPhase = engine.state.currentPhase;
+      var newMilestones = engine.tick(TICK_INTERVAL);
+      // Lightweight render: update numbers and affordability classes
+      renderNumbers();
+      updateCardAffordability();
+      // Full card rebuild only when milestones unlock or phase changes
+      if (newMilestones.length > 0 || engine.state.currentPhase !== prevPhase) {
+        renderCards();
+      }
+    }, TICK_INTERVAL);
     setInterval(function() {
       engine.save();
       saveToCloud();

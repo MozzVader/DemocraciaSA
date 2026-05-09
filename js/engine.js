@@ -313,11 +313,11 @@ GameEngine.prototype.tick = function(deltaMs) {
   this.state.playTime += deltaSec;
   this.state.currentPhase = getCurrentPhase(this.state.totalInfluencia);
 
-  this.checkMilestones();
-  this.notify();
+  return this.checkMilestones();
 };
 
 GameEngine.prototype.checkMilestones = function() {
+  var newlyUnlocked = [];
   for (let i = 0; i < MILESTONES.length; i++) {
     const milestone = MILESTONES[i];
     if (this.state.unlockedMilestones.indexOf(milestone.id) !== -1) continue;
@@ -340,9 +340,11 @@ GameEngine.prototype.checkMilestones = function() {
     }
     if (met) {
       this.state.unlockedMilestones.push(milestone.id);
+      newlyUnlocked.push(milestone);
       if (this.onMilestone) this.onMilestone(milestone);
     }
   }
+  return newlyUnlocked;
 };
 
 GameEngine.prototype.save = function() {

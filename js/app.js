@@ -558,7 +558,9 @@
     dom.registerSubmit.addEventListener('click', handleRegister);
     dom.googleLoginBtn.addEventListener('click', handleGoogleLogin);
     // Enter key on forms
+    dom.loginEmail.addEventListener('keydown', function(e) { if (e.key === 'Enter') handleLogin(); });
     dom.loginPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') handleLogin(); });
+    dom.registerEmail.addEventListener('keydown', function(e) { if (e.key === 'Enter') handleRegister(); });
     dom.registerPassword.addEventListener('keydown', function(e) { if (e.key === 'Enter') handleRegister(); });
 
     // Mobile clicker

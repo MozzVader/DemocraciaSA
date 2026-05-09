@@ -79,6 +79,10 @@ body {
   min-width: 0;
 }
 
+.button-zone {
+  position: relative;
+}
+
 .mobile-clicker {
   /* visible on mobile only */
 }
@@ -200,11 +204,12 @@ body {
   gap: 0.75rem;
 }
 
-.brand-name h1 {
+h1.brand-name {
   font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   white-space: nowrap;
+  margin: 0;
 }
 
 .brand-highlight { color: #d4af37; }
@@ -437,10 +442,7 @@ body {
   color: #d4af37;
 }
 
-.panel-tab-panel {
-  padding: 1rem;
-  min-height: 200px;
-}
+
 
 /* ---- Clicker ---- */
 
@@ -1191,6 +1193,12 @@ body {
   background: #f59e0b;
 }
 
+.modal-btn-gold:disabled {
+  opacity: 0.5;
+  cursor: wait;
+  background: #a08030;
+}
+
 /* ---- Auth Section (Header) ---- */
 
 .auth-section {
@@ -1339,6 +1347,11 @@ body {
 
 .auth-submit-btn {
   margin-top: 0.25rem;
+}
+
+.auth-submit-btn:disabled {
+  opacity: 0.5;
+  cursor: wait;
 }
 
 /* ---- Google OAuth Button ---- */

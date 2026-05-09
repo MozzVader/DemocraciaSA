@@ -17,78 +17,78 @@
 
   function cacheDom() {
     // Header
-    dom.influenciaDisplay = document.getElementById('influencia-display');
-    dom.influenciaPerSec = document.getElementById('influencia-per-sec');
-    dom.dineroDisplay = document.getElementById('dinero-display');
-    dom.phaseLabel = document.getElementById('phase-label');
+    dom.influenciaDisplay = document.getElementById('influencia-amount');
+    dom.influenciaPerSec = document.getElementById('influencia-rate');
+    dom.dineroDisplay = document.getElementById('dinero-amount');
+    dom.phaseLabel = document.getElementById('current-phase');
 
     // Mobile clicker
-    dom.totalInfluencia = document.getElementById('total-influencia');
-    dom.prodPerSec = document.getElementById('prod-per-sec');
-    dom.clickPower = document.getElementById('click-power');
-    dom.totalClicks = document.getElementById('total-clicks');
-    dom.clickerBtn = document.getElementById('clicker-btn');
-    dom.clickerArea = document.getElementById('clicker-area');
-    dom.floatsContainer = document.getElementById('floats-container');
+    dom.totalInfluencia = document.getElementById('clicker-influencia');
+    dom.prodPerSec = document.getElementById('clicker-rate');
+    dom.clickPower = document.getElementById('clicker-strength');
+    dom.totalClicks = document.getElementById('click-counter');
+    dom.clickerBtn = document.getElementById('influence-button');
+    dom.clickerArea = document.getElementById('button-zone');
+    dom.floatsContainer = document.getElementById('floating-numbers');
 
     // Desktop clicker
-    dom.totalInfluenciaD = document.getElementById('total-influencia-desktop');
-    dom.prodPerSecD = document.getElementById('prod-per-sec-desktop');
-    dom.clickPowerD = document.getElementById('click-power-desktop');
-    dom.totalClicksD = document.getElementById('total-clicks-desktop');
-    dom.clickerBtnD = document.getElementById('clicker-btn-desktop');
-    dom.clickerAreaD = document.getElementById('clicker-area-desktop');
+    dom.totalInfluenciaD = document.getElementById('clicker-influencia-desktop');
+    dom.prodPerSecD = document.getElementById('clicker-rate-desktop');
+    dom.clickPowerD = document.getElementById('clicker-strength-desktop');
+    dom.totalClicksD = document.getElementById('click-counter-desktop');
+    dom.clickerBtnD = document.getElementById('influence-button-desktop');
+    dom.clickerAreaD = document.getElementById('button-zone-desktop');
 
     // Lists
-    dom.generatorList = document.getElementById('generator-list');
-    dom.upgradeList = document.getElementById('upgrade-list');
-    dom.milestoneList = document.getElementById('milestone-list');
-    dom.generatorListD = document.getElementById('generator-list-desktop');
-    dom.upgradeListD = document.getElementById('upgrade-list-desktop');
-    dom.milestoneListD = document.getElementById('milestone-list-desktop');
+    dom.generatorList = document.getElementById('generators-list');
+    dom.upgradeList = document.getElementById('operations-list');
+    dom.milestoneList = document.getElementById('achievements-list');
+    dom.generatorListD = document.getElementById('generators-list-desktop');
+    dom.upgradeListD = document.getElementById('operations-list-desktop');
+    dom.milestoneListD = document.getElementById('achievements-list-desktop');
 
     // Stats (desktop)
-    dom.statsDinero = document.getElementById('stats-dinero');
-    dom.statsDineroPerSec = document.getElementById('stats-dinero-per-sec');
-    dom.statsProduction = document.getElementById('stats-production');
-    dom.qualityValue = document.getElementById('quality-value');
-    dom.qualityBar = document.getElementById('quality-bar');
-    dom.qualityQuote = document.getElementById('quality-quote');
-    dom.statsPhase = document.getElementById('stats-phase');
-    dom.milestonesCount = document.getElementById('milestones-count');
-    dom.nextMilestoneName = document.getElementById('next-milestone-name');
-    dom.nextMilestoneBar = document.getElementById('next-milestone-bar');
-    dom.nextMilestoneContainer = document.getElementById('next-milestone-container');
-    dom.playTime = document.getElementById('play-time');
+    dom.statsDinero = document.getElementById('stat-dinero');
+    dom.statsDineroPerSec = document.getElementById('stat-dinero-rate');
+    dom.statsProduction = document.getElementById('stat-production-rate');
+    dom.qualityValue = document.getElementById('quality-number');
+    dom.qualityBar = document.getElementById('quality-meter');
+    dom.qualityQuote = document.getElementById('quality-commentary');
+    dom.statsPhase = document.getElementById('stat-current-phase');
+    dom.milestonesCount = document.getElementById('achievements-progress');
+    dom.nextMilestoneName = document.getElementById('next-achievement-name');
+    dom.nextMilestoneBar = document.getElementById('next-achievement-bar');
+    dom.nextMilestoneContainer = document.getElementById('next-achievement-container');
+    dom.playTime = document.getElementById('session-timer');
 
     // Badges
-    dom.upgradeBadge = document.getElementById('upgrade-badge');
-    dom.upgradeBadgeD = document.getElementById('upgrade-badge-desktop');
+    dom.upgradeBadge = document.getElementById('operations-counter');
+    dom.upgradeBadgeD = document.getElementById('operations-counter-desktop');
 
     // News
-    dom.headlineText = document.getElementById('headline-text');
+    dom.headlineText = document.getElementById('ticker-headline');
 
     // Buy amount (all buttons)
-    dom.buyAmountBtns = document.querySelectorAll('.buy-amount-btn');
+    dom.buyAmountBtns = document.querySelectorAll('.quantity-option');
 
     // Footer
-    dom.footerSave = document.getElementById('footer-save');
-    dom.footerGuide = document.getElementById('footer-guide');
-    dom.footerReset = document.getElementById('footer-reset');
+    dom.footerSave = document.getElementById('button-save');
+    dom.footerGuide = document.getElementById('button-guide');
+    dom.footerReset = document.getElementById('button-reset');
 
     // Mobile tabs
-    dom.tabGeneradores = document.getElementById('tab-generadores');
-    dom.tabOperaciones = document.getElementById('tab-operaciones');
-    dom.tabLogros = document.getElementById('tab-logros');
-    dom.panelGeneradores = document.getElementById('panel-generadores');
-    dom.panelOperaciones = document.getElementById('panel-operaciones');
-    dom.panelLogros = document.getElementById('panel-logros');
+    dom.tabGeneradores = document.getElementById('tab-generators');
+    dom.tabOperaciones = document.getElementById('tab-operations');
+    dom.tabLogros = document.getElementById('tab-achievements');
+    dom.panelGeneradores = document.getElementById('panel-generators');
+    dom.panelOperaciones = document.getElementById('panel-operations');
+    dom.panelLogros = document.getElementById('panel-achievements');
 
     // Toasts
-    dom.toastContainer = document.getElementById('toast-container');
+    dom.notification-notification-toastContainer = document.getElementById('notification-area');
 
     // Footer year
-    document.getElementById('footer-year').textContent = new Date().getFullYear();
+    document.getElementById('current-year').textContent = new Date().getFullYear();
   }
 
   // ---- Helper: set text on one or two elements ----
@@ -140,14 +140,14 @@
       }
 
       var canAfford = s.influencia >= displayCost;
-      html += '<div class="gen-card' + (canAfford ? ' affordable' : '') + '" data-gen-id="' + gen.id + '">';
-      html += '<span class="gen-emoji">' + gen.emoji + '</span>';
-      html += '<div class="gen-info">';
-      html += '<div class="gen-header"><span class="gen-name">' + gen.name + '</span><span class="gen-owned">' + owned + '</span></div>';
-      html += '<div class="gen-quote">' + gen.quote + '</div>';
-      html += '<div class="gen-footer"><span class="gen-cost">Costo: ' + formatNumber(displayCost);
-      if (engine.buyAmount !== 1) html += ' <span class="gen-amount">(' + (displayAmount === 0 ? '-' : displayAmount) + ')</span>';
-      html += '</span><span class="gen-production">+' + formatNumber(gen.baseProduction) + '/s c/u</span></div>';
+      html += '<div class="generator-card' + (canAfford ? ' can-afford' : '') + '" data-gen-id="' + gen.id + '">';
+      html += '<span class="card-icon">' + gen.emoji + '</span>';
+      html += '<div class="card-details">';
+      html += '<div class="card-top"><span class="card-name">' + gen.name + '</span><span class="card-count">' + owned + '</span></div>';
+      html += '<div class="card-quote">' + gen.quote + '</div>';
+      html += '<div class="card-bottom"><span class="card-price">Costo: ' + formatNumber(displayCost);
+      if (engine.buyAmount !== 1) html += ' <span class="card-quantity">(' + (displayAmount === 0 ? '-' : displayAmount) + ')</span>';
+      html += '</span><span class="card-output">+' + formatNumber(gen.baseProduction) + '/s c/u</span></div>';
       html += '</div></div>';
     }
     return html;
@@ -162,7 +162,7 @@
   }
 
   function bindGeneratorClicks(container) {
-    var cards = container.querySelectorAll('.gen-card');
+    var cards = container.querySelectorAll('.generator-card');
     for (var j = 0; j < cards.length; j++) {
       cards[j].addEventListener('click', function() {
         engine.buyGenerator(this.dataset.genId);
@@ -178,7 +178,7 @@
     }
 
     if (available.length === 0) {
-      return '<div class="empty-message">"Ninguna operaci\u00F3n disponible todav\u00EDa, seguí construyendo influencia..."</div>';
+      return '<div class="empty-notice">"Ninguna operaci\u00F3n disponible todav\u00EDa, seguí construyendo influencia..."</div>';
     }
 
     var html = '';
@@ -186,12 +186,12 @@
       var u = available[i];
       var costDisplay = u.costResource === 'influencia' ? formatNumber(u.cost) : formatDinero(u.cost);
       var hasResource = u.costResource === 'influencia' ? s.influencia >= u.cost : s.dinero >= u.cost;
-      html += '<div class="upgrade-card' + (hasResource ? ' affordable' : '') + '" data-upgrade-id="' + u.id + '">';
-      html += '<span class="upgrade-emoji">' + u.emoji + '</span>';
-      html += '<div class="upgrade-info">';
-      html += '<div class="upgrade-name">' + u.name + '</div>';
-      html += '<div class="upgrade-desc">' + u.description + '</div>';
-      html += '<div class="upgrade-cost">Costo: ' + costDisplay;
+      html += '<div class="operation-card' + (hasResource ? ' can-afford' : '') + '" data-upgrade-id="' + u.id + '">';
+      html += '<span class="card-icon">' + u.emoji + '</span>';
+      html += '<div class="card-details">';
+      html += '<div class="card-name">' + u.name + '</div>';
+      html += '<div class="card-description">' + u.description + '</div>';
+      html += '<div class="card-price">Costo: ' + costDisplay;
       if (u.costResource === 'dinero') html += ' (dinero)';
       html += '</div></div></div>';
     }
@@ -213,7 +213,7 @@
   }
 
   function bindUpgradeClicks(container) {
-    var cards = container.querySelectorAll('.upgrade-card');
+    var cards = container.querySelectorAll('.operation-card');
     for (var j = 0; j < cards.length; j++) {
       cards[j].addEventListener('click', function() {
         engine.purchaseUpgrade(this.dataset.upgradeId);
@@ -227,11 +227,11 @@
     for (var i = 0; i < MILESTONES.length; i++) {
       var m = MILESTONES[i];
       var isUnlocked = s.unlockedMilestones.indexOf(m.id) !== -1;
-      html += '<div class="milestone-card' + (isUnlocked ? ' unlocked' : '') + '">';
-      html += '<span class="milestone-emoji">' + (isUnlocked ? m.emoji : '\u{1F512}') + '</span>';
-      html += '<div class="milestone-info"><div class="milestone-name">' + m.name + '</div>';
-      html += '<div class="milestone-desc">' + (isUnlocked ? m.description : '???') + '</div></div>';
-      if (isUnlocked) html += '<span class="milestone-check">\u2713</span>';
+      html += '<div class="achievement-card' + (isUnlocked ? ' unlocked' : '') + '">';
+      html += '<span class="achievement-icon">' + (isUnlocked ? m.emoji : '\u{1F512}') + '</span>';
+      html += '<div class="achievement-details"><div class="achievement-name">' + m.name + '</div>';
+      html += '<div class="achievement-description">' + (isUnlocked ? m.description : '???') + '</div></div>';
+      if (isUnlocked) html += '<span class="achievement-checkmark">\u2713</span>';
       html += '</div>';
     }
     return html;
@@ -278,7 +278,7 @@
     }
 
     if (unlockedCount === totalMilestones) {
-      dom.nextMilestoneContainer.innerHTML = '<div class="milestone-all-done">\u{1F3C6} Todos desbloqueados</div>';
+      dom.nextMilestoneContainer.innerHTML = '<div class="all-achievements-unlocked">\u{1F3C6} Todos desbloqueados</div>';
     } else if (nextMilestone) {
       var req = nextMilestone.requirement;
       if (req.type === 'totalInfluencia') nextProgress = Math.min(100, (s.totalInfluencia / req.value) * 100);
@@ -303,7 +303,7 @@
 
   function addFloat(container, x, value) {
     var el = document.createElement('div');
-    el.className = 'float-number';
+    el.className = 'floating-number';
     el.textContent = '+' + formatNumber(value);
     el.style.left = x + '%';
     container.appendChild(el);
@@ -327,28 +327,28 @@
   // ---- Toast System ----
 
   function showToast(milestone) {
-    var toast = document.createElement('div');
-    toast.className = 'toast';
+    var notification-toast = document.createElement('div');
+    notification-toast.className = 'notification-notification-toast';
     var rewardText = '';
     switch (milestone.reward.type) {
       case 'clickMultiplier': rewardText = '+' + milestone.reward.value + ' influencia por clic'; break;
       case 'productionMultiplier': rewardText = 'x' + milestone.reward.value + ' producci\u00F3n total'; break;
       case 'unlockedPhase': rewardText = 'Nueva fase desbloqueada'; break;
     }
-    toast.innerHTML =
-      '<div class="toast-accent"></div>' +
-      '<div class="toast-icon">' + milestone.emoji + '</div>' +
-      '<div class="toast-content">' +
-        '<div class="toast-label">Logro Desbloqueado</div>' +
-        '<div class="toast-title">' + milestone.name + '</div>' +
-        '<div class="toast-desc">' + milestone.description + '</div>' +
-        '<div class="toast-reward">' + rewardText + '</div>' +
+    notification-toast.innerHTML =
+      '<div class="notification-accent"></div>' +
+      '<div class="notification-icon">' + milestone.emoji + '</div>' +
+      '<div class="notification-body">' +
+        '<div class="notification-type">Logro Desbloqueado</div>' +
+        '<div class="notification-heading">' + milestone.name + '</div>' +
+        '<div class="notification-text">' + milestone.description + '</div>' +
+        '<div class="notification-reward">' + rewardText + '</div>' +
       '</div>' +
-      '<div class="toast-progress"></div>';
-    dom.toastContainer.appendChild(toast);
+      '<div class="notification-timer"></div>';
+    dom.notification-notification-toastContainer.appendChild(notification-toast);
     setTimeout(function() {
-      toast.classList.add('toast-exit');
-      setTimeout(function() { if (toast.parentNode) toast.parentNode.removeChild(toast); }, 500);
+      notification-toast.classList.add('notification-exit');
+      setTimeout(function() { if (notification-toast.parentNode) notification-toast.parentNode.removeChild(notification-toast); }, 500);
     }, 5000);
   }
 
@@ -414,21 +414,21 @@
 
     // Footer
     dom.footerSave.addEventListener('click', function() { engine.save(); });
-    dom.footerGuide.addEventListener('click', function() { openDialog('guide-dialog'); });
-    dom.footerReset.addEventListener('click', function() { openDialog('reset-dialog'); });
+    dom.footerGuide.addEventListener('click', function() { openDialog('help-modal'); });
+    dom.footerReset.addEventListener('click', function() { openDialog('confirm-modal'); });
 
     // Reset dialog
-    document.getElementById('reset-cancel').addEventListener('click', function() { closeDialog('reset-dialog'); });
-    document.getElementById('reset-confirm').addEventListener('click', function() {
+    document.getElementById('confirm-cancel').addEventListener('click', function() { closeDialog('confirm-modal'); });
+    document.getElementById('confirm-accept').addEventListener('click', function() {
       engine.reset();
-      closeDialog('reset-dialog');
+      closeDialog('confirm-modal');
     });
 
     // Guide dialog
-    document.getElementById('guide-close').addEventListener('click', function() { closeDialog('guide-dialog'); });
+    document.getElementById('help-close').addEventListener('click', function() { closeDialog('help-modal'); });
 
     // Dialog backdrop
-    var overlays = document.querySelectorAll('.dialog-overlay');
+    var overlays = document.querySelectorAll('.modal-backdrop');
     for (var i = 0; i < overlays.length; i++) {
       overlays[i].addEventListener('click', function(e) {
         if (e.target === this) closeDialog(this.id);

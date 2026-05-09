@@ -15,34 +15,34 @@
 </head>
 <body>
 
-<div class="app-container">
+<div class="game-wrapper">
   <!-- Background -->
-  <div class="bg-blobs">
-    <div class="bg-blob-1"></div>
-    <div class="bg-blob-2"></div>
+  <div class="background-effects">
+    <div class="background-glow-1"></div>
+    <div class="background-glow-2"></div>
   </div>
 
   <!-- Header -->
-  <header class="game-header glass-dark">
-    <div class="header-inner">
-      <div class="header-left">
-        <h1 class="header-title">
-          <span class="title-gold">DEMOCRACIA</span><span class="title-muted">.SA</span>
+  <header class="topbar glass-dark">
+    <div class="topbar-content">
+      <div class="topbar-brand">
+        <h1 class="brand-name">
+          <span class="brand-highlight">DEMOCRACIA</span><span class="brand-subtle">.SA</span>
         </h1>
-        <span class="header-phase" id="phase-label"></span>
+        <span class="phase-indicator" id="current-phase"></span>
       </div>
-      <div class="header-resources">
-        <div class="resource-block">
+      <div class="resources-bar">
+        <div class="resource-group">
           <div class="resource-label">Influencia</div>
-          <div class="resource-value resource-value-gold">
-            <span id="influencia-display">0</span>
-            <span class="resource-per-sec" id="influencia-per-sec">+0/s</span>
+          <div class="resource-amount resource-gold">
+            <span id="influencia-amount">0</span>
+            <span class="resource-rate" id="influencia-rate">+0/s</span>
           </div>
         </div>
-        <div class="resource-block">
+        <div class="resource-group">
           <div class="resource-label">Dinero</div>
-          <div class="resource-value resource-value-green">
-            $<span id="dinero-display">0</span>
+          <div class="resource-amount resource-green">
+            $<span id="dinero-amount">0</span>
           </div>
         </div>
       </div>
@@ -50,156 +50,156 @@
   </header>
 
   <!-- News Ticker -->
-  <div class="news-ticker glass-dark-subtle">
-    <div class="news-inner">
-      <div class="news-indicator">
-        <span class="news-dot"></span>
-        <span class="news-label">Rotativo</span>
+  <div class="ticker-bar glass-subtle">
+    <div class="ticker-content">
+      <div class="ticker-badge">
+        <span class="live-dot"></span>
+        <span class="ticker-label">Rotativo</span>
       </div>
-      <div class="news-text">
-        <p class="news-headline" id="headline-text">Cargando noticias...</p>
+      <div class="ticker-headline-area">
+        <p class="ticker-headline" id="ticker-headline">Cargando noticias...</p>
       </div>
     </div>
   </div>
 
   <!-- Main Content -->
-  <main class="main-content">
-    <div class="main-inner">
+  <main class="game-main">
+    <div class="game-main-inner">
 
       <!-- Mobile: Clicker -->
       <div class="mobile-clicker">
-        <div class="clicker-section">
+        <div class="influence-center">
           <div style="text-align:center;">
-            <div class="clicker-label">Influencia Total</div>
-            <div class="clicker-value" id="total-influencia">0</div>
-            <div class="clicker-stats">
-              <span id="prod-per-sec">0/s</span> · <span id="click-power">1/click</span>
+            <div class="influence-label">Influencia Total</div>
+            <div class="influence-display" id="clicker-influencia">0</div>
+            <div class="influence-details">
+              <span id="clicker-rate">0/s</span> · <span id="clicker-strength">1/click</span>
             </div>
           </div>
-          <div class="clicker-area" id="clicker-area">
-            <div class="clicker-ping"></div>
-            <div id="floats-container"></div>
-            <button class="clicker-btn" id="clicker-btn">
+          <div class="button-zone" id="button-zone">
+            <div class="click-pulse"></div>
+            <div id="floating-numbers"></div>
+            <button class="influence-button" id="influence-button">
               <img src="sol-de-mayo.png" alt="Sol de Mayo" draggable="false">
-              <span class="clicker-btn-label">INFLUENCIAR</span>
+              <span class="influence-button-label">INFLUENCIAR</span>
             </button>
           </div>
-          <div class="clicker-total"><span id="total-clicks">0</span> clics totales</div>
+          <div class="click-counter-label"><span id="click-counter">0</span> clics totales</div>
         </div>
       </div>
 
       <!-- Mobile: Tabs -->
-      <div class="mobile-tabs-nav">
-        <button class="mobile-tab active" data-tab="generadores" id="tab-generadores">🚀 Generadores</button>
-        <button class="mobile-tab" data-tab="operaciones" id="tab-operaciones">⭐ Operaciones</button>
-        <button class="mobile-tab" data-tab="logros" id="tab-logros">🏆 Logros</button>
+      <div class="panel-tabs">
+        <button class="panel-tab active" data-tab="generadores" id="tab-generators">🚀 Generadores</button>
+        <button class="panel-tab" data-tab="operaciones" id="tab-operations">⭐ Operaciones</button>
+        <button class="panel-tab" data-tab="logros" id="tab-achievements">🏆 Logros</button>
       </div>
 
       <!-- Mobile Tab Panels -->
-      <div class="mobile-panel" id="panel-generadores">
-        <div class="panel-header">
-          <div class="panel-title">🚀 Red de Influencia</div>
-          <div class="buy-amount-group">
-            <button class="buy-amount-btn active" data-amount="1">x1</button>
-            <button class="buy-amount-btn" data-amount="10">x10</button>
-            <button class="buy-amount-btn" data-amount="-1">Max</button>
+      <div class="tab-panel" id="panel-generators">
+        <div class="section-header">
+          <div class="section-title">🚀 Red de Influencia</div>
+          <div class="quantity-selector">
+            <button class="quantity-option active" data-amount="1">x1</button>
+            <button class="quantity-option" data-amount="10">x10</button>
+            <button class="quantity-option" data-amount="-1">Max</button>
           </div>
         </div>
-        <div class="panel-scroll custom-scrollbar" id="generator-list"></div>
+        <div class="section-scroll custom-scroll" id="generators-list"></div>
       </div>
-      <div class="mobile-panel" id="panel-operaciones" style="display:none;">
-        <div class="panel-header">
-          <div class="panel-title">⭐ Operaciones Especiales</div>
-          <span class="upgrade-badge" id="upgrade-badge">0/18</span>
+      <div class="tab-panel" id="panel-operations" style="display:none;">
+        <div class="section-header">
+          <div class="section-title">⭐ Operaciones Especiales</div>
+          <span class="operations-counter" id="operations-counter">0/18</span>
         </div>
-        <div class="panel-scroll custom-scrollbar" id="upgrade-list"></div>
+        <div class="section-scroll custom-scroll" id="operations-list"></div>
       </div>
-      <div class="mobile-panel" id="panel-logros" style="display:none;">
-        <div class="panel-scroll custom-scrollbar" id="milestone-list"></div>
+      <div class="tab-panel" id="panel-achievements" style="display:none;">
+        <div class="section-scroll custom-scroll" id="achievements-list"></div>
       </div>
 
       <!-- Desktop Grid -->
-      <div class="desktop-grid">
+      <div class="desktop-layout">
         <!-- Left: Generators -->
-        <aside class="desktop-left">
-          <div class="panel-header">
-            <div class="panel-title">🚀 Red de Influencia</div>
-            <div class="buy-amount-group">
-              <button class="buy-amount-btn active" data-amount="1">x1</button>
-              <button class="buy-amount-btn" data-amount="10">x10</button>
-              <button class="buy-amount-btn" data-amount="-1">Max</button>
+        <aside class="sidebar-generators">
+          <div class="section-header">
+            <div class="section-title">🚀 Red de Influencia</div>
+            <div class="quantity-selector">
+              <button class="quantity-option active" data-amount="1">x1</button>
+              <button class="quantity-option" data-amount="10">x10</button>
+              <button class="quantity-option" data-amount="-1">Max</button>
             </div>
           </div>
-          <div class="panel-scroll custom-scrollbar" id="generator-list-desktop"></div>
+          <div class="section-scroll custom-scroll" id="generators-list-desktop"></div>
         </aside>
 
         <!-- Center: Clicker + Stats -->
-        <div class="desktop-center">
-          <div class="clicker-section">
+        <div class="center-column">
+          <div class="influence-center">
             <div style="text-align:center;">
-              <div class="clicker-label">Influencia Total</div>
-              <div class="clicker-value" id="total-influencia-desktop">0</div>
-              <div class="clicker-stats">
-                <span id="prod-per-sec-desktop">0/s</span> · <span id="click-power-desktop">1/click</span>
+              <div class="influence-label">Influencia Total</div>
+              <div class="influence-display" id="clicker-influencia-desktop">0</div>
+              <div class="influence-details">
+                <span id="clicker-rate-desktop">0/s</span> · <span id="clicker-strength-desktop">1/click</span>
               </div>
             </div>
-            <div class="clicker-area" id="clicker-area-desktop">
-              <div class="clicker-ping"></div>
-              <button class="clicker-btn" id="clicker-btn-desktop">
+            <div class="button-zone" id="button-zone-desktop">
+              <div class="click-pulse"></div>
+              <button class="influence-button" id="influence-button-desktop">
                 <img src="sol-de-mayo.png" alt="Sol de Mayo" draggable="false">
-                <span class="clicker-btn-label">INFLUENCIAR</span>
+                <span class="influence-button-label">INFLUENCIAR</span>
               </button>
             </div>
-            <div class="clicker-total"><span id="total-clicks-desktop">0</span> clics totales</div>
+            <div class="click-counter-label"><span id="click-counter-desktop">0</span> clics totales</div>
           </div>
 
-          <div class="stats-grid">
-            <div class="stat-card">
+          <div class="statistics-grid">
+            <div class="stat-box">
               <div class="stat-label">Dinero</div>
-              <div class="stat-value stat-value-green" id="stats-dinero">$0</div>
-              <div class="stat-sub" id="stats-dinero-per-sec">+$0/s</div>
+              <div class="stat-value stat-green" id="stat-dinero">$0</div>
+              <div class="stat-sub" id="stat-dinero-rate">+$0/s</div>
               <div class="stat-divider">
                 <div class="stat-label">Produccion</div>
-                <div class="stat-value stat-value-gold" id="stats-production">0/s</div>
+                <div class="stat-value stat-gold" id="stat-production-rate">0/s</div>
               </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-box">
               <div class="stat-label">Calidad Democratica</div>
-              <div class="stat-quality-value" id="quality-value">100%</div>
-              <div class="quality-bar-track">
-                <div class="quality-bar-fill" id="quality-bar" style="width:100%;background:#22c55e;"></div>
+              <div class="stat-quality-number" id="quality-number">100%</div>
+              <div class="quality-meter-track">
+                <div class="quality-meter-fill" id="quality-meter" style="width:100%;background:#22c55e;"></div>
               </div>
-              <div class="quality-quote" id="quality-quote"></div>
+              <div class="quality-commentary" id="quality-commentary"></div>
             </div>
-            <div class="stat-card">
+            <div class="stat-box">
               <div class="stat-label">Fase Actual</div>
-              <div class="stat-phase-value" id="stats-phase"></div>
+              <div class="phase-display" id="stat-current-phase"></div>
             </div>
-            <div class="stat-card">
-              <div class="stat-label">Logros (<span id="milestones-count">0/9</span>)</div>
-              <div id="next-milestone-container">
-                <div class="milestone-next-name" id="next-milestone-name"></div>
-                <div class="milestone-progress-track">
-                  <div class="milestone-progress-fill" id="next-milestone-bar" style="width:0%;"></div>
+            <div class="stat-box">
+              <div class="stat-label">Logros (<span id="achievements-progress">0/9</span>)</div>
+              <div id="next-achievement-container">
+                <div class="next-achievement-name" id="next-achievement-name"></div>
+                <div class="next-achievement-track">
+                  <div class="next-achievement-fill" id="next-achievement-bar" style="width:0%;"></div>
                 </div>
               </div>
             </div>
           </div>
-          <div class="play-time" id="play-time">Tiempo de juego: 0s</div>
+          <div class="session-timer" id="session-timer">Tiempo de juego: 0s</div>
         </div>
 
         <!-- Right: Upgrades + Milestones -->
-        <aside class="desktop-right">
-          <div class="desktop-upgrades">
-            <div class="panel-header">
-              <div class="panel-title">⭐ Operaciones Especiales</div>
-              <span class="upgrade-badge" id="upgrade-badge-desktop">0/18</span>
+        <aside class="sidebar-upgrades">
+          <div class="upgrades-section">
+            <div class="section-header">
+              <div class="section-title">⭐ Operaciones Especiales</div>
+              <span class="operations-counter" id="operations-counter-desktop">0/18</span>
             </div>
-            <div class="panel-scroll custom-scrollbar" id="upgrade-list-desktop"></div>
+            <div class="section-scroll custom-scroll" id="operations-list-desktop"></div>
           </div>
-          <div class="desktop-milestones">
-            <div class="panel-title" style="font-size:1.125rem;">🏆 Logros</div>
-            <div class="panel-scroll custom-scrollbar" id="milestone-list-desktop"></div>
+          <div class="achievements-section">
+            <div class="section-title" style="font-size:1.125rem;">🏆 Logros</div>
+            <div class="section-scroll custom-scroll" id="achievements-list-desktop"></div>
           </div>
         </aside>
       </div>
@@ -208,70 +208,70 @@
   </main>
 
   <!-- Footer -->
-  <footer class="game-footer glass-dark">
-    <div class="footer-copy">DOCUMENTO CLASIFICADO · DEMOCRACIA S.A. © <span id="footer-year"></span></div>
-    <div class="footer-actions">
-      <button class="footer-btn" id="footer-guide">
+  <footer class="bottombar glass-dark">
+    <div class="copyright">DOCUMENTO CLASIFICADO · DEMOCRACIA S.A. © <span id="current-year"></span></div>
+    <div class="bottombar-buttons">
+      <button class="bottombar-btn" id="button-guide">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-        <span class="footer-btn-label">Guia</span>
+        <span class="bottombar-btn-text">Guia</span>
       </button>
-      <button class="footer-btn" id="footer-save">Guardar</button>
-      <button class="footer-btn footer-btn-danger" id="footer-reset">Reiniciar</button>
+      <button class="bottombar-btn" id="button-save">Guardar</button>
+      <button class="bottombar-btn bottombar-btn-danger" id="button-reset">Reiniciar</button>
     </div>
   </footer>
 </div>
 
 <!-- Guide Dialog -->
-<div class="dialog-overlay" id="guide-dialog">
-  <div class="dialog-box glass-dialog">
-    <div class="dialog-accent-top"></div>
-    <div class="dialog-content">
-      <div class="dialog-title">
+<div class="modal-backdrop" id="help-modal">
+  <div class="modal-window glass-modal">
+    <div class="modal-gold-top"></div>
+    <div class="modal-body">
+      <div class="modal-title">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
         Como Se Juega
       </div>
-      <div class="dialog-subtitle">"Todo lo que necesitas saber para conquistar el sistema."</div>
-      <hr class="dialog-divider">
+      <div class="modal-subtitle">"Todo lo que necesitas saber para conquistar el sistema."</div>
+      <hr class="modal-rule">
       <div style="display:flex;flex-direction:column;gap:1rem;">
-        <div class="guide-section"><div class="guide-icon">🗳️</div><div><div class="guide-title">Influenciar</div><div class="guide-text">Clickea el boton central para ganar influencia. A medida que compres mejoras, cada clic rendira mas.</div></div></div>
-        <hr class="dialog-divider">
-        <div class="guide-section"><div class="guide-icon">🚀</div><div><div class="guide-title">Red de Influencia</div><div class="guide-text">Los generadores producen influencia automaticamente por segundo. Cada uno es mas caro pero genera mas.</div></div></div>
-        <hr class="dialog-divider">
-        <div class="guide-section"><div class="guide-icon">⭐</div><div><div class="guide-title">Operaciones Especiales</div><div class="guide-text">Son mejoras unicas que se desbloquean al cumplir ciertas condiciones de influencia o generadores.</div></div></div>
-        <hr class="dialog-divider">
-        <div class="guide-section"><div class="guide-icon">🏆</div><div><div class="guide-title">Logros</div><div class="guide-text">Se desbloquean automaticamente a medida que acumulas influencia total. Cada logro otorga bonificaciones permanentes.</div></div></div>
-        <hr class="dialog-divider">
-        <div class="guide-section"><div class="guide-icon">📰</div><div><div class="guide-title">El Rotativo</div><div class="guide-text">Son noticias satiricas que cambian solas. No afectan el juego, pero mantienen el morale alto.</div></div></div>
-        <hr class="dialog-divider">
-        <div class="guide-section"><div class="guide-icon">📊</div><div><div class="guide-title">Las Fases</div><div class="guide-text">El juego tiene 3 fases: Municipal, Provincial/Nacional e Imperio. Cada fase habilita nuevos generadores mas poderosos.</div></div></div>
+        <div class="help-section"><div class="help-icon">🗳️</div><div><div class="help-topic">Influenciar</div><div class="help-text">Clickea el boton central para ganar influencia. A medida que compres mejoras, cada clic rendira mas.</div></div></div>
+        <hr class="modal-rule">
+        <div class="help-section"><div class="help-icon">🚀</div><div><div class="help-topic">Red de Influencia</div><div class="help-text">Los generadores producen influencia automaticamente por segundo. Cada uno es mas caro pero genera mas.</div></div></div>
+        <hr class="modal-rule">
+        <div class="help-section"><div class="help-icon">⭐</div><div><div class="help-topic">Operaciones Especiales</div><div class="help-text">Son mejoras unicas que se desbloquean al cumplir ciertas condiciones de influencia o generadores.</div></div></div>
+        <hr class="modal-rule">
+        <div class="help-section"><div class="help-icon">🏆</div><div><div class="help-topic">Logros</div><div class="help-text">Se desbloquean automaticamente a medida que acumulas influencia total. Cada logro otorga bonificaciones permanentes.</div></div></div>
+        <hr class="modal-rule">
+        <div class="help-section"><div class="help-icon">📰</div><div><div class="help-topic">El Rotativo</div><div class="help-text">Son noticias satiricas que cambian solas. No afectan el juego, pero mantienen el morale alto.</div></div></div>
+        <hr class="modal-rule">
+        <div class="help-section"><div class="help-icon">📊</div><div><div class="help-topic">Las Fases</div><div class="help-text">El juego tiene 3 fases: Municipal, Provincial/Nacional e Imperio. Cada fase habilita nuevos generadores mas poderosos.</div></div></div>
       </div>
-      <div class="guide-footer">"El poder no se pregunta, se toma. Pero primero hay que leer el manual."</div>
-      <div class="dialog-actions" style="justify-content:center;margin-top:1.25rem;">
-        <button class="dialog-btn dialog-btn-primary" id="guide-close">Entendido</button>
+      <div class="help-footer">"El poder no se pregunta, se toma. Pero primero hay que leer el manual."</div>
+      <div class="modal-actions" style="justify-content:center;margin-top:1.25rem;">
+        <button class="modal-btn modal-btn-gold" id="help-close">Entendido</button>
       </div>
     </div>
-    <div class="dialog-accent-bottom"></div>
+    <div class="modal-gold-bottom"></div>
   </div>
 </div>
 
 <!-- Reset Dialog -->
-<div class="dialog-overlay" id="reset-dialog">
-  <div class="dialog-box glass-dialog" style="max-width:24rem;">
-    <div class="dialog-accent-top"></div>
-    <div class="dialog-content">
-      <div class="dialog-title" style="font-size:1.125rem;">Reiniciar el juego?</div>
+<div class="modal-backdrop" id="confirm-modal">
+  <div class="modal-window glass-modal" style="max-width:24rem;">
+    <div class="modal-gold-top"></div>
+    <div class="modal-body">
+      <div class="modal-title" style="font-size:1.125rem;">Reiniciar el juego?</div>
       <p style="text-align:center;font-size:0.875rem;color:#cbd5e1;margin-top:0.5rem;">Se perdera todo tu progreso. Esta accion no se puede deshacer. Los votantes que influiste quedaran libres... por ahora.</p>
-      <div class="dialog-actions">
-        <button class="dialog-btn dialog-btn-cancel" id="reset-cancel">Cancelar</button>
-        <button class="dialog-btn dialog-btn-confirm" id="reset-confirm">Reiniciar</button>
+      <div class="modal-actions">
+        <button class="modal-btn modal-btn-cancel" id="confirm-cancel">Cancelar</button>
+        <button class="modal-btn modal-btn-danger" id="confirm-accept">Reiniciar</button>
       </div>
     </div>
-    <div class="dialog-accent-bottom"></div>
+    <div class="modal-gold-bottom"></div>
   </div>
 </div>
 
 <!-- Toast Container -->
-<div class="toast-container" id="toast-container"></div>
+<div class="notification-area" id="notification-area"></div>
 
 <!-- Scripts -->
 <script src="js/data.js"></script>

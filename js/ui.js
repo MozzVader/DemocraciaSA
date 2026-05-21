@@ -555,7 +555,7 @@ var UI = (() => {
           tickerEl.textContent = headlines[currentHeadline];
           tickerEl.style.opacity = '1';
         }, 300);
-      }, 8000);
+      }, 12000);
     }
   }
 

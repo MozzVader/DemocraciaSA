@@ -199,6 +199,27 @@ var UI = (() => {
         openModal('modal-reset');
       });
     }
+
+    // Save button
+    var btnSave = document.getElementById('btn-save');
+    if (btnSave) {
+      btnSave.addEventListener('click', function () {
+        Save.save();
+        btnSave.textContent = '✓ Guardado';
+        setTimeout(function () {
+          btnSave.textContent = 'Guardar';
+        }, 1500);
+      });
+    }
+
+    // Confirm reset button (dentro del modal)
+    var btnConfirmReset = document.querySelector('#modal-reset .btn-danger');
+    if (btnConfirmReset) {
+      btnConfirmReset.addEventListener('click', function () {
+        Game.resetJuego();
+        closeModal('modal-reset');
+      });
+    }
   }
 
   function openModal(id) {

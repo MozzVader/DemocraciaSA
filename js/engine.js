@@ -179,6 +179,28 @@ var Game = (() => {
     actualizarRevelados();
   }
 
+  // ── Reset del juego ──────────────────────────────────────────
+  function resetJuego() {
+    pesos = 0;
+    pesosTotales = 0;
+    clicsTotales = 0;
+    tiempoJugado = 0;
+    tickCount = 0;
+    cantidadCompra = 1;
+
+    for (var i = 0; i < generadores.length; i++) {
+      generadores[i].cantidad = 0;
+      generadores[i].revelado = (i === 0); // solo el primero visible
+    }
+
+    // Borrar save
+    Save.reset();
+
+    // Re-render y actualizar
+    UI.renderGeneradores();
+    UI.actualizar();
+  }
+
   // ── Setup eventos ─────────────────────────────────────────────
   function setupEvents() {
     // Click en el botón principal
@@ -216,6 +238,7 @@ var Game = (() => {
     getTiempoJugado: getTiempoJugado,
     getGeneradores: getGeneradores,
     getCantidadCompra: getCantidadCompra,
+    resetJuego: resetJuego,
     _restore: restore,
   };
 

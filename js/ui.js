@@ -10,20 +10,27 @@ var UI = (() => {
   var $genBody = null;     // .panel-body (dentro de panel-generators)
   var $moneyAmount = null; // .money-amount
   var $moneyRate = null;   // .money-rate
+  var $infoMoney = null;   // .info-money (container para notation toast)
 
   // Cache de cards renderizadas por id de generador
   var genCards = {};
 
+  // Notación toast cooldown (para no spam)
+  var notationToastTimer = null;
+
   // ── Init ──────────────────────────────────────────────────────
   function init() {
     $genBody = document.getElementById('gen-list');
-    $moneyAmount = document.querySelector('.money-amount');
+    $moneyAmount = document.getElementById('money-amount');
     $moneyRate = document.querySelector('.money-rate');
+    $infoMoney = document.querySelector('.info-money');
 
     // NOTA: renderGeneradores() se llama DESPUÉS de Game.init() en init.js
     setupModals();
     setupMobileTabs();  // este llama a setupResize(panels) internamente
     setupNewsTicker();
+    setupNotationClick();
+    setupOpciones();
   }
 
   // ── Render de Generadores ─────────────────────────────────────
@@ -150,6 +157,144 @@ var UI = (() => {
     return cantidadCompra;
   }
 
+  // ── Click en money-amount para ciclar notación ───────────────
+  function setupNotationClick() {
+    if (!$moneyAmount) return;
+
+    $moneyAmount.addEventListener('click', function () {
+      var notaciones = ['corta', 'larga', 'cientifica'];
+      var actual = Formato.getNotacion();
+      var idx = notaciones.indexOf(actual);
+      var siguiente = notaciones[(idx + 1) % notaciones.length];
+
+      Formato.setNotacion(siguiente);
+      syncNotationRadios();
+      showNotationToast(siguiente);
+      UI.actualizar();
+    });
+  }
+
+  /** Muestra un toast brevemente con el nombre de la notación */
+  function showNotationToast(notacion) {
+    if (!$infoMoney) return;
+
+    // Remover toast anterior si existe
+    var prev = $infoMoney.querySelector('.notation-toast');
+    if (prev) prev.remove();
+
+    var nombres = { corta: 'Corta', larga: 'Larga', cientifica: 'Científica' };
+    var toast = document.createElement('span');
+    toast.className = 'notation-toast';
+    toast.textContent = nombres[notacion] || notacion;
+    $infoMoney.appendChild(toast);
+
+    // Auto-remover después de la animación
+    setTimeout(function () {
+      if (toast.parentNode) toast.remove();
+    }, 1500);
+  }
+
+  /** Sincroniza los radio buttons con la notación actual */
+  function syncNotationRadios() {
+    var actual = Formato.getNotacion();
+    var radios = document.querySelectorAll('input[name="notacion"]');
+    for (var i = 0; i < radios.length; i++) {
+      radios[i].checked = (radios[i].value === actual);
+    }
+  }
+
+  // ── Modal de Opciones ─────────────────────────────────────────
+  function setupOpciones() {
+    // Botón ⚙️ del header
+    var btnSettings = document.getElementById('btn-settings');
+    if (btnSettings) {
+      btnSettings.addEventListener('click', function () {
+        syncNotationRadios();
+        openModal('modal-opciones');
+      });
+    }
+
+    // Radio buttons de notación
+    var radios = document.querySelectorAll('input[name="notacion"]');
+    for (var i = 0; i < radios.length; i++) {
+      radios[i].addEventListener('change', function () {
+        Formato.setNotacion(this.value);
+        UI.actualizar();
+      });
+    }
+
+    // Guardar
+    var optGuardar = document.getElementById('opt-guardar');
+    if (optGuardar) {
+      optGuardar.addEventListener('click', function () {
+        Save.save();
+        optGuardar.textContent = '✓ Guardado';
+        optGuardar.style.color = '#4ade80';
+        setTimeout(function () {
+          optGuardar.textContent = 'Guardar juego';
+          optGuardar.style.color = '';
+        }, 1500);
+      });
+    }
+
+    // Exportar save
+    var optExportar = document.getElementById('opt-exportar');
+    if (optExportar) {
+      optExportar.addEventListener('click', function () {
+        try {
+          var raw = localStorage.getItem('democracia_sa_save') || '';
+          navigator.clipboard.writeText(raw).then(function () {
+            optExportar.textContent = '✓ Copiado al portapapeles';
+            optExportar.style.color = '#4ade80';
+            setTimeout(function () {
+              optExportar.textContent = 'Exportar save';
+              optExportar.style.color = '';
+            }, 2000);
+          }).catch(function () {
+            // Fallback: prompt
+            prompt('Copiá este texto:', raw);
+          });
+        } catch (e) {
+          console.error('Error al exportar:', e);
+        }
+      });
+    }
+
+    // Importar save
+    var optImportar = document.getElementById('opt-importar');
+    if (optImportar) {
+      optImportar.addEventListener('click', function () {
+        var saveStr = prompt('Pegá acá tu save exportado:');
+        if (!saveStr || !saveStr.trim()) return;
+        try {
+          var data = JSON.parse(saveStr.trim());
+          if (!data || !data.version) throw new Error('Save inválido');
+          localStorage.setItem('democracia_sa_save', JSON.stringify(data));
+          // Recargar para aplicar
+          optImportar.textContent = '✓ Importado — recargando...';
+          optImportar.style.color = '#4ade80';
+          setTimeout(function () { location.reload(); }, 1000);
+        } catch (e) {
+          optImportar.textContent = '✗ Save inválido';
+          optImportar.style.color = '#ef4444';
+          setTimeout(function () {
+            optImportar.textContent = 'Importar save';
+            optImportar.style.color = '';
+          }, 2000);
+        }
+      });
+    }
+
+    // Reiniciar (abre el modal de confirmación)
+    var optReiniciar = document.getElementById('opt-reiniciar');
+    if (optReiniciar) {
+      optReiniciar.addEventListener('click', function () {
+        closeModal('modal-opciones');
+        openModal('modal-reset');
+      });
+    }
+  }
+
   // ── Modals ────────────────────────────────────────────────────
   function setupModals() {
     // Open: data-modal="modal-id"
@@ -183,34 +328,6 @@ var UI = (() => {
         });
       }
     });
-
-    // Login button
-    var btnLogin = document.getElementById('btn-login');
-    if (btnLogin) {
-      btnLogin.addEventListener('click', function () {
-        openModal('modal-login');
-      });
-    }
-
-    // Reset button
-    var btnReset = document.getElementById('btn-reset');
-    if (btnReset) {
-      btnReset.addEventListener('click', function () {
-        openModal('modal-reset');
-      });
-    }
-
-    // Save button
-    var btnSave = document.getElementById('btn-save');
-    if (btnSave) {
-      btnSave.addEventListener('click', function () {
-        Save.save();
-        btnSave.textContent = '✓ Guardado';
-        setTimeout(function () {
-          btnSave.textContent = 'Guardar';
-        }, 1500);
-      });
-    }
 
     // Confirm reset button (dentro del modal)
     var btnConfirmReset = document.querySelector('#modal-reset .btn-danger');

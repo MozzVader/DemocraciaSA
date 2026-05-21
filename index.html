@@ -21,7 +21,6 @@
       <div class="header-brand">
         <span class="header-icon">&#x1F3DB;&#xFE0F;</span>
         <h1 class="header-title">DEMOCRACIA<span class="brand-dot">.SA</span></h1>
-        <span class="phase-badge">Fase 2 &mdash; Provincial</span>
       </div>
       <!-- Center: Ticker -->
       <div class="header-ticker">
@@ -29,11 +28,11 @@
         <span class="ticker-label">NOTICIAS</span>
         <p class="ticker-text" id="ticker-headline">"Senador pide investigar interferencia extranjera en las elecciones. Su financista es suizo."</p>
       </div>
-      <!-- Right: Auth -->
+      <!-- Right: Settings -->
       <div class="header-auth">
-        <button class="btn-login" id="btn-login">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          <span>Login</span>
+        <button class="btn-settings" id="btn-settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span class="btn-settings-text">Opciones</span>
         </button>
       </div>
     </div>
@@ -72,11 +71,10 @@
 
       <!-- Game Info -->
       <div class="game-info">
-        <div class="info-phase">Fase 2 &mdash; Provincial / Nacional</div>
         <div class="info-money">
-          <div class="money-label">Pesos</div>
-          <div class="money-amount">$ 1,234,567</div>
-          <div class="money-rate">+8,420/s &middot; 5/click</div>
+          <div class="money-label">PESOS</div>
+          <div class="money-amount" id="money-amount" title="Click para cambiar formato de número">$ 0</div>
+          <div class="money-rate">+0/s &middot; 1/click</div>
         </div>
       </div>
 
@@ -263,8 +261,6 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
           <span class="footer-btn-text">Gu&iacute;a</span>
         </button>
-        <button class="footer-btn" id="btn-save">Guardar</button>
-        <button class="footer-btn footer-btn-danger" id="btn-reset">Reiniciar</button>
       </div>
     </div>
   </footer>
@@ -463,37 +459,58 @@
   </div>
 </div>
 
-<!-- ========== MODAL: LOGIN ========== -->
-<div class="modal-overlay" id="modal-login">
+<!-- ========== MODAL: OPCIONES ========== -->
+<div class="modal-overlay" id="modal-opciones">
   <div class="modal-box">
     <div class="modal-gold-bar"></div>
-    <button class="modal-close" data-close="modal-login">&times;</button>
+    <button class="modal-close" data-close="modal-opciones">&times;</button>
     <div class="modal-header">
-      <h2 class="modal-title">Acceso Clasificado</h2>
-      <p class="modal-subtitle">"Inici&aacute; sesi&oacute;n para que tu influencia trascienda las fronteras del navegador."</p>
+      <h2 class="modal-title">Opciones</h2>
     </div>
     <div class="modal-body">
-      <form class="login-form">
-        <div class="login-field">
-          <label for="login-email">Email</label>
-          <input type="email" id="login-email" placeholder="tupartido@democracia.sa" autocomplete="email">
+
+      <!-- Notación -->
+      <div class="options-section">
+        <div class="options-label">Formato de número</div>
+        <div class="options-radios">
+          <label class="radio-option">
+            <input type="radio" name="notacion" value="corta" checked>
+            <span class="radio-mark"></span>
+            <span class="radio-text">Corta <span class="radio-example">1.5 M &middot; 2.3 B</span></span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="notacion" value="larga">
+            <span class="radio-mark"></span>
+            <span class="radio-text">Larga <span class="radio-example">1.5 millones &middot; 2.3 billones</span></span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="notacion" value="cientifica">
+            <span class="radio-mark"></span>
+            <span class="radio-text">Científica <span class="radio-example">1.5e6 &middot; 2.3e9</span></span>
+          </label>
         </div>
-        <div class="login-field">
-          <label for="login-password">Contrase&ntilde;a</label>
-          <input type="password" id="login-password" placeholder="Tu clave secreta" autocomplete="current-password">
-        </div>
-        <button type="submit" class="btn-gold" style="width:100%;">Ingresar</button>
-      </form>
+      </div>
+
       <hr class="modal-divider">
-      <button class="btn-google">
-        <svg width="18" height="18" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-        Continuar con Google
-      </button>
-      <p class="login-hint">Tu progreso se guarda en la nube autom&aacute;ticamente al iniciar sesi&oacute;n.</p>
+
+      <!-- Acciones -->
+      <div class="options-section">
+        <div class="options-label">Datos</div>
+        <div class="options-actions">
+          <button class="btn-option" id="opt-guardar">Guardar juego</button>
+          <button class="btn-option" id="opt-exportar">Exportar save</button>
+          <button class="btn-option" id="opt-importar">Importar save</button>
+          <button class="btn-option btn-option-danger" id="opt-reiniciar">Reiniciar juego</button>
+        </div>
+      </div>
+
     </div>
     <div class="modal-gold-bar"></div>
   </div>
 </div>
+
+<!-- Hidden import textarea -->
+<textarea id="import-save-area" style="display:none;"></textarea>
 
 <!-- ========== MODAL: CONFIRM RESET ========== -->
 <div class="modal-overlay" id="modal-reset">

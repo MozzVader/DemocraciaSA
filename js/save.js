@@ -19,6 +19,7 @@ var Save = (() => {
         pesosTotales: Game.getPesosTotales(),
         clicsTotales: Game.getClicsTotales(),
         tiempoJugado: Game.getTiempoJugado(),
+        notacion: Formato.getNotacion(),
         generadores: generadores.map(function (g) {
           return {
             id: g.id,
@@ -49,6 +50,11 @@ var Save = (() => {
       // necesitamos asignar directamente
       if (typeof Game._restore === 'function') {
         Game._restore(data);
+      }
+
+      // Restaurar notación si existe
+      if (data.notacion) {
+        Formato.setNotacion(data.notacion);
       }
 
       return true;

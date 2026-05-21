@@ -110,7 +110,7 @@ const Formato = (() => {
 
   function _corta(n, decimales) {
     for (const s of cortaSufijos) {
-      if (n >= s.valor * 1000) continue;
+      if (n < s.valor) continue;  // saltar sufijos demasiado grandes
       const cantidad = n / s.valor;
       const d = decimales != null ? decimales : 1;
       return cantidad.toFixed(d) + ' ' + s.sufijo;
@@ -120,7 +120,7 @@ const Formato = (() => {
 
   function _larga(n, decimales) {
     for (const s of largaSufijos) {
-      if (n >= s.valor * 1000) continue;
+      if (n < s.valor) continue;  // saltar sufijos demasiado grandes
       const cantidad = n / s.valor;
       const d = decimales != null ? decimales : 1;
       const cantidadEntera = Math.floor(cantidad);

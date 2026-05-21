@@ -237,26 +237,21 @@ var UI = (() => {
       });
     }
 
-    // Exportar save
+    // Exportar save (usa prompt como Cookie Clicker — 100% confiable)
     var optExportar = document.getElementById('opt-exportar');
     if (optExportar) {
       optExportar.addEventListener('click', function () {
-        try {
-          var raw = localStorage.getItem('democracia_sa_save') || '';
-          navigator.clipboard.writeText(raw).then(function () {
-            optExportar.textContent = '✓ Copiado al portapapeles';
-            optExportar.style.color = '#4ade80';
-            setTimeout(function () {
-              optExportar.textContent = 'Exportar save';
-              optExportar.style.color = '';
-            }, 2000);
-          }).catch(function () {
-            // Fallback: prompt
-            prompt('Copiá este texto:', raw);
-          });
-        } catch (e) {
-          console.error('Error al exportar:', e);
+        var raw = localStorage.getItem('democracia_sa_save') || '';
+        if (!raw) {
+          optExportar.textContent = '✗ No hay datos para exportar';
+          optExportar.style.color = '#ef4444';
+          setTimeout(function () {
+            optExportar.textContent = 'Exportar save';
+            optExportar.style.color = '';
+          }, 2000);
+          return;
         }
+        prompt('Copiá todo el texto de acá abajo:', raw);
       });
     }
 
@@ -269,11 +264,9 @@ var UI = (() => {
         try {
           var data = JSON.parse(saveStr.trim());
           if (!data || !data.version) throw new Error('Save inválido');
+          // Escribir y recargar inmediatamente (sin delay para evitar auto-save)
           localStorage.setItem('democracia_sa_save', JSON.stringify(data));
-          // Recargar para aplicar
-          optImportar.textContent = '✓ Importado — recargando...';
-          optImportar.style.color = '#4ade80';
-          setTimeout(function () { location.reload(); }, 1000);
+          location.reload();
         } catch (e) {
           optImportar.textContent = '✗ Save inválido';
           optImportar.style.color = '#ef4444';

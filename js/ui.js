@@ -62,7 +62,7 @@ var UI = (() => {
     if (gen.etapa === 1) {
       card.classList.add('gen-mystery');
       card.innerHTML =
-        '<div class="gen-icon gen-icon-mystery">' + gen.icono + '</div>' +
+        '<div class="gen-icon gen-icon-mystery"><img src="' + gen.icono + '" alt="???" draggable="false"></div>' +
         '<div class="gen-info">' +
           '<div class="gen-top">' +
             '<span class="gen-name">???</span>' +
@@ -78,7 +78,7 @@ var UI = (() => {
 
     // Etapas 2 y 3 = nombre visible
     card.innerHTML =
-      '<div class="gen-icon">' + gen.icono + '</div>' +
+      '<div class="gen-icon"><img src="' + gen.icono + '" alt="' + gen.nombre + '" draggable="false"></div>' +
       '<div class="gen-info">' +
         '<div class="gen-top">' +
           '<span class="gen-name">' + gen.nombre + '</span>' +

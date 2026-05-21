@@ -9,7 +9,7 @@ const GENERADORES = [
     nombre: 'Militante',
     precioBase: 15,
     ppsBase: 0.1,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-0.png',
     desc: 'Un joven idealista que reparte volantes a cambio de un sanguche y un viaje en colectivo.',
   },
   {
@@ -17,7 +17,7 @@ const GENERADORES = [
     nombre: 'Puntero',
     precioBase: 100,
     ppsBase: 1,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-1.png',
     desc: 'El eslabón fundamental. Un celular y una lista de contactos valen más que cualquier diploma.',
   },
   {
@@ -25,7 +25,7 @@ const GENERADORES = [
     nombre: 'Unidad Básica',
     precioBase: 1100,
     ppsBase: 8,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-2.png',
     desc: 'Un local con paredes llenas de fotos, un televisor viejo y un mate compartido. Promesas incluidas.',
   },
   {
@@ -33,7 +33,7 @@ const GENERADORES = [
     nombre: 'Sindicato',
     precioBase: 12000,
     ppsBase: 47,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-3.png',
     desc: '"Los trabajadores unidos jamás serán vencidos". Y si pueden armar un paro, mejor.',
   },
   {
@@ -41,7 +41,7 @@ const GENERADORES = [
     nombre: 'Municipio',
     precioBase: 130000,
     ppsBase: 260,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-4.png',
     desc: '¿Un bache? Dos obras. ¿Un semáforo? Tres. El municipio siempre encuentra la forma de justificar el presupuesto.',
   },
   {
@@ -49,7 +49,7 @@ const GENERADORES = [
     nombre: 'Ministerio',
     precioBase: 1400000,
     ppsBase: 1400,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-5.png',
     desc: 'Miles de empleados, reuniones interminables y una productividad... opinable.',
   },
   {
@@ -57,7 +57,7 @@ const GENERADORES = [
     nombre: 'Banco Público',
     precioBase: 20000000,
     ppsBase: 7800,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-6.png',
     desc: '"¿A qué tasa?" La que diga el ministro. El banco que nunca cierra... excepto cuando conviene.',
   },
   {
@@ -65,7 +65,7 @@ const GENERADORES = [
     nombre: 'Operador Político',
     precioBase: 330000000,
     ppsBase: 44000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-7.png',
     desc: 'Ese tipo que todos conocen pero nadie nombra. Si hay un problema, él tiene la solución.',
   },
   {
@@ -73,7 +73,7 @@ const GENERADORES = [
     nombre: 'Grupo Económico',
     precioBase: 5100000000,
     ppsBase: 260000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-8.png',
     desc: 'JP Morgan, Goldman Sachs... pero con asado los domingos y DNI argentino.',
   },
   {
@@ -81,7 +81,7 @@ const GENERADORES = [
     nombre: 'Exportadores',
     precioBase: 75000000000,
     ppsBase: 1600000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-9.png',
     desc: 'Soja, maíz, carne. Los que siempre ganan, sin importar quién gobierne.',
   },
   {
@@ -89,7 +89,7 @@ const GENERADORES = [
     nombre: 'Cueva Financiera',
     precioBase: 1e12,
     ppsBase: 10000000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-10.png',
     desc: 'Un depto sin nombre en Puerto Madero. Adentro se mueven millones sin que nadie vea.',
   },
   {
@@ -97,7 +97,7 @@ const GENERADORES = [
     nombre: 'Fondo Fiduciario',
     precioBase: 14e12,
     ppsBase: 65000000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-11.png',
     desc: 'Plata que entra, plata que sale, plata que... ¿a dónde fue? Nadie sabe con certeza.',
   },
   {
@@ -105,7 +105,7 @@ const GENERADORES = [
     nombre: 'Banco Central',
     precioBase: 170e12,
     ppsBase: 430000000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-12.png',
     desc: 'El dueño de la maquinita. Literalmente.',
   },
   {
@@ -113,7 +113,7 @@ const GENERADORES = [
     nombre: 'Organismo Internacional',
     precioBase: 2.1e15,
     ppsBase: 2900000000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-13.png',
     desc: 'BID, Banco Mundial, OEA... prestan plata y piden reformas que nadie cumple.',
   },
   {
@@ -121,7 +121,7 @@ const GENERADORES = [
     nombre: 'Socio Estratégico',
     precioBase: 26e15,
     ppsBase: 21000000000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-14.png',
     desc: '"China va a invertir 20 mil millones." — Nunca se supo cuánto llegó realmente, pero el discurso fue memorable.',
   },
   {
@@ -129,7 +129,7 @@ const GENERADORES = [
     nombre: 'Mercado Global',
     precioBase: 310e15,
     ppsBase: 150000000000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-15.png',
     desc: 'Cuando la plaza local se te queda chica, exportás promesas al mundo entero.',
   },
   {
@@ -137,7 +137,7 @@ const GENERADORES = [
     nombre: 'Fondo Buitre',
     precioBase: 3.6e18,
     ppsBase: 1100000000000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-16.png',
     desc: 'Compran deuda a precio de gallina muerta y cobran con intereses de halcón.',
   },
   {
@@ -145,7 +145,7 @@ const GENERADORES = [
     nombre: 'El FMI',
     precioBase: 40e18,
     ppsBase: 8000000000000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-17.png',
     desc: '18 programas. 18 fracasos. Un récord que ningún país quiere ostentar.',
   },
   {
@@ -153,7 +153,7 @@ const GENERADORES = [
     nombre: 'El Estado',
     precioBase: 500e18,
     ppsBase: 65000000000000,
-    icono: '🏗️',
+    icono: 'assets/icons/gen-18.png',
     desc: 'Empezaste como militante en la calle. Ahora sos vos el Estado. ¿Te acordás de tus ideales?',
   },
 ];

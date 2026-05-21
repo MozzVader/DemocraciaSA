@@ -20,11 +20,10 @@ var UI = (() => {
     $moneyAmount = document.querySelector('.money-amount');
     $moneyRate = document.querySelector('.money-rate');
 
-    renderGeneradores();
+    // NOTA: renderGeneradores() se llama DESPUÉS de Game.init() en init.js
     setupModals();
-    setupMobileTabs();
+    setupMobileTabs();  // este llama a setupResize(panels) internamente
     setupNewsTicker();
-    setupResize();
   }
 
   // ── Render de Generadores ─────────────────────────────────────

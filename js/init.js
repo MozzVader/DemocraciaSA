@@ -15,12 +15,15 @@ document.addEventListener('visibilitychange', function () {
 
 // Boot cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', function () {
-  // 1. Inicializar UI (modals, tabs, ticker, render generadores)
+  // 1. Inicializar UI (modals, tabs, ticker — SIN render generadores aún)
   UI.init();
 
   // 2. Inicializar motor (clona generadores, carga save, arranca loop, setup click)
   Game.init();
 
-  // 3. Primer render de UI con datos cargados
+  // 3. Render de generadores con datos reales del motor
+  UI.renderGeneradores();
+
+  // 4. Primer refresh de UI
   UI.actualizar();
 });

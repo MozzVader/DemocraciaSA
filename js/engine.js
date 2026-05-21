@@ -201,13 +201,37 @@ var Game = (() => {
     UI.actualizar();
   }
 
+  // ── Click float (número flotante dorado) ──────────────────────
+  function spawnClickFloat(e, container) {
+    var el = document.createElement('span');
+    el.className = 'click-float';
+    el.textContent = '+$' + Formato.numero(pesosPorClic);
+
+    // Posición relativa al contenedor (clicker-area)
+    var area = container.closest('.clicker-area') || container;
+    var rect = area.getBoundingClientRect();
+    var x = e.clientX - rect.left + (Math.random() - 0.5) * 30;
+    var y = e.clientY - rect.top - 10;
+    el.style.left = x + 'px';
+    el.style.top = y + 'px';
+
+    area.style.position = area.style.position || 'relative';
+    area.appendChild(el);
+
+    // Limpiar después de la animación
+    setTimeout(function () {
+      if (el.parentNode) el.parentNode.removeChild(el);
+    }, 1000);
+  }
+
   // ── Setup eventos ─────────────────────────────────────────────
   function setupEvents() {
     // Click en el botón principal
     var clickerBtn = document.querySelector('.clicker-btn');
     if (clickerBtn) {
-      clickerBtn.addEventListener('click', function () {
+      clickerBtn.addEventListener('click', function (e) {
         click();
+        spawnClickFloat(e, clickerBtn);
       });
     }
 

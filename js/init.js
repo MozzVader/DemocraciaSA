@@ -29,7 +29,12 @@ document.addEventListener('DOMContentLoaded', function () {
   // 2. Inicializar motor (clona generadores, carga save, arranca loop, setup click)
   Game.init();
 
-  // 3. Render de generadores con datos reales del motor
+  // 3. Inicializar calidad democrática (fluctuación random)
+  if (typeof Calidad !== 'undefined' && Calidad.init) {
+    Calidad.init();
+  }
+
+  // 4. Render de generadores con datos reales del motor
   UI.renderGeneradores();
 
   // 4. Primer refresh de UI

@@ -75,7 +75,12 @@ var Game = (() => {
     pesos += delta;
     pesosTotales += delta;
 
-    // 3. Tiempo jugado
+    // 3. Calidad democrática (fluctuación random)
+    if (typeof Calidad === 'object' && Calidad.tick) {
+      Calidad.tick();
+    }
+
+    // 4. Tiempo jugado
     tiempoJugado += TICK_SEG;
 
     // 4. Tick counter

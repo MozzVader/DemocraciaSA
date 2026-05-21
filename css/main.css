@@ -689,7 +689,6 @@ body {
 
 .stats-nacionales {
   width: 100%;
-  max-width: 28rem;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;

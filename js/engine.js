@@ -23,7 +23,12 @@ var Game = (() => {
   var loopId = null;
   var ultimaVisibilidad = 0;  // timestamp de ultima vez que la pestaña fue visible
 
-  // Generadores: clon de GENERADORES con .cantidad agregada
+  // Generadores: clon de GENERADORES con .cantidad y .etapa agregados
+  // Etapas de develado:
+  //   0 = oculto (no aparece en la lista)
+  //   1 = misterio ("???" + icono oscuro, muestra que existe)
+  //   2 = revelado (nombre + precio visible, grisado, no comprable)
+  //   3 = comprable (todo normal)
   var generadores = [];
 
   // Cantidad seleccionada para compra
@@ -41,12 +46,12 @@ var Game = (() => {
         icono: g.icono,
         desc: g.desc,
         cantidad: 0,
-        revelado: false,    // true cuando pesos >= precioBase (o ya compró)
+        etapa: 0,         // 0=oculto, 1=misterio, 2=revelado, 3=comprable
       };
     });
 
-    // El primero siempre es visible
-    generadores[0].revelado = true;
+    // El primero siempre es comprable
+    generadores[0].etapa = 3;
 
     // Cargar save si existe
     Save.load();
@@ -94,7 +99,7 @@ var Game = (() => {
     pesos += ganancia;
     pesosTotales += ganancia;
     clicsTotales++;
-    actualizarRevelados();
+    actualizarEtapas();
     UI.actualizar();
   }
 
@@ -112,9 +117,7 @@ var Game = (() => {
     // Descontar y agregar
     pesos -= precio;
     gen.cantidad += cantidad;
-    gen.revelado = true;
-
-    actualizarRevelados();
+    actualizarEtapas();
     UI.actualizar();
     return true;
   }
@@ -132,12 +135,39 @@ var Game = (() => {
     return (pesos >= precio) ? cantidadCompra : 0;
   }
 
-  // ── Gate de visibilidad ───────────────────────────────────────
-  // Un generador se revela cuando pesos >= su precioBase
-  function actualizarRevelados() {
+  // ── Gate de visibilidad (4 etapas) ──────────────────────────
+  // Umbral = precioBase del generador
+  //   pesosTotales < 33% umbral  → etapa 0 (oculto)
+  //  33%–66% umbral             → etapa 1 ("???" misterio)
+  //  66%–100% umbral            → etapa 2 (revelado grisado)
+  //   pesosTotales >= umbral    → etapa 3 (comprable)
+  function actualizarEtapas() {
     for (var i = 0; i < generadores.length; i++) {
-      if (!generadores[i].revelado && pesos >= generadores[i].precioBase) {
-        generadores[i].revelado = true;
+      var gen = generadores[i];
+      // Si ya compró al menos uno, siempre etapa 3
+      if (gen.cantidad > 0) {
+        gen.etapa = 3;
+        continue;
+      }
+      var umbral = gen.precioBase;
+      var ratio = pesosTotales / umbral;
+      var nuevaEtapa;
+      if (ratio >= 1) {
+        nuevaEtapa = 3;       // comprable
+      } else if (ratio >= 0.66) {
+        nuevaEtapa = 2;       // revelado grisado
+      } else if (ratio >= 0.33) {
+        nuevaEtapa = 1;       // misterio "???"
+      } else {
+        nuevaEtapa = 0;       // oculto
+      }
+      // Solo subir etapa, nunca bajar (evitar que un generador se oculte)
+      if (nuevaEtapa > gen.etapa) {
+        gen.etapa = nuevaEtapa;
+      }
+      // Pero si llegó a etapa 3 (comprable) y después no tiene suficiente, baja a 2
+      if (gen.etapa === 3 && pesos < gen.precioBase) {
+        gen.etapa = 2;
       }
     }
   }
@@ -173,7 +203,7 @@ var Game = (() => {
           if (generadores[j].id === sg.id) {
             generadores[j].cantidad = sg.cantidad || 0;
             if (generadores[j].cantidad > 0) {
-              generadores[j].revelado = true;
+              generadores[j].etapa = 3;
             }
             break;
           }
@@ -181,7 +211,7 @@ var Game = (() => {
       }
     }
 
-    actualizarRevelados();
+    actualizarEtapas();
   }
 
   // ── Progreso offline ───────────────────────────────────────
@@ -217,8 +247,8 @@ var Game = (() => {
     // Actualizar timestamp
     ultimaVisibilidad = ahora;
 
-    // Actualizar revelados y UI
-    actualizarRevelados();
+    // Actualizar etapas y UI
+    actualizarEtapas();
     UI.actualizar();
 
     return {
@@ -239,7 +269,7 @@ var Game = (() => {
 
     for (var i = 0; i < generadores.length; i++) {
       generadores[i].cantidad = 0;
-      generadores[i].revelado = (i === 0); // solo el primero visible
+      generadores[i].etapa = (i === 0) ? 3 : 0; // solo el primero comprable
     }
 
     // Borrar save

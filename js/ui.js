@@ -53,10 +53,30 @@ var UI = (() => {
     card.className = 'gen-card';
     card.dataset.id = gen.id;
 
-    if (!gen.revelado) {
+    // Etapa 0 = oculto
+    if (gen.etapa === 0) {
       card.classList.add('hidden');
     }
 
+    // Etapa 1 = misterio ("???" + icono oscuro)
+    if (gen.etapa === 1) {
+      card.classList.add('gen-mystery');
+      card.innerHTML =
+        '<div class="gen-icon gen-icon-mystery">' + gen.icono + '</div>' +
+        '<div class="gen-info">' +
+          '<div class="gen-top">' +
+            '<span class="gen-name">???</span>' +
+          '</div>' +
+          '<p class="gen-desc">Algo se avecina...</p>' +
+          '<div class="gen-bottom">' +
+            '<span class="gen-cost">???</span>' +
+          '</div>' +
+        '</div>';
+      // No comprable en etapa misterio
+      return card;
+    }
+
+    // Etapas 2 y 3 = nombre visible
     card.innerHTML =
       '<div class="gen-icon">' + gen.icono + '</div>' +
       '<div class="gen-info">' +
@@ -71,9 +91,11 @@ var UI = (() => {
         '</div>' +
       '</div>';
 
-    // Click para comprar
+    // Click para comprar (solo etapa 3)
     card.addEventListener('click', function () {
-      Game.comprar(gen.id);
+      if (gen.etapa >= 3) {
+        Game.comprar(gen.id);
+      }
     });
 
     return card;
@@ -103,15 +125,58 @@ var UI = (() => {
       var card = genCards[gen.id];
       if (!card) continue;
 
-      // Visibilidad (gate)
-      if (!gen.revelado && pesos >= gen.precioBase) {
-        gen.revelado = true;
-      }
-      if (!gen.revelado) {
+      // Etapa 0 = oculto
+      if (gen.etapa === 0) {
         card.classList.add('hidden');
+        card.classList.remove('gen-mystery', 'gen-locked', 'can-afford');
         continue;
       }
+
+      // Transiciones entre etapas visibles
+      // Si estaba oculta y pasó a misterio/revelado: re-crear la card
+      if (gen.etapa === 1 && !card.classList.contains('gen-mystery')) {
+        // Recrear card como misterio
+        var newCard = crearGenCard(gen);
+        card.parentNode.replaceChild(newCard, card);
+        genCards[gen.id] = newCard;
+        newCard.classList.remove('hidden');
+        continue;
+      }
+      if (gen.etapa >= 2 && card.classList.contains('gen-mystery')) {
+        // Recrear card con nombre visible
+        var newCard = crearGenCard(gen);
+        card.parentNode.replaceChild(newCard, card);
+        genCards[gen.id] = newCard;
+        newCard.classList.remove('hidden');
+        if (gen.etapa === 2) newCard.classList.add('gen-locked');
+        continue;
+      }
+
       card.classList.remove('hidden');
+
+      // Etapa 1 = misterio (ya está renderizada como tal, solo mostrar/ocultar)
+      if (gen.etapa === 1) {
+        card.classList.add('gen-mystery');
+        card.classList.remove('gen-locked', 'can-afford');
+        continue;
+      }
+
+      card.classList.remove('gen-mystery');
+
+      // Etapa 2 = revelado grisado (no comprable)
+      if (gen.etapa === 2) {
+        card.classList.add('gen-locked');
+        card.classList.remove('can-afford');
+        // Mostrar precio
+        var $cost2 = card.querySelector('.gen-cost');
+        if ($cost2) $cost2.textContent = '$ ' + Formato.numero(gen.precioBase);
+        var $output2 = card.querySelector('.gen-output');
+        if ($output2) $output2.textContent = '+' + Formato.numero(gen.ppsBase) + '/s';
+        continue;
+      }
+
+      // Etapa 3 = comprable (comportamiento normal)
+      card.classList.remove('gen-locked');
 
       // Cantidad
       var $count = card.querySelector('.gen-count');

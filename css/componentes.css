@@ -35,15 +35,63 @@
   background: #151d30;
 }
 
-/* Locked phase state */
-.gen-card.locked-phase {
-  opacity: 0.25;
+/* Etapa 1: Misterio (??? ) */
+.gen-card.gen-mystery {
+  opacity: 0.35;
   cursor: default;
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
-.gen-card.locked-phase:hover {
+.gen-card.gen-mystery .gen-icon-mystery {
+  filter: brightness(0) invert(0.15);
+  transition: filter 0.3s ease;
+}
+
+.gen-card.gen-mystery .gen-name {
+  color: #475569;
+  font-style: italic;
+  letter-spacing: 0.05em;
+}
+
+.gen-card.gen-mystery .gen-desc {
+  color: #334155;
+}
+
+.gen-card.gen-mystery .gen-cost {
+  color: #334155;
+}
+
+/* Etapa 2: Revelado grisado (nombre visible, no comprable) */
+.gen-card.gen-locked {
+  opacity: 0.55;
+  cursor: default;
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.gen-card.gen-locked:hover {
   border-color: rgba(255, 255, 255, 0.05);
   background: #0e1424;
+}
+
+.gen-card.gen-locked .gen-name {
+  color: #64748b;
+}
+
+.gen-card.gen-locked .gen-desc {
+  color: #374151;
+}
+
+.gen-card.gen-locked .gen-count {
+  color: #475569;
+}
+
+.gen-card.gen-locked .gen-cost {
+  color: #ef4444;
+  opacity: 0.7;
+}
+
+.gen-card.gen-locked .gen-output {
+  color: #475569;
 }
 
 .gen-card.hidden {

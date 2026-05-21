@@ -46,6 +46,10 @@
   background: #0e1424;
 }
 
+.gen-card.hidden {
+  display: none;
+}
+
 /* Icon */
 .gen-icon {
   font-size: 1.375rem;

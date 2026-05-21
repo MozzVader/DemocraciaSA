@@ -255,7 +255,7 @@ var UI = (() => {
       });
     }
 
-    // Importar save
+    // Importar save (restaura en memoria, sin recargar)
     var optImportar = document.getElementById('opt-importar');
     if (optImportar) {
       optImportar.addEventListener('click', function () {
@@ -264,9 +264,28 @@ var UI = (() => {
         try {
           var data = JSON.parse(saveStr.trim());
           if (!data || !data.version) throw new Error('Save inválido');
-          // Escribir y recargar inmediatamente (sin delay para evitar auto-save)
+
+          // Persistir en localStorage
           localStorage.setItem('democracia_sa_save', JSON.stringify(data));
-          location.reload();
+
+          // Restaurar en memoria directamente (sin reload)
+          if (typeof Game._restore === 'function') {
+            Game._restore(data);
+          }
+          if (data.notacion) {
+            Formato.setNotacion(data.notacion);
+          }
+
+          // Re-render y cerrar modal
+          UI.renderGeneradores();
+          UI.actualizar();
+
+          optImportar.textContent = '✓ Importado';
+          optImportar.style.color = '#4ade80';
+          setTimeout(function () {
+            optImportar.textContent = 'Importar save';
+            optImportar.style.color = '';
+          }, 2000);
         } catch (e) {
           optImportar.textContent = '✗ Save inválido';
           optImportar.style.color = '#ef4444';

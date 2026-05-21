@@ -480,11 +480,56 @@ var UI = (() => {
     }
   }
 
+  // ── Offline Notification ──────────────────────────────────────
+  function showOfflineNotification(pesosGanados, segundos) {
+    // Remover notificación anterior si existe
+    var prev = document.querySelector('.offline-notification');
+    if (prev) prev.remove();
+
+    var banner = document.createElement('div');
+    banner.className = 'offline-notification';
+    banner.innerHTML =
+      '<span class="offline-icon">&#x1F3DB;&#xFE0F;</span>' +
+      '<div class="offline-text">' +
+        '<strong>Progreso offline</strong><br>' +
+        'Ganaste <span class="offline-money">$ ' + Formato.numero(pesosGanados) + '</span> ' +
+        'mientras estuviste ausente ' + Formato.tiempo(segundos) + '.' +
+      '</div>' +
+      '<button class="offline-close">&times;</button>';
+
+    document.querySelector('.game-wrapper').appendChild(banner);
+
+    // Fade in
+    requestAnimationFrame(function () {
+      banner.classList.add('visible');
+    });
+
+    // Cerrar con botón X
+    banner.querySelector('.offline-close').addEventListener('click', function () {
+      dismissBanner(banner);
+    });
+
+    // Auto-dismiss a los 8 segundos
+    setTimeout(function () {
+      dismissBanner(banner);
+    }, 8000);
+  }
+
+  function dismissBanner(banner) {
+    if (!banner || !banner.parentNode) return;
+    banner.classList.remove('visible');
+    banner.classList.add('hiding');
+    setTimeout(function () {
+      if (banner.parentNode) banner.remove();
+    }, 400);
+  }
+
   // ── API pública ───────────────────────────────────────────────
   return {
     init: init,
     actualizar: actualizar,
     renderGeneradores: renderGeneradores,
+    showOfflineNotification: showOfflineNotification,
   };
 
 })();

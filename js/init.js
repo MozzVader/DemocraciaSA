@@ -7,9 +7,17 @@
 window.addEventListener('beforeunload', function () {
   Save.save();
 });
+
+// Progreso offline + save al cambiar pestaña
 document.addEventListener('visibilitychange', function () {
   if (document.visibilityState === 'hidden') {
     Save.save();
+  } else if (document.visibilityState === 'visible') {
+    // Calcular progreso offline
+    var resultado = Game.applyOfflineProgress();
+    if (resultado && resultado.segundos >= 60) {
+      UI.showOfflineNotification(resultado.ganados, resultado.segundos);
+    }
   }
 });
 

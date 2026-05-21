@@ -10,6 +10,7 @@ var Game = (() => {
   var TICK_SEG = 0.1;           // segundos por tick
   var UI_REFRESH_TICKS = 10;    // actualizar UI cada 1 segundo
   var AUTO_SAVE_MS = 30000;     // guardar cada 30s
+  var OFFLINE_MAX_SEG = 7200;  // maximo offline: 2 horas
 
   // ── Estado ────────────────────────────────────────────────────
   var pesos = 0;
@@ -20,6 +21,7 @@ var Game = (() => {
   var tickCount = 0;
   var ultimoSave = 0;
   var loopId = null;
+  var ultimaVisibilidad = 0;  // timestamp de ultima vez que la pestaña fue visible
 
   // Generadores: clon de GENERADORES con .cantidad agregada
   var generadores = [];
@@ -51,6 +53,7 @@ var Game = (() => {
 
     // Arrancar loop
     ultimoSave = Date.now();
+    ultimaVisibilidad = Date.now();
     loopId = setInterval(gameTick, TICK_MS);
 
     // Setup de eventos
@@ -153,6 +156,8 @@ var Game = (() => {
   function getTiempoJugado() { return tiempoJugado; }
   function getGeneradores() { return generadores; }
   function getCantidadCompra() { return cantidadCompra; }
+  function getUltimaVisibilidad() { return ultimaVisibilidad; }
+  function setUltimaVisibilidad(ts) { ultimaVisibilidad = ts; }
 
   // ── Restore desde save ────────────────────────────────────────
   function restore(data) {
@@ -179,6 +184,49 @@ var Game = (() => {
     actualizarRevelados();
   }
 
+  // ── Progreso offline ───────────────────────────────────────
+  /**
+   * Calcula y aplica las ganancias de tiempo offline.
+   * @returns {{ ganados: number, segundos: number } | null} null si no hay ganancias
+   */
+  function applyOfflineProgress() {
+    var ahora = Date.now();
+    var tiempoAusente = (ahora - ultimaVisibilidad) / 1000;
+
+    // Menos de 5 segundos: ignorar (evitar falsos positivos)
+    if (tiempoAusente < 5) return null;
+
+    // Cap a OFFLINE_MAX_SEG
+    var tiempoOffline = Math.min(tiempoAusente, OFFLINE_MAX_SEG);
+
+    // Calcular PPS actual
+    var pps = Formulas.ppsTotal(generadores);
+    if (pps <= 0) {
+      ultimaVisibilidad = ahora;
+      return null;
+    }
+
+    // Calcular ganancia
+    var pesosGanados = pps * tiempoOffline;
+
+    // Aplicar
+    pesos += pesosGanados;
+    pesosTotales += pesosGanados;
+    tiempoJugado += tiempoOffline;
+
+    // Actualizar timestamp
+    ultimaVisibilidad = ahora;
+
+    // Actualizar revelados y UI
+    actualizarRevelados();
+    UI.actualizar();
+
+    return {
+      ganados: pesosGanados,
+      segundos: tiempoOffline,
+    };
+  }
+
   // ── Reset del juego ──────────────────────────────────────────
   function resetJuego() {
     pesos = 0;
@@ -187,6 +235,7 @@ var Game = (() => {
     tiempoJugado = 0;
     tickCount = 0;
     cantidadCompra = 1;
+    ultimaVisibilidad = Date.now();
 
     for (var i = 0; i < generadores.length; i++) {
       generadores[i].cantidad = 0;
@@ -263,6 +312,9 @@ var Game = (() => {
     getGeneradores: getGeneradores,
     getCantidadCompra: getCantidadCompra,
     resetJuego: resetJuego,
+    applyOfflineProgress: applyOfflineProgress,
+    getUltimaVisibilidad: getUltimaVisibilidad,
+    setUltimaVisibilidad: setUltimaVisibilidad,
     _restore: restore,
   };
 

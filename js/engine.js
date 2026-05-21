@@ -81,8 +81,9 @@ var Game = (() => {
     // 4. Tick counter
     tickCount++;
 
-    // 5. Actualizar UI cada segundo
+    // 5. Actualizar etapas y UI cada segundo
     if (tickCount % UI_REFRESH_TICKS === 0) {
+      actualizarEtapas();
       UI.actualizar();
     }
 

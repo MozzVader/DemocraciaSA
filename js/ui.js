@@ -237,7 +237,7 @@ var UI = (() => {
       });
     }
 
-    // Exportar save (usa prompt como Cookie Clicker — 100% confiable)
+    // Exportar save (base64 para que no sea trivial editar)
     var optExportar = document.getElementById('opt-exportar');
     if (optExportar) {
       optExportar.addEventListener('click', function () {
@@ -251,18 +251,32 @@ var UI = (() => {
           }, 2000);
           return;
         }
-        prompt('Copiá todo el texto de acá abajo:', raw);
+        try {
+          var encoded = btoa(unescape(encodeURIComponent(raw)));
+          prompt('Copiá todo el texto de acá abajo:', encoded);
+        } catch (e) {
+          // Fallback: exportar como texto plano
+          prompt('Copiá todo el texto de acá abajo:', raw);
+        }
       });
     }
 
-    // Importar save (restaura en memoria, sin recargar)
+    // Importar save (decodifica base64, fallback a JSON plano para saves viejos)
     var optImportar = document.getElementById('opt-importar');
     if (optImportar) {
       optImportar.addEventListener('click', function () {
         var saveStr = prompt('Pegá acá tu save exportado:');
         if (!saveStr || !saveStr.trim()) return;
         try {
-          var data = JSON.parse(saveStr.trim());
+          var jsonStr;
+          // Intentar decodear base64 primero
+          try {
+            jsonStr = decodeURIComponent(escape(atob(saveStr.trim())));
+          } catch (b64err) {
+            // No es base64 — intentar JSON directo (saves viejos)
+            jsonStr = saveStr.trim();
+          }
+          var data = JSON.parse(jsonStr);
           if (!data || !data.version) throw new Error('Save inválido');
 
           // Persistir en localStorage

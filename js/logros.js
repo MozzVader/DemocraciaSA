@@ -7,8 +7,9 @@ var Logros = (() => {
 
   // ── Config ────────────────────────────────────────────────────
   var MAX_TOASTS = 3;
-  var ICON_PLACEHOLDER = '\u{1F3C6}';  // 🏆 placeholder para desbloqueados
+  var ICON_PLACEHOLDER = '\u{1F3C6}';  // 🏆 fallback si no carga la imagen
   var ICON_LOCKED = '\u2753';            // ❓ para bloqueados
+  var ICON_PATH = 'assets/logros/peso-'; // base path de iconos
 
   // ── Estado privado ────────────────────────────────────────────
   var desbloqueados = {};   // { id: timestamp }
@@ -40,6 +41,11 @@ var Logros = (() => {
 
     // Setup tooltip hover
     setupTooltip();
+  }
+
+  // ── HTML del icono de un logro (img con fallback emoji) ──
+  function logroIconHTML(id) {
+    return '<img src="' + ICON_PATH + id + '.png" alt="" onerror="this.outerHTML=\'\u{1F3C6}\'">';
   }
 
   // ── Obtener valor de un stat del juego ───────────────────────
@@ -85,7 +91,7 @@ var Logros = (() => {
     if (item) {
       item.classList.remove('locked');
       item.classList.add('unlocked');
-      item.innerHTML = '<span class="logro-icon">' + ICON_PLACEHOLDER + '</span>';
+      item.innerHTML = '<span class="logro-icon">' + logroIconHTML(id) + '</span>';
     }
 
     // Actualizar badge y subtitle
@@ -109,7 +115,7 @@ var Logros = (() => {
 
       if (desbloqueados[logro.id]) {
         item.classList.add('unlocked');
-        item.innerHTML = '<span class="logro-icon">' + ICON_PLACEHOLDER + '</span>';
+        item.innerHTML = '<span class="logro-icon">' + logroIconHTML(logro.id) + '</span>';
       } else {
         item.classList.add('locked');
         item.innerHTML = '<span class="logro-icon">' + ICON_LOCKED + '</span>';
@@ -158,9 +164,9 @@ var Logros = (() => {
     toast.className = 'logros-toast';
 
     toast.innerHTML =
-      '<div class="logros-toast-icon">' + ICON_PLACEHOLDER + '</div>' +
+      '<div class="logros-toast-icon">' + logroIconHTML(logro.id) + '</div>' +
       '<div class="logros-toast-info">' +
-        '<div class="logros-toast-name">\u{1F3C6} ' + logro.nombre + '</div>' +
+        '<div class="logros-toast-name">' + logro.nombre + '</div>' +
         '<div class="logros-toast-desc">' + logro.desc + '</div>' +
       '</div>' +
       '<button class="logros-toast-close">&times;</button>';
@@ -236,7 +242,7 @@ var Logros = (() => {
 
     if (isUnlocked && logro) {
       $tooltip.innerHTML =
-        '<div class="logro-tooltip-icon">' + ICON_PLACEHOLDER + '</div>' +
+        '<div class="logro-tooltip-icon">' + logroIconHTML(id) + '</div>' +
         '<div class="logro-tooltip-content">' +
           '<div class="logro-tooltip-name">' + logro.nombre + '</div>' +
           '<div class="logro-tooltip-desc">' + logro.desc + '</div>' +
@@ -245,8 +251,8 @@ var Logros = (() => {
       $tooltip.innerHTML =
         '<div class="logro-tooltip-icon">' + ICON_LOCKED + '</div>' +
         '<div class="logro-tooltip-content">' +
-          '<div class="logro-tooltip-name">\u00BF\u00BF\u00BF</div>' +
-          '<div class="logro-tooltip-desc">\u00BF\u00BF\u00BF \u00BF\u00BF\u00BF \u00BF\u00BF\u00BF</div>' +
+          '<div class="logro-tooltip-name">???</div>' +
+          '<div class="logro-tooltip-desc">??? ??? ???</div>' +
         '</div>';
     }
 

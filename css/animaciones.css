@@ -117,6 +117,18 @@
   font-size: 1.25rem;
   flex-shrink: 0;
   line-height: 1;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logros-toast-icon img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  image-rendering: pixelated;
 }
 
 .logros-toast-info {

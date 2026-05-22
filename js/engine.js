@@ -112,7 +112,6 @@ var Game = (() => {
     pesosTotales += ganancia;
     clicsTotales++;
     actualizarEtapas();
-    UI.actualizar();
   }
 
   // ── Compra de Generador ───────────────────────────────────────

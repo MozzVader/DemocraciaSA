@@ -293,6 +293,7 @@ var Logros = (() => {
         desbloqueados[ids[i]] = 1;
       }
     }
+    render();
   }
 
   // ── Limpiar (reset del juego) ────────────────────────────────

@@ -86,10 +86,13 @@ var Game = (() => {
     // 4. Tick counter
     tickCount++;
 
-    // 5. Actualizar etapas, UI y billetes cada segundo
+    // 5. Actualizar etapas, UI y logros cada segundo
     if (tickCount % UI_REFRESH_TICKS === 0) {
       actualizarEtapas();
       UI.actualizar();
+      if (typeof Logros !== 'undefined' && Logros.tick) {
+        Logros.tick();
+      }
     }
 
     // 6. Tick billetes (cada tick)
@@ -286,6 +289,11 @@ var Game = (() => {
 
     // Limpiar billetes
     Billetes.limpiar();
+
+    // Limpiar logros
+    if (typeof Logros !== 'undefined' && Logros.limpiar) {
+      Logros.limpiar();
+    }
 
     // Re-render y actualizar
     UI.renderGeneradores();

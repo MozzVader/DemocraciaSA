@@ -1,0 +1,61 @@
+// ============================================
+// DEMOCRACIA S.A. — Data de Logros
+// Todos los logros del juego por categoría
+// IDs secuenciales globales (no se repiten)
+// ============================================
+
+var LOGROS_DATA = [
+
+  // ── Categoría: Pesos en una run ──────────────────────
+  { id: 1,  nombre: 'La primera colecta',                desc: 'Consigue 1 Peso en una run.',                    cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1 } },
+  { id: 2,  nombre: 'Aporte de militancia',               desc: 'Consigue 1,000 Pesos en una run.',               cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e3 } },
+  { id: 3,  nombre: 'Billetera de campaña',               desc: 'Consigue 100,000 Pesos en una run.',             cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e5 } },
+  { id: 4,  nombre: 'Declaración jurada',                 desc: 'Consigue 1 millón de Pesos en una run.',         cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e6 } },
+  { id: 5,  nombre: 'El primer sobre',                    desc: 'Consigue 100 millones de Pesos en una run.',     cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e8 } },
+  { id: 6,  nombre: 'Obra sin licitación',                desc: 'Consigue 1 billón de Pesos en una run.',         cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e12 } },
+  { id: 7,  nombre: 'Contrato millonario',                desc: 'Consigue 100 billones de Pesos en una run.',     cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e14 } },
+  { id: 8,  nombre: 'Deuda de provincia',                 desc: 'Consigue 1 trillón de Pesos en una run.',        cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e18 } },
+  { id: 9,  nombre: 'Escándalo nacional',                 desc: 'Consigue 100 trillones de Pesos en una run.',    cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e20 } },
+  { id: 10, nombre: 'Cuenta en Suiza',                    desc: 'Consigue 1 cuadrillón de Pesos en una run.',     cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e24 } },
+  { id: 11, nombre: 'Los volquetes del siglo',            desc: 'Consigue 100 cuadrillones de Pesos en una run.', cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e26 } },
+  { id: 12, nombre: 'Reservas del Central',               desc: 'Consigue 1 quintillón de Pesos en una run.',     cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e30 } },
+  { id: 13, nombre: 'Deuda con el FMI',                   desc: 'Consigue 100 quintillones de Pesos en una run.', cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e32 } },
+  { id: 14, nombre: 'El país es tuyo',                    desc: 'Consigue 1 sextillón de Pesos en una run.',      cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e36 } },
+  { id: 15, nombre: 'PBI de una nación',                  desc: 'Consigue 100 sextillones de Pesos en una run.',  cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e38 } },
+  { id: 16, nombre: 'PBI continental',                    desc: 'Consigue 1 septillón de Pesos en una run.',      cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e42 } },
+  { id: 17, nombre: 'Fondo buitre global',                desc: 'Consigue 100 septillones de Pesos en una run.',  cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e44 } },
+  { id: 18, nombre: 'PBI mundial',                        desc: 'Consigue 1 octillón de Pesos en una run.',       cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e48 } },
+  { id: 19, nombre: 'Deuda interplanetaria',              desc: 'Consigue 100 octillones de Pesos en una run.',   cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e50 } },
+  { id: 20, nombre: 'Economía de ciencia ficción',        desc: 'Consigue 1 nonillón de Pesos en una run.',       cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e54 } },
+  { id: 21, nombre: 'Más plata que la que existe',        desc: 'Consigue 100 nonillones de Pesos en una run.',   cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e56 } },
+  { id: 22, nombre: 'Inflación galáctica',                desc: 'Consigue 1 decillón de Pesos en una run.',       cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e60 } },
+  { id: 23, nombre: 'Sistema solar financiero',           desc: 'Consigue 100 decillones de Pesos en una run.',   cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e62 } },
+  { id: 24, nombre: 'Universo de pesos',                  desc: 'Consigue 1 undecillón de Pesos en una run.',     cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e66 } },
+  { id: 25, nombre: 'Multiverso de billetes',             desc: 'Consigue 100 undecillones de Pesos en una run.', cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e68 } },
+  { id: 26, nombre: 'Dimensión del dinero',               desc: 'Consigue 1 duodecillón de Pesos en una run.',    cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e72 } },
+  { id: 27, nombre: 'Agujero negro financiero',           desc: 'Consigue 100 duodecillones de Pesos en una run.',cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e74 } },
+  { id: 28, nombre: 'Más que todas las galaxias',         desc: 'Consigue 1 tredecillón de Pesos en una run.',    cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e78 } },
+  { id: 29, nombre: 'Inflación interdimensional',         desc: 'Consigue 100 tredecillones de Pesos en una run.',cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e80 } },
+  { id: 30, nombre: 'Plata de universos paralelos',       desc: 'Consigue 1 cuatordecillón de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e84 } },
+  { id: 31, nombre: 'El banco del multiverso',            desc: 'Consigue 100 cuatordecillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e86 } },
+  { id: 32, nombre: 'Más allá del dinero',                desc: 'Consigue 1 quindecillón de Pesos en una run.',   cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e90 } },
+  { id: 33, nombre: 'La última frontera fiscal',          desc: 'Consigue 100 quindecillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e92 } },
+  { id: 34, nombre: 'Matrix monetaria',                   desc: 'Consigue 1 sexdecillón de Pesos en una run.',    cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e96 } },
+  { id: 35, nombre: 'El código fuente de la economía',    desc: 'Consigue 100 sexdecillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e98 } },
+  { id: 36, nombre: 'Singularidad financiera',            desc: 'Consigue 1 septendecillón de Pesos en una run.',  cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e102 } },
+  { id: 37, nombre: 'El creador tiene hambre',            desc: 'Consigue 100 septendecillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e104 } },
+  { id: 38, nombre: 'Se rompió la economía',              desc: 'Consigue 1 octodecillón de Pesos en una run.',   cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e108 } },
+  { id: 39, nombre: 'Floating point error',               desc: 'Consigue 100 octodecillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e110 } },
+  { id: 40, nombre: 'Más que todos los números',          desc: 'Consigue 1 novemdecillón de Pesos en una run.',  cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e114 } },
+  { id: 41, nombre: 'Fin de los tiempos... económicos',   desc: 'Consigue 100 novemdecillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e116 } },
+  { id: 42, nombre: 'El universo colapsó de inflación',   desc: 'Consigue 1 vigintillón de Pesos en una run.',    cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e120 } },
+  { id: 43, nombre: 'Dios te pide un préstamo',           desc: 'Consigue 100 vigintillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e122 } },
+  { id: 44, nombre: 'El big bang de los billetes',        desc: 'Consigue 1 unvigintillón de Pesos en una run.',  cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e126 } },
+  { id: 45, nombre: 'JavaScript no soporta tanto',        desc: 'Consigue 100 unvigintillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e128 } },
+  { id: 46, nombre: 'El dinero dejó de tener sentido',    desc: 'Consigue 1 duovigintillón de Pesos en una run.', cat: 'pesos',  cond: { stat: 'pesosTotales', val: 1e132 } },
+  { id: 47, nombre: 'Imposible. Y sin embargo...',        desc: 'Consigue 100 duovigintillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e134 } },
+  { id: 48, nombre: 'Dios te devuelve el préstamo (con intereses)', desc: 'Consigue 1 trevigintillón de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e138 } },
+  { id: 49, nombre: 'El final de la economía',            desc: 'Consigue 100 trevigintillones de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e140 } },
+  { id: 50, nombre: 'DEMOCRACIA S.A. S.A. S.A.',         desc: 'Consigue 1 cuatrivigintillón de Pesos en una run.', cat: 'pesos', cond: { stat: 'pesosTotales', val: 1e144 } },
+
+];

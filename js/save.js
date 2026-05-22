@@ -6,7 +6,7 @@
 var Save = (() => {
 
   var SAVE_KEY = 'democracia_sa_save';
-  var VERSION = 1;
+  var VERSION = 2;
 
   function getBilletesState() {
     var panel = document.getElementById('panel-center');
@@ -33,6 +33,7 @@ var Save = (() => {
         tiempoJugado: Game.getTiempoJugado(),
         notacion: Formato.getNotacion(),
         billetes: getBilletesState(),
+        logros: (typeof Logros !== 'undefined' && Logros.getDesbloqueados) ? Logros.getDesbloqueados() : [],
         generadores: generadores.map(function (g) {
           return {
             id: g.id,
@@ -73,6 +74,11 @@ var Save = (() => {
       // Restaurar estado de billetes (default: activados)
       if (data.billetes === false) {
         setBilletesState(false);
+      }
+
+      // Restaurar logros desbloqueados
+      if (data.logros && typeof Logros !== 'undefined' && Logros.restore) {
+        Logros.restore(data.logros);
       }
 
       return true;

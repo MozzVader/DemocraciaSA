@@ -29,6 +29,11 @@ document.addEventListener('DOMContentLoaded', function () {
   // 2. Inicializar billetes (antes del motor para que esté listo)
   Billetes.init();
 
+  // 2.5. Inicializar logros (después de billetes, antes del motor)
+  if (typeof Logros !== 'undefined' && Logros.init) {
+    Logros.init();
+  }
+
   // 3. Inicializar motor (clona generadores, carga save, arranca loop, setup click)
   Game.init();
 

@@ -26,17 +26,20 @@ document.addEventListener('DOMContentLoaded', function () {
   // 1. Inicializar UI (modals, tabs, ticker — SIN render generadores aún)
   UI.init();
 
-  // 2. Inicializar motor (clona generadores, carga save, arranca loop, setup click)
+  // 2. Inicializar billetes (antes del motor para que esté listo)
+  Billetes.init();
+
+  // 3. Inicializar motor (clona generadores, carga save, arranca loop, setup click)
   Game.init();
 
-  // 3. Inicializar calidad democrática (fluctuación random)
+  // 4. Inicializar calidad democrática (fluctuación random)
   if (typeof Calidad !== 'undefined' && Calidad.init) {
     Calidad.init();
   }
 
-  // 4. Render de generadores con datos reales del motor
+  // 5. Render de generadores con datos reales del motor
   UI.renderGeneradores();
 
-  // 4. Primer refresh de UI
+  // 6. Primer refresh de UI
   UI.actualizar();
 });

@@ -86,13 +86,16 @@ var Game = (() => {
     // 4. Tick counter
     tickCount++;
 
-    // 5. Actualizar etapas y UI cada segundo
+    // 5. Actualizar etapas, UI y billetes cada segundo
     if (tickCount % UI_REFRESH_TICKS === 0) {
       actualizarEtapas();
       UI.actualizar();
     }
 
-    // 6. Auto-save
+    // 6. Tick billetes (cada tick)
+    Billetes.tick(pps);
+
+    // 7. Auto-save
     if (Date.now() - ultimoSave >= AUTO_SAVE_MS) {
       Save.save();
       ultimoSave = Date.now();
@@ -281,6 +284,9 @@ var Game = (() => {
     // Borrar save
     Save.reset();
 
+    // Limpiar billetes
+    Billetes.limpiar();
+
     // Re-render y actualizar
     UI.renderGeneradores();
     UI.actualizar();
@@ -317,6 +323,7 @@ var Game = (() => {
       clickerBtn.addEventListener('click', function (e) {
         click();
         spawnClickFloat(e, clickerBtn);
+        Billetes.spawnClick(pesosPorClic);
       });
     }
 

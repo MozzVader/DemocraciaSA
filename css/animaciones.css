@@ -32,3 +32,35 @@
     transform: translateY(-70px) scale(0.8);
   }
 }
+
+/* ---- Lluvia de billetes ---- */
+
+.billetes-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 1;
+}
+
+#billetes-back {
+  z-index: 1;
+}
+
+#billetes-front {
+  z-index: 2;
+}
+
+.billete {
+  position: absolute;
+  image-rendering: pixelated;
+  will-change: transform, opacity;
+}
+
+.billete-back {
+  /* 32x32 por defecto, seteado por JS */
+}
+
+.billete-front {
+  /* 48x48 por defecto, seteado por JS */
+}

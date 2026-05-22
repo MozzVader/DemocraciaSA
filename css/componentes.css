@@ -329,6 +329,8 @@
   max-width: 24rem;
   flex-shrink: 0;
   margin-top: 0.75rem;
+  position: relative;
+  z-index: 5;
 }
 
 .telegrama {
@@ -860,10 +862,32 @@
   display: none;
 }
 
+.radio-option input[type="checkbox"] {
+  display: none;
+}
+
 .radio-option input[type="radio"]:checked + .radio-mark {
   background: #d4af37;
   border-color: #d4af37;
   box-shadow: inset 0 0 0 2px #0a0f1e;
+}
+
+.radio-option input[type="checkbox"]:checked + .radio-mark {
+  background: #d4af37;
+  border-color: #d4af37;
+  box-shadow: inset 0 0 0 2px #0a0f1e;
+}
+
+.radio-option input[type="checkbox"]:checked + .radio-mark::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 4px;
+  height: 8px;
+  border: solid #0a0f1e;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
 }
 
 .radio-mark {
@@ -874,6 +898,7 @@
   border: 2px solid rgba(255, 255, 255, 0.2);
   background: transparent;
   transition: all 0.15s ease;
+  position: relative;
 }
 
 .radio-text {

@@ -259,6 +259,15 @@ var UI = (() => {
     }, 1500);
   }
 
+  /** Sincroniza el checkbox de billetes con el estado actual */
+  function syncBilletesToggle() {
+    var optBilletes = document.getElementById('opt-billetes');
+    var panelCenter = document.getElementById('panel-center');
+    if (optBilletes && panelCenter) {
+      optBilletes.checked = !panelCenter.classList.contains('billetes-off');
+    }
+  }
+
   /** Sincroniza los radio buttons con la notación actual */
   function syncNotationRadios() {
     var actual = Formato.getNotacion();
@@ -275,6 +284,7 @@ var UI = (() => {
     if (btnSettings) {
       btnSettings.addEventListener('click', function () {
         syncNotationRadios();
+        syncBilletesToggle();
         openModal('modal-opciones');
       });
     }
@@ -285,6 +295,17 @@ var UI = (() => {
       radios[i].addEventListener('change', function () {
         Formato.setNotacion(this.value);
         UI.actualizar();
+      });
+    }
+
+    // Toggle billetes
+    var optBilletes = document.getElementById('opt-billetes');
+    if (optBilletes) {
+      optBilletes.addEventListener('change', function () {
+        var panelCenter = document.getElementById('panel-center');
+        if (panelCenter) {
+          panelCenter.classList.toggle('billetes-off', !this.checked);
+        }
       });
     }
 
@@ -353,6 +374,14 @@ var UI = (() => {
           }
           if (data.notacion) {
             Formato.setNotacion(data.notacion);
+          }
+          // Restaurar estado de billetes al importar
+          if (data.billetes === false) {
+            var pc = document.getElementById('panel-center');
+            if (pc) pc.classList.add('billetes-off');
+          } else {
+            var pc2 = document.getElementById('panel-center');
+            if (pc2) pc2.classList.remove('billetes-off');
           }
 
           // Re-render y cerrar modal

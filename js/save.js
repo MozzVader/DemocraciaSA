@@ -8,6 +8,18 @@ var Save = (() => {
   var SAVE_KEY = 'democracia_sa_save';
   var VERSION = 1;
 
+  function getBilletesState() {
+    var panel = document.getElementById('panel-center');
+    return panel ? !panel.classList.contains('billetes-off') : true;
+  }
+
+  function setBilletesState(enabled) {
+    var panel = document.getElementById('panel-center');
+    if (panel) {
+      panel.classList.toggle('billetes-off', !enabled);
+    }
+  }
+
   function save() {
     try {
       var generadores = Game.getGeneradores();
@@ -20,6 +32,7 @@ var Save = (() => {
         clicsTotales: Game.getClicsTotales(),
         tiempoJugado: Game.getTiempoJugado(),
         notacion: Formato.getNotacion(),
+        billetes: getBilletesState(),
         generadores: generadores.map(function (g) {
           return {
             id: g.id,
@@ -55,6 +68,11 @@ var Save = (() => {
       // Restaurar notación si existe
       if (data.notacion) {
         Formato.setNotacion(data.notacion);
+      }
+
+      // Restaurar estado de billetes (default: activados)
+      if (data.billetes === false) {
+        setBilletesState(false);
       }
 
       return true;

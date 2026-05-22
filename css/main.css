@@ -546,6 +546,7 @@ body {
   max-width: 24rem;
   flex-shrink: 0;
   position: relative;
+  z-index: 5;
 }
 
 .info-money {
@@ -623,6 +624,7 @@ body {
   position: relative;
   flex-shrink: 0;
   margin: 0.5rem 0;
+  z-index: 5;
 }
 
 .clicker-glow {
@@ -697,6 +699,8 @@ body {
   margin-top: auto;
   padding: 1rem 0 0.875rem;
   border-top: 1px solid rgba(212, 175, 55, 0.12);
+  position: relative;
+  z-index: 5;
 }
 
 .stat-nacional {

@@ -40,15 +40,14 @@
   inset: 0;
   overflow: hidden;
   pointer-events: none;
-  z-index: 1;
 }
 
 #billetes-back {
-  z-index: 1;
+  z-index: 0;
 }
 
 #billetes-front {
-  z-index: 2;
+  z-index: 1;
 }
 
 .billete {
@@ -63,4 +62,10 @@
 
 .billete-front {
   /* 48x48 por defecto, seteado por JS */
+}
+
+/* Toggle: ocultar billetes */
+.billetes-off #billetes-back,
+.billetes-off #billetes-front {
+  display: none;
 }

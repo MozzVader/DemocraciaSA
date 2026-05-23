@@ -1,0 +1,32 @@
+name: Auto-generate docs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'js/data/**'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate docs
+        run: node scripts/generate-docs.js
+
+      - name: Commit & push if changed
+        run: |
+          git diff --quiet docs/ && exit 0
+          git config user.name "docs-bot"
+          git config user.email "docs-bot[bot]@users.noreply.github.com"
+          git add docs/
+          git commit -m "docs: auto-update data reference"
+          git push

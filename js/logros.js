@@ -55,6 +55,7 @@ var Logros = (() => {
       case 'clicsTotales':  return Game.getClicsTotales();
       case 'tiempoJugado':  return Game.getTiempoJugado();
       case 'pps':           return Game.getPPS();
+      case 'clics':         return Game.getPesosPorClicTotales();
       default: return 0;
     }
   }

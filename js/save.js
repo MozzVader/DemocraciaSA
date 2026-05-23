@@ -30,6 +30,7 @@ var Save = (() => {
         pesos: Game.getPesos(),
         pesosTotales: Game.getPesosTotales(),
         clicsTotales: Game.getClicsTotales(),
+        pesosPorClicTotales: Game.getPesosPorClicTotales(),
         tiempoJugado: Game.getTiempoJugado(),
         notacion: Formato.getNotacion(),
         billetes: getBilletesState(),

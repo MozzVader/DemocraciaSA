@@ -17,6 +17,7 @@ var Game = (() => {
   var pesosTotales = 0;         // acumulados (para prestige futuro)
   var pesosPorClic = 1;         // click power base
   var clicsTotales = 0;
+  var pesosPorClicTotales = 0;  // lifetime: no resetea en prestige
   var tiempoJugado = 0;         // segundos
   var tickCount = 0;
   var ultimoSave = 0;
@@ -111,6 +112,7 @@ var Game = (() => {
     pesos += ganancia;
     pesosTotales += ganancia;
     clicsTotales++;
+    pesosPorClicTotales += ganancia;
     actualizarEtapas();
   }
 
@@ -194,6 +196,7 @@ var Game = (() => {
   function getPesosTotales() { return pesosTotales; }
   function getPesosPorClic() { return pesosPorClic; }
   function getClicsTotales() { return clicsTotales; }
+  function getPesosPorClicTotales() { return pesosPorClicTotales; }
   function getTiempoJugado() { return tiempoJugado; }
   function getPPS() { return Formulas.ppsTotal(generadores); }
   function getGeneradores() { return generadores; }
@@ -206,6 +209,7 @@ var Game = (() => {
     pesos = data.pesos || 0;
     pesosTotales = data.pesosTotales || 0;
     clicsTotales = data.clicsTotales || 0;
+    pesosPorClicTotales = data.pesosPorClicTotales || 0;
     tiempoJugado = data.tiempoJugado || 0;
 
     if (data.generadores) {
@@ -359,6 +363,7 @@ var Game = (() => {
     getPesosTotales: getPesosTotales,
     getPesosPorClic: getPesosPorClic,
     getClicsTotales: getClicsTotales,
+    getPesosPorClicTotales: getPesosPorClicTotales,
     getTiempoJugado: getTiempoJugado,
     getPPS: getPPS,
     getGeneradores: getGeneradores,

@@ -111,4 +111,26 @@ var LOGROS_DATA = [
   { id: 99, nombre: 'El creador se jubiló',                       desc: 'Genera 1 octodecillón de Pesos por segundo.',       cat: 'pps', icono: 'pps-49', cond: { stat: 'pps', val: 1e108 } },
   { id: 100,nombre: 'Salto cuántico: El peso es y no es un velocirraptor', desc: 'Genera 10 octodecillones de Pesos por segundo.', cat: 'pps', icono: 'pps-50', cond: { stat: 'pps', val: 1e109 } },
 
+  // ── Categoría: Clics (Pesos generados con clicks) ─────────
+  { id: 101, nombre: 'Dedo principiante',                            desc: 'Genera 1,000 Pesos sólo clickeando.',               cat: 'clics', icono: 'click-1',  cond: { stat: 'clics', val: 1e3 } },
+  { id: 102, nombre: 'Callosidad incipiente',                        desc: 'Genera 100,000 Pesos sólo clickeando.',            cat: 'clics', icono: 'click-2',  cond: { stat: 'clics', val: 1e5 } },
+  { id: 103, nombre: 'El dedo no descansa',                          desc: 'Genera 1,000,000 de Pesos sólo clickeando.',        cat: 'clics', icono: 'click-3',  cond: { stat: 'clics', val: 1e6 } },
+  { id: 104, nombre: 'Síndrome del túnel carpiano',                  desc: 'Genera 10 millones de Pesos sólo clickeando.',     cat: 'clics', icono: 'click-4',  cond: { stat: 'clics', val: 1e7 } },
+  { id: 105, nombre: 'Trabajo no es explotación si es voluntario',    desc: 'Genera 1,000 millones de Pesos sólo clickeando.',   cat: 'clics', icono: 'click-5',  cond: { stat: 'clics', val: 1e9 } },
+  { id: 106, nombre: 'El pueblo unido... clickea',                   desc: 'Genera 10,000 millones de Pesos sólo clickeando.',  cat: 'clics', icono: 'click-6',  cond: { stat: 'clics', val: 1e10 } },
+  { id: 107, nombre: 'Dedo de acero',                                 desc: 'Genera 100,000 millones de Pesos sólo clickeando.', cat: 'clics', icono: 'click-7',  cond: { stat: 'clics', val: 1e11 } },
+  { id: 108, nombre: 'Dedo meteórico',                                desc: 'Genera 1 billón de Pesos sólo clickeando.',        cat: 'clics', icono: 'click-8',  cond: { stat: 'clics', val: 1e12 } },
+  { id: 109, nombre: '"Se cayó el sistema"',                          desc: 'Genera 10 billones de Pesos sólo clickeando.',      cat: 'clics', icono: 'click-9',  cond: { stat: 'clics', val: 1e13 } },
+  { id: 110, nombre: 'Clickero certificado',                          desc: 'Genera 100 billones de Pesos sólo clickeando.',     cat: 'clics', icono: 'click-10', cond: { stat: 'clics', val: 1e14 } },
+  { id: 111, nombre: 'El dedo del destino',                           desc: 'Genera 1 cuadrillón de Pesos sólo clickeando.',     cat: 'clics', icono: 'click-11', cond: { stat: 'clics', val: 1e24 } },
+  { id: 112, nombre: 'Dios clickea a través tuyo',                    desc: 'Genera 100 cuadrillones de Pesos sólo clickeando.', cat: 'clics', icono: 'click-12', cond: { stat: 'clics', val: 1e26 } },
+  { id: 113, nombre: 'El universo tiembla con cada click',           desc: 'Genera 10 quintillones de Pesos sólo clickeando.',  cat: 'clics', icono: 'click-13', cond: { stat: 'clics', val: 1e31 } },
+  { id: 114, nombre: 'Tu muñeca es leyenda',                          desc: 'Genera 1 sextillón de Pesos sólo clickeando.',      cat: 'clics', icono: 'click-14', cond: { stat: 'clics', val: 1e36 } },
+  { id: 115, nombre: 'El click que rompió la simulación',            desc: 'Genera 100 sextillones de Pesos sólo clickeando.',  cat: 'clics', icono: 'click-15', cond: { stat: 'clics', val: 1e38 } },
+  { id: 116, nombre: 'Tu dedo es ahora un agujero negro',            desc: 'Genera 10 septillones de Pesos sólo clickeando.',   cat: 'clics', icono: 'click-16', cond: { stat: 'clics', val: 1e43 } },
+  { id: 117, nombre: 'Cada click crea un universo paralelo',         desc: 'Genera 1 octillón de Pesos sólo clickeando.',      cat: 'clics', icono: 'click-17', cond: { stat: 'clics', val: 1e48 } },
+  { id: 118, nombre: 'El dedo omnisciente',                           desc: 'Genera 100 octillones de Pesos sólo clickeando.',   cat: 'clics', icono: 'click-18', cond: { stat: 'clics', val: 1e50 } },
+  { id: 119, nombre: 'Empiezo a sospechar que usas autoclicker',     desc: 'Genera 1 nonillón de Pesos sólo clickeando.',      cat: 'clics', icono: 'click-19', cond: { stat: 'clics', val: 1e54 } },
+  { id: 120, nombre: 'Hay un click más allá de este click',          desc: 'Genera 10 nonillones de Pesos sólo clickeando.',     cat: 'clics', icono: 'click-20', cond: { stat: 'clics', val: 1e55 } },
+
 ];

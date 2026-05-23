@@ -45,7 +45,7 @@ var Logros = (() => {
 
   // ── HTML del icono de un logro (img con fallback emoji) ──
   function logroIconHTML(icono) {
-    return '<img src="' + ICON_PATH + icono + '.png' alt="" onerror="this.outerHTML=\'\u{1F3C6}\'">';
+    return '<img src="' + ICON_PATH + icono + '.png" alt="" onerror="this.outerHTML=\'\u{1F3C6}\'">';
   }
 
   // ── Obtener valor de un stat del juego ───────────────────────

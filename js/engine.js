@@ -278,6 +278,7 @@ var Game = (() => {
     pesos = 0;
     pesosTotales = 0;
     clicsTotales = 0;
+    pesosPorClicTotales = 0;
     tiempoJugado = 0;
     tickCount = 0;
     cantidadCompra = 1;

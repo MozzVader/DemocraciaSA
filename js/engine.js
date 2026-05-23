@@ -195,6 +195,7 @@ var Game = (() => {
   function getPesosPorClic() { return pesosPorClic; }
   function getClicsTotales() { return clicsTotales; }
   function getTiempoJugado() { return tiempoJugado; }
+  function getPPS() { return Formulas.ppsTotal(generadores); }
   function getGeneradores() { return generadores; }
   function getCantidadCompra() { return cantidadCompra; }
   function getUltimaVisibilidad() { return ultimaVisibilidad; }
@@ -359,6 +360,7 @@ var Game = (() => {
     getPesosPorClic: getPesosPorClic,
     getClicsTotales: getClicsTotales,
     getTiempoJugado: getTiempoJugado,
+    getPPS: getPPS,
     getGeneradores: getGeneradores,
     getCantidadCompra: getCantidadCompra,
     resetJuego: resetJuego,

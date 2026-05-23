@@ -9,7 +9,7 @@
 - [Generadores](GENERADORES.md) — 19 registros
 - [Operaciones](OPERACIONES.md) — 0 registros
 - [Eventos](EVENTOS.md) — 0 registros
-- [Noticias](NOTICIAS.md) — 0 registros
+- [Noticias](NOTICIAS.md) — 24 registros
 
 ## Convenciones
 

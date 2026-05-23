@@ -175,12 +175,14 @@ function generateNoticias(data) {
 
   let md = '# Noticias — Reference\n\n';
   md += '> **Archivo:** `js/data/noticias.js`\n';
-  md += '> **Total:** ' + data.length + ' noticias\n\n';
+  md += '> **Total:** ' + data.length + ' noticias (ticker)\n\n';
 
-  md += '| ID | Texto |\n';
-  md += '|----|-------|\n';
-  data.forEach(n => {
-    md += '| ' + n.id + ' | ' + (n.texto || '-') + ' |\n';
+  md += '| # | Headline |\n';
+  md += '|---|----------|\n';
+  data.forEach((n, i) => {
+    // Puede ser string directo o objeto con .texto
+    const texto = typeof n === 'string' ? n : (n.texto || n.nombre || '-');
+    md += '| ' + (i + 1) + ' | ' + texto + ' |\n';
   });
 
   md += '\n';

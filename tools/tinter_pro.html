@@ -7,60 +7,60 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Segoe UI', Arial, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; }
-h1 { text-align: center; color: #e94560; margin-bottom: 5px; font-size: 1.8em; }
-.subtitle { text-align: center; color: #888; margin-bottom: 20px; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #1c1c1c; color: #ccc; padding: 20px; }
+h1 { text-align: center; color: #fff; margin-bottom: 5px; font-size: 1.8em; font-weight: 400; letter-spacing: 1px; }
+.subtitle { text-align: center; color: #666; margin-bottom: 20px; font-size: 13px; }
 
 /* Tabs */
 .tabs { display: flex; gap: 4px; justify-content: center; margin-bottom: 20px; }
-.tab { padding: 10px 24px; border-radius: 8px 8px 0 0; cursor: pointer; background: #16213e; color: #aaa; border: 1px solid #333; border-bottom: none; font-size: 14px; transition: all 0.2s; }
-.tab:hover { color: #fff; background: #1a2744; }
-.tab.active { background: #0f3460; color: #fff; border-color: #e94560; border-bottom: 1px solid #0f3460; position: relative; }
-.tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: #e94560; }
+.tab { padding: 10px 24px; border-radius: 8px 8px 0 0; cursor: pointer; background: #252525; color: #777; border: 1px solid #333; border-bottom: none; font-size: 14px; transition: all 0.2s; }
+.tab:hover { color: #bbb; background: #2a2a2a; }
+.tab.active { background: #2e2e2e; color: #ddd; border-color: #444; border-bottom: 1px solid #2e2e2e; position: relative; }
+.tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: #888; }
 
-.tab-content { display: none; background: #16213e; border: 1px solid #333; border-radius: 0 8px 8px 8px; padding: 20px; }
+.tab-content { display: none; background: #2e2e2e; border: 1px solid #333; border-radius: 0 8px 8px 8px; padding: 20px; }
 .tab-content.active { display: block; }
 
 /* Upload */
 .upload-zone { border: 2px dashed #444; border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 20px; }
-.upload-zone:hover, .upload-zone.dragover { border-color: #e94560; background: rgba(233,69,96,0.05); }
+.upload-zone:hover, .upload-zone.dragover { border-color: #666; background: rgba(255,255,255,0.02); }
 .upload-zone p { color: #888; margin-top: 8px; }
 .upload-zone .icon { font-size: 40px; }
 
 /* Controls */
 .controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
 .controls label { color: #aaa; font-size: 13px; }
-.controls input[type="text"] { background: #0a0a1a; border: 1px solid #333; color: #fff; padding: 6px 12px; border-radius: 6px; width: 150px; font-size: 13px; }
+.controls input[type="text"] { background: #222; border: 1px solid #444; color: #ccc; padding: 6px 12px; border-radius: 6px; width: 150px; font-size: 13px; }
 
-button { background: #e94560; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
-button:hover { background: #ff6b81; transform: translateY(-1px); }
-button:disabled { background: #444; cursor: not-allowed; transform: none; }
-.btn-secondary { background: #0f3460; }
-.btn-secondary:hover { background: #1a4a80; }
+button { background: #444; color: #ddd; border: 1px solid #555; padding: 10px 20px; border-radius: 6px; cursor: pointer; font-size: 14px; transition: all 0.15s; }
+button:hover { background: #555; color: #fff; }
+button:disabled { background: #333; color: #555; cursor: not-allowed; border-color: #333; }
+.btn-secondary { background: #333; color: #aaa; border-color: #444; }
+.btn-secondary:hover { background: #3a3a3a; color: #ccc; }
 
 /* Preview */
 .preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.preview-header h3 { color: #e94560; font-size: 16px; }
+.preview-header h3 { color: #bbb; font-size: 16px; font-weight: 400; }
 .preview-grid { display: grid; gap: 10px; margin-bottom: 20px; }
 .preview-grid.logros { grid-template-columns: repeat(10, 1fr); }
 .preview-grid.ops { grid-template-columns: repeat(10, 1fr); }
 .preview-item { text-align: center; }
-.preview-item canvas { image-rendering: pixelated; border: 1px solid #333; border-radius: 4px; background: #0a0a1a; }
+.preview-item canvas { image-rendering: pixelated; border: 1px solid #333; border-radius: 4px; background: #1a1a1a; }
 .preview-item .label { font-size: 9px; color: #888; margin-top: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 48px; display: inline-block; }
-.preview-item:hover .label { color: #e94560; }
+.preview-item:hover .label { color: #ddd; }
 
 /* Tier info */
-.tier-info { background: #0a0a1a; border-radius: 8px; padding: 12px; margin-top: 15px; }
-.tier-info h4 { color: #e94560; margin-bottom: 6px; }
+.tier-info { background: #222; border-radius: 8px; padding: 12px; margin-top: 15px; }
+.tier-info h4 { color: #aaa; margin-bottom: 6px; font-weight: 400; }
 .tier-table { width: 100%; font-size: 12px; }
-.tier-table th { background: #0f3460; padding: 4px 8px; text-align: left; }
+.tier-table th { background: #333; padding: 4px 8px; text-align: left; color: #aaa; }
 .tier-table td { padding: 3px 8px; border-bottom: 1px solid #222; }
-.tier-table tr:hover td { background: rgba(233,69,96,0.1); }
+.tier-table tr:hover td { background: rgba(255,255,255,0.04); }
 .tier-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: middle; margin-right: 6px; }
 
 /* Status */
-.status { color: #888; font-size: 13px; padding: 8px; background: #0a0a1a; border-radius: 6px; margin-bottom: 15px; }
-.status.error { color: #e94560; }
+.status { color: #888; font-size: 13px; padding: 8px; background: #222; border-radius: 6px; margin-bottom: 15px; }
+.status.error { color: #c75050; }
 .status.success { color: #52b788; }
 
 /* Hidden */
@@ -68,7 +68,7 @@ button:disabled { background: #444; cursor: not-allowed; transform: none; }
 </style>
 </head>
 <body>
-<h1>🎨 Tinter Pro</h1>
+<h1>Tinter Pro</h1>
 <p class="subtitle">Herramienta de tintado para Democracia S.A.</p>
 
 <div class="tabs">

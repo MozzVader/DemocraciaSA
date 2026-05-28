@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tinter Pro — Democracia S.A.</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; }
+h1 { text-align: center; color: #e94560; margin-bottom: 5px; font-size: 1.8em; }
+.subtitle { text-align: center; color: #888; margin-bottom: 20px; }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; justify-content: center; margin-bottom: 20px; }
+.tab { padding: 10px 24px; border-radius: 8px 8px 0 0; cursor: pointer; background: #16213e; color: #aaa; border: 1px solid #333; border-bottom: none; font-size: 14px; transition: all 0.2s; }
+.tab:hover { color: #fff; background: #1a2744; }
+.tab.active { background: #0f3460; color: #fff; border-color: #e94560; border-bottom: 1px solid #0f3460; position: relative; }
+.tab.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: #e94560; }
+
+.tab-content { display: none; background: #16213e; border: 1px solid #333; border-radius: 0 8px 8px 8px; padding: 20px; }
+.tab-content.active { display: block; }
+
+/* Upload */
+.upload-zone { border: 2px dashed #444; border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 0.2s; margin-bottom: 20px; }
+.upload-zone:hover, .upload-zone.dragover { border-color: #e94560; background: rgba(233,69,96,0.05); }
+.upload-zone p { color: #888; margin-top: 8px; }
+.upload-zone .icon { font-size: 40px; }
+
+/* Controls */
+.controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-bottom: 20px; }
+.controls label { color: #aaa; font-size: 13px; }
+.controls input[type="text"] { background: #0a0a1a; border: 1px solid #333; color: #fff; padding: 6px 12px; border-radius: 6px; width: 150px; font-size: 13px; }
+
+button { background: #e94560; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+button:hover { background: #ff6b81; transform: translateY(-1px); }
+button:disabled { background: #444; cursor: not-allowed; transform: none; }
+.btn-secondary { background: #0f3460; }
+.btn-secondary:hover { background: #1a4a80; }
+
+/* Preview */
+.preview-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.preview-header h3 { color: #e94560; font-size: 16px; }
+.preview-grid { display: grid; gap: 10px; margin-bottom: 20px; }
+.preview-grid.logros { grid-template-columns: repeat(10, 1fr); }
+.preview-grid.ops { grid-template-columns: repeat(10, 1fr); }
+.preview-item { text-align: center; }
+.preview-item canvas { image-rendering: pixelated; border: 1px solid #333; border-radius: 4px; background: #0a0a1a; }
+.preview-item .label { font-size: 9px; color: #888; margin-top: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 48px; display: inline-block; }
+.preview-item:hover .label { color: #e94560; }
+
+/* Tier info */
+.tier-info { background: #0a0a1a; border-radius: 8px; padding: 12px; margin-top: 15px; }
+.tier-info h4 { color: #e94560; margin-bottom: 6px; }
+.tier-table { width: 100%; font-size: 12px; }
+.tier-table th { background: #0f3460; padding: 4px 8px; text-align: left; }
+.tier-table td { padding: 3px 8px; border-bottom: 1px solid #222; }
+.tier-table tr:hover td { background: rgba(233,69,96,0.1); }
+.tier-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; vertical-align: middle; margin-right: 6px; }
+
+/* Status */
+.status { color: #888; font-size: 13px; padding: 8px; background: #0a0a1a; border-radius: 6px; margin-bottom: 15px; }
+.status.error { color: #e94560; }
+.status.success { color: #52b788; }
+
+/* Hidden */
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<h1>🎨 Tinter Pro</h1>
+<p class="subtitle">Herramienta de tintado para Democracia S.A.</p>
+
+<div class="tabs">
+  <div class="tab active" data-tab="logros">🪙 Logros (50 colores)</div>
+  <div class="tab" data-tab="ops">💰 Operaciones (19 tiers)</div>
+</div>
+
+<!-- TAB: LOGROS -->
+<div class="tab-content active" id="tab-logros">
+  <div class="upload-zone" id="uploadLogros">
+    <div class="icon">📁</div>
+    <p>Arrastrá o pegá (Ctrl+V) un sprite con 4 tonos</p>
+    <p style="font-size:11px;color:#555;">Se detectan los tonos por canal verde: ≥210, ≥195, ≥160, &lt;160</p>
+  </div>
+  <div class="status" id="statusLogros">Esperando imagen...</div>
+  <div class="controls">
+    <label>Prefijo:</label>
+    <input type="text" id="prefixLogros" value="peso">
+    <button id="btnGenLogros" disabled>Generar 50 variantes</button>
+    <button id="btnZipLogros" disabled class="btn-secondary">📦 Descargar ZIP</button>
+  </div>
+  <div id="previewLogros"></div>
+</div>
+
+<!-- TAB: OPERACIONES -->
+<div class="tab-content" id="tab-ops">
+  <div class="upload-zone" id="uploadOps">
+    <div class="icon">📁</div>
+    <p>Arrastrá o pegá (Ctrl+V) el icono base de un generador</p>
+    <p style="font-size:11px;color:#555;">Se aplicarán los 19 tiers con bordes, tintes y efectos</p>
+  </div>
+  <div class="status" id="statusOps">Esperando imagen...</div>
+  <div class="controls">
+    <label>Prefijo:</label>
+    <input type="text" id="prefixOps" value="gen">
+    <button id="btnGenOps" disabled>Generar 19 tiers</button>
+    <button id="btnZipOps" disabled class="btn-secondary">📦 Descargar ZIP</button>
+  </div>
+  <div id="previewOps"></div>
+  <div class="tier-info">
+    <h4>Referencia de Tiers</h4>
+    <table class="tier-table">
+      <tr><th>#</th><th>Tier</th><th>Color</th><th>Borde</th><th>Efecto</th></tr>
+      <tr><td>1-3</td><td>Patacón → Billete</td><td><span class="tier-dot" style="background:#888;"></span>Natural</td><td>Blanco 2px</td><td>—</td></tr>
+      <tr><td>4-6</td><td>Cheque → Bono del Estado</td><td><span class="tier-dot" style="background:#4488cc;"></span>Azul/metalizado</td><td>Gris/plateado 2px</td><td>—</td></tr>
+      <tr><td>7-9</td><td>Letra → Dólar</td><td><span class="tier-dot" style="background:#cc3333;"></span>Rojo escarlata</td><td>Rojo sólido 2px</td><td>Brillo 1px</td></tr>
+      <tr><td>10-12</td><td>Dólar Blue → SWIFT</td><td><span class="tier-dot" style="background:linear-gradient(135deg,#cc33cc,#33cc33);"></span>Púrpura</td><td>Doble borde 2+1px</td><td>Sparkles</td></tr>
+      <tr><td>13-15</td><td>Crypto → Bono Sovereign</td><td><span class="tier-dot" style="background:linear-gradient(90deg,#cc3333,#3366cc);"></span>Split A/B</td><td>Doble grueso 3+1px</td><td>—</td></tr>
+      <tr><td>16</td><td>Desembolso del FMI</td><td><span class="tier-dot" style="background:linear-gradient(90deg,#cc9933,#33cc33);"></span>Split especial</td><td>Arcoíris 3px</td><td>—</td></tr>
+      <tr><td>17</td><td>S&P 500</td><td><span class="tier-dot" style="background:#cccc33;"></span>Amarillo urgente</td><td>Doble arcoíris 2+1px</td><td>"¡!"</td></tr>
+      <tr><td>18</td><td>Petróleo Brent</td><td><span class="tier-dot" style="background:#c0c0c8;"></span>Cromado metálico</td><td>Doble arcoíris 2+1px</td><td>Sparkles + Brillo</td></tr>
+      <tr><td>19</td><td>Onza Troy</td><td><span class="tier-dot" style="background:#ffd700;"></span>Dorado</td><td>Oro sólido 3px</td><td>Sutil brillo 1px</td></tr>
+    </table>
+  </div>
+</div>
+
+<canvas id="hiddenCanvas" class="hidden"></canvas>
+
+<script>
+// ============================================================
+// STATE
+// ============================================================
+const state = {
+  logros: { img: null, results: [] },
+  ops: { img: null, results: [] }
+};
+
+const TIER_NAMES = [
+  'Patacón','Moneda','Billete',
+  'Cheque','Tarjeta de crédito','Bono del Estado',
+  'Letra del Tesoro','Pagaré','Dólar',
+  'Dólar Blue','Dólar MEP','Transferencia SWIFT',
+  'Criptomoneda','ADR','Bono Sovereign',
+  'Desembolso del FMI','S&P 500','Petróleo Brent','Onza Troy'
+];
+
+const TIER_SHORT = [
+  'patacon','moneda','billete',
+  'cheque','tarjeta','bono',
+  'letra','pagare','dolar',
+  'dolarblue','dolarmep','swift',
+  'crypto','adr','soberano',
+  'fmi','sp500','brent','onza'
+];
+
+// Logros: 50 color palette (5 phases × 10)
+function getLogroColor(index) {
+  const phases = [
+    { r1:27,g1:67,b1:50,  r2:64,g2:145,b2:108 },  // Verde oscuro → verde claro
+    { r1:123,g1:88,b1:0,  r2:255,g2:215,b2:0 },    // Dorado oscuro → dorado claro
+    { r1:191,g1:54,b1:12, r2:255,g2:23,b2:68 },     // Naranja oscuro → rojo claro
+    { r1:74,g1:20,b1:140, r2:224,g2:64,b2:251 },    // Púrpura oscuro → púrpura claro
+    { r1:13,g1:71,b1:161, r2:255,g2:255,b2:255 }    // Azul oscuro → blanco
+  ];
+  const phase = Math.floor(index / 10);
+  const pos = (index % 10) / 9;
+  const p = phases[Math.min(phase, 4)];
+  return {
+    r: Math.round(p.r1 + (p.r2 - p.r1) * pos),
+    g: Math.round(p.g1 + (p.g2 - p.g1) * pos),
+    b: Math.round(p.b1 + (p.b2 - p.b1) * pos)
+  };
+}
+
+// ============================================================
+// UTILITY FUNCTIONS
+// ============================================================
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+function getPixelData(img) {
+  const c = document.createElement('canvas');
+  c.width = img.naturalWidth || img.width;
+  c.height = img.naturalHeight || img.height;
+  const ctx = c.getContext('2d');
+  ctx.drawImage(img, 0, 0);
+  return ctx.getImageData(0, 0, c.width, c.height);
+}
+
+function copyImageData(src) {
+  return new ImageData(new Uint8ClampedArray(src.data), src.width, src.height);
+}
+
+// Detect tone by green channel (4-tone system)
+function getToneFactor(g) {
+  if (g >= 210) return 1.0;
+  if (g >= 195) return 0.78;
+  if (g >= 160) return 0.55;
+  return 0.38;
+}
+
+// ============================================================
+// LOGROS MODE: Tint with 50 colors
+// ============================================================
+function tintLogro(srcData, color) {
+  const data = copyImageData(srcData);
+  const d = data.data;
+  for (let i = 0; i < d.length; i += 4) {
+    const a = d[i+3];
+    if (a === 0) continue;
+    const factor = getToneFactor(d[i+1]);
+    d[i]   = Math.min(255, Math.round(color.r * factor));
+    d[i+1] = Math.min(255, Math.round(color.g * factor));
+    d[i+2] = Math.min(255, Math.round(color.b * factor));
+  }
+  return data;
+}
+
+function generateLogros() {
+  const img = state.logros.img;
+  if (!img) return;
+  const srcData = getPixelData(img);
+  const prefix = document.getElementById('prefixLogros').value || 'peso';
+  state.logros.results = [];
+
+  for (let i = 0; i < 50; i++) {
+    const color = getLogroColor(i);
+    const tinted = tintLogro(srcData, color);
+    const canvas = document.createElement('canvas');
+    canvas.width = tinted.width;
+    canvas.height = tinted.height;
+    canvas.getContext('2d').putImageData(tinted, 0, 0);
+    state.logros.results.push({ canvas, name: `${prefix}-${i+1}.png` });
+  }
+
+  renderPreview('previewLogros', state.logros.results, 'logros');
+  document.getElementById('btnZipLogros').disabled = false;
+  setStatus('statusLogros', '50 variantes generadas ✓', 'success');
+}
+
+// ============================================================
+// OPERATIONS MODE: Apply tier effects
+// ============================================================
+
+// Generic tint function (replaces all non-transparent pixels)
+function tintPixels(srcData, color, intensity) {
+  intensity = intensity || 1.0;
+  const data = copyImageData(srcData);
+  const d = data.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i+3] === 0) continue;
+    // Preserve some original luminosity for depth
+    const lum = (d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114) / 255;
+    const blend = 0.3 + lum * 0.7; // keep 30% of original brightness variation
+    d[i]   = Math.min(255, Math.round(color.r * intensity * blend + d[i] * (1 - intensity) * 0.3));
+    d[i+1] = Math.min(255, Math.round(color.g * intensity * blend + d[i+1] * (1 - intensity) * 0.3));
+    d[i+2] = Math.min(255, Math.round(color.b * intensity * blend + d[i+2] * (1 - intensity) * 0.3));
+  }
+  return data;
+}
+
+// Chrome/metallic tint
+function tintChrome(srcData) {
+  const data = copyImageData(srcData);
+  const d = data.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i+3] === 0) continue;
+    const lum = (d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114) / 255;
+    const base = 160;
+    const range = 80;
+    const val = Math.round(base + range * lum);
+    d[i] = Math.min(255, val);
+    d[i+1] = Math.min(255, val);
+    d[i+2] = Math.min(255, Math.round(val * 1.05)); // slight blue tint
+  }
+  return data;
+}
+
+// Gold tint
+function tintGold(srcData) {
+  return tintPixels(srcData, { r: 255, g: 200, b: 50 }, 0.85);
+}
+
+// Add border to sprite (expand canvas)
+function addBorder(srcData, borderColor, borderWidth) {
+  const w = srcData.width;
+  const h = srcData.height;
+  const nw = w + borderWidth * 2;
+  const nh = h + borderWidth * 2;
+  const canvas = document.createElement('canvas');
+  canvas.width = nw;
+  canvas.height = nh;
+  const ctx = canvas.getContext('2d');
+
+  // Draw border
+  ctx.fillStyle = borderColor;
+  ctx.fillRect(0, 0, nw, nh);
+
+  // Draw original on top
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = w;
+  tmpCanvas.height = h;
+  tmpCanvas.getContext('2d').putImageData(srcData, 0, 0);
+  ctx.drawImage(tmpCanvas, borderWidth, borderWidth);
+
+  return ctx.getImageData(0, 0, nw, nh);
+}
+
+// Add glow around edges
+function addGlow(srcData, glowColor, glowSize) {
+  const w = srcData.width;
+  const h = srcData.height;
+  const nw = w + glowSize * 2;
+  const nh = h + glowSize * 2;
+  const canvas = document.createElement('canvas');
+  canvas.width = nw;
+  canvas.height = nh;
+  const ctx = canvas.getContext('2d');
+
+  // Draw original centered
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = w;
+  tmpCanvas.height = h;
+  tmpCanvas.getContext('2d').putImageData(srcData, 0, 0);
+
+  // Draw glow (blur the sprite behind)
+  ctx.globalAlpha = 0.3;
+  ctx.shadowColor = glowColor;
+  ctx.shadowBlur = glowSize * 3;
+  ctx.drawImage(tmpCanvas, glowSize, glowSize);
+  ctx.shadowBlur = 0;
+  ctx.globalAlpha = 1.0;
+
+  // Draw original on top
+  ctx.drawImage(tmpCanvas, glowSize, glowSize);
+
+  return ctx.getImageData(0, 0, nw, nh);
+}
+
+// Add sparkles
+function addSparkles(srcData, count) {
+  const data = copyImageData(srcData);
+  const d = data.data;
+  const w = data.width;
+  const h = data.height;
+
+  // Find non-transparent pixels
+  const validPixels = [];
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      const idx = (y * w + x) * 4;
+      if (d[idx + 3] > 128) validPixels.push({ x, y, idx });
+    }
+  }
+
+  // Add sparkle pixels
+  for (let i = 0; i < count && validPixels.length > 0; i++) {
+    const px = validPixels[Math.floor(Math.random() * validPixels.length)];
+    // Bright white/yellow pixel
+    d[px.idx] = 255;
+    d[px.idx + 1] = 255;
+    d[px.idx + 2] = Math.random() > 0.5 ? 255 : 200;
+    d[px.idx + 3] = 255;
+
+    // Also make neighbors slightly brighter (cross pattern)
+    const neighbors = [
+      { x: px.x + 1, y: px.y }, { x: px.x - 1, y: px.y },
+      { x: px.x, y: px.y + 1 }, { x: px.x, y: px.y - 1 }
+    ];
+    for (const n of neighbors) {
+      if (n.x >= 0 && n.x < w && n.y >= 0 && n.y < h) {
+        const ni = (n.y * w + n.x) * 4;
+        if (d[ni + 3] > 0) {
+          d[ni] = Math.min(255, d[ni] + 80);
+          d[ni + 1] = Math.min(255, d[ni + 1] + 80);
+          d[ni + 2] = Math.min(255, d[ni + 2] + 40);
+        }
+      }
+    }
+  }
+
+  return data;
+}
+
+// Split tint (left half color A, right half color B)
+function tintSplit(srcData, colorA, colorB) {
+  const data = copyImageData(srcData);
+  const d = data.data;
+  const w = data.width;
+  const mid = Math.floor(w / 2);
+
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i+3] === 0) continue;
+    const px = (i / 4) % w;
+    const color = px < mid ? colorA : colorB;
+    const lum = (d[i] * 0.299 + d[i+1] * 0.587 + d[i+2] * 0.114) / 255;
+    const blend = 0.3 + lum * 0.7;
+    d[i]   = Math.min(255, Math.round(color.r * blend));
+    d[i+1] = Math.min(255, Math.round(color.g * blend));
+    d[i+2] = Math.min(255, Math.round(color.b * blend));
+  }
+  return data;
+}
+
+// Rainbow border (each side a different color)
+function addRainbowBorder(srcData, borderWidth) {
+  const w = srcData.width;
+  const h = srcData.height;
+  const nw = w + borderWidth * 2;
+  const nh = h + borderWidth * 2;
+  const canvas = document.createElement('canvas');
+  canvas.width = nw;
+  canvas.height = nh;
+  const ctx = canvas.getContext('2d');
+
+  // Draw rainbow border
+  const colors = ['#ff3333', '#ff9933', '#ffff33', '#33ff33', '#3333ff', '#9933ff', '#ff33ff'];
+  // Top
+  for (let x = 0; x < nw; x++) {
+    const ci = Math.floor((x / nw) * colors.length) % colors.length;
+    ctx.fillStyle = colors[ci];
+    ctx.fillRect(x, 0, 1, borderWidth);
+  }
+  // Bottom
+  for (let x = 0; x < nw; x++) {
+    const ci = Math.floor((x / nw) * colors.length) % colors.length;
+    ctx.fillStyle = colors[ci];
+    ctx.fillRect(x, nh - borderWidth, 1, borderWidth);
+  }
+  // Left
+  for (let y = 0; y < nh; y++) {
+    const ci = Math.floor((y / nh) * colors.length) % colors.length;
+    ctx.fillStyle = colors[ci];
+    ctx.fillRect(0, y, borderWidth, 1);
+  }
+  // Right
+  for (let y = 0; y < nh; y++) {
+    const ci = Math.floor((y / nh) * colors.length) % colors.length;
+    ctx.fillStyle = colors[ci];
+    ctx.fillRect(nw - borderWidth, y, borderWidth, 1);
+  }
+
+  // Fill corners
+  for (let y = 0; y < nh; y++) {
+    for (let x = 0; x < nw; x++) {
+      if (x < borderWidth && y < borderWidth) continue;
+      if (x < borderWidth && y >= nh - borderWidth) continue;
+      if (x >= nw - borderWidth && y < borderWidth) continue;
+      if (x >= nw - borderWidth && y >= nh - borderWidth) continue;
+    }
+  }
+
+  // Draw original
+  const tmpCanvas = document.createElement('canvas');
+  tmpCanvas.width = w;
+  tmpCanvas.height = h;
+  tmpCanvas.getContext('2d').putImageData(srcData, 0, 0);
+  ctx.drawImage(tmpCanvas, borderWidth, borderWidth);
+
+  return ctx.getImageData(0, 0, nw, nh);
+}
+
+// Add "¡!" mark in pixel font
+function addExclamationMark(srcData) {
+  const data = copyImageData(srcData);
+  const d = data.data;
+  const w = data.width;
+  const h = data.height;
+
+  // 5x7 pixel "¡" in top-left area
+  const mark = [
+    [0,0,1,0,0],
+    [0,0,0,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+    [0,0,0,0,0],
+    [0,0,1,0,0],
+    [0,0,1,0,0],
+  ];
+
+  const startX = 2;
+  const startY = 2;
+
+  for (let row = 0; row < mark.length; row++) {
+    for (let col = 0; col < mark[row].length; col++) {
+      if (mark[row][col] && startX + col < w && startY + row < h) {
+        const idx = ((startY + row) * w + (startX + col)) * 4;
+        d[idx] = 255;
+        d[idx + 1] = 255;
+        d[idx + 2] = 50;
+        d[idx + 3] = 255;
+      }
+    }
+  }
+
+  return data;
+}
+
+// Main: Generate all 19 tiers
+function generateOps() {
+  const img = state.ops.img;
+  if (!img) return;
+  const srcData = getPixelData(img);
+  const prefix = document.getElementById('prefixOps').value || 'gen';
+  state.ops.results = [];
+
+  // Tier definitions: [start, end, { config }]
+  const tierConfigs = [];
+
+  // Tiers 1-3: Natural + white border
+  for (let t = 0; t < 3; t++) {
+    tierConfigs.push((src) => {
+      let result = copyImageData(src);
+      result = addBorder(result, '#ffffff', 2);
+      return result;
+    });
+  }
+
+  // Tiers 4-6: Blue/metallic tint + silver border
+  for (let t = 0; t < 3; t++) {
+    tierConfigs.push((src) => {
+      let result = tintPixels(src, { r: 68, g: 136, b: 204 }, 0.75 + t * 0.05);
+      result = addBorder(result, '#b0b8c8', 2);
+      return result;
+    });
+  }
+
+  // Tiers 7-9: Red/scarlet tint + red border + glow
+  for (let t = 0; t < 3; t++) {
+    tierConfigs.push((src) => {
+      let result = tintPixels(src, { r: 200, g: 40, b: 40 }, 0.7 + t * 0.08);
+      result = addGlow(result, '#ff4444', 1);
+      result = addBorder(result, '#cc2222', 2);
+      return result;
+    });
+  }
+
+  // Tiers 10-12: Purple tint + double border + sparkles
+  for (let t = 0; t < 3; t++) {
+    tierConfigs.push((src) => {
+      let result = tintPixels(src, { r: 160, g: 40, b: 200 }, 0.7 + t * 0.08);
+      result = addSparkles(result, 3 + t * 2);
+      result = addBorder(result, '#cc66ff', 2);
+      result = addBorder(result, '#9933cc', 1);
+      return result;
+    });
+  }
+
+  // Tiers 13-15: Split colors + thick double border
+  const splitConfigs = [
+    { a: { r: 200, g: 40, b: 40 }, b: { r: 40, g: 80, b: 200 }, border: '#886633' },
+    { a: { r: 220, g: 180, b: 40 }, b: { r: 120, g: 40, b: 180 }, border: '#997733' },
+    { a: { r: 40, g: 160, b: 80 }, b: { r: 220, g: 180, b: 40 }, border: '#889944' },
+  ];
+  for (let t = 0; t < 3; t++) {
+    tierConfigs.push((src) => {
+      const cfg = splitConfigs[t];
+      let result = tintSplit(src, cfg.a, cfg.b);
+      result = addBorder(result, cfg.border, 3);
+      result = addBorder(result, '#222222', 1);
+      return result;
+    });
+  }
+
+  // Tier 16: FMI - Split + rainbow border
+  tierConfigs.push((src) => {
+    let result = tintSplit(src, { r: 200, g: 150, b: 40 }, { r: 40, g: 180, b: 80 });
+    result = addRainbowBorder(result, 3);
+    return result;
+  });
+
+  // Tier 17: S&P 500 - Yellow + double rainbow border + "¡!"
+  tierConfigs.push((src) => {
+    let result = tintPixels(src, { r: 220, g: 200, b: 40 }, 0.85);
+    result = addBorder(result, '#cccc33', 2);
+    result = addRainbowBorder(result, 1);
+    result = addExclamationMark(result);
+    return result;
+  });
+
+  // Tier 18: Petróleo Brent - Chrome + double rainbow + sparkles + glow
+  tierConfigs.push((src) => {
+    let result = tintChrome(src);
+    result = addSparkles(result, 8);
+    result = addGlow(result, '#aabbdd', 1);
+    result = addBorder(result, '#8888aa', 2);
+    result = addRainbowBorder(result, 1);
+    return result;
+  });
+
+  // Tier 19: Onza Troy - Gold + gold border + subtle glow
+  tierConfigs.push((src) => {
+    let result = tintGold(src);
+    result = addGlow(result, '#ffcc33', 1);
+    result = addBorder(result, '#daa520', 3);
+    return result;
+  });
+
+  // Generate all
+  for (let i = 0; i < 19; i++) {
+    let result = tierConfigs[i](srcData);
+    const canvas = document.createElement('canvas');
+    canvas.width = result.width;
+    canvas.height = result.height;
+    canvas.getContext('2d').putImageData(result, 0, 0);
+    state.ops.results.push({ canvas, name: `${prefix}-${TIER_SHORT[i]}.png` });
+  }
+
+  renderPreview('previewOps', state.ops.results, 'ops');
+  document.getElementById('btnZipOps').disabled = false;
+  setStatus('statusOps', '19 tiers generados ✓', 'success');
+}
+
+// ============================================================
+// RENDERING
+// ============================================================
+function renderPreview(containerId, results, mode) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+
+  const grid = document.createElement('div');
+  grid.className = `preview-grid ${mode}`;
+
+  const displaySize = mode === 'logros' ? 48 : 56; // ops might be bigger due to borders
+
+  results.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'preview-item';
+
+    const canvas = document.createElement('canvas');
+    const scale = displaySize / Math.max(item.canvas.width, item.canvas.height);
+    canvas.width = Math.round(item.canvas.width * scale);
+    canvas.height = Math.round(item.canvas.height * scale);
+    canvas.style.width = canvas.width + 'px';
+    canvas.style.height = canvas.height + 'px';
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(item.canvas, 0, 0, canvas.width, canvas.height);
+
+    const label = document.createElement('div');
+    label.className = 'label';
+    label.textContent = item.name;
+
+    // Click to download individual
+    canvas.style.cursor = 'pointer';
+    canvas.title = item.name;
+    canvas.addEventListener('click', () => downloadCanvas(item.canvas, item.name));
+
+    div.appendChild(canvas);
+    div.appendChild(label);
+    grid.appendChild(div);
+  });
+
+  container.appendChild(grid);
+}
+
+function downloadCanvas(canvas, filename) {
+  const link = document.createElement('a');
+  link.download = filename;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+async function downloadZip(results, zipName) {
+  const zip = new JSZip();
+  results.forEach(item => {
+    const dataUrl = item.canvas.toDataURL('image/png');
+    const base64 = dataUrl.split(',')[1];
+    zip.file(item.name, base64, { base64: true });
+  });
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const link = document.createElement('a');
+  link.download = zipName;
+  link.href = URL.createObjectURL(blob);
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function setStatus(id, text, type) {
+  const el = document.getElementById(id);
+  el.textContent = text;
+  el.className = `status ${type || ''}`;
+}
+
+// ============================================================
+// UPLOAD HANDLING
+// ============================================================
+function handleImageUpload(file, target) {
+  if (!file || !file.type.startsWith('image/')) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const img = await loadImage(e.target.result);
+      state[target].img = img;
+
+      if (target === 'logros') {
+        setStatus('statusLogros', `Imagen cargada: ${img.width}×${img.height}px ✓`, 'success');
+        document.getElementById('btnGenLogros').disabled = false;
+      } else {
+        setStatus('statusOps', `Imagen cargada: ${img.width}×${img.height}px ✓`, 'success');
+        document.getElementById('btnGenOps').disabled = false;
+      }
+    } catch (err) {
+      setStatus('status' + (target === 'logros' ? 'Logros' : 'Ops'), 'Error al cargar imagen: ' + err.message, 'error');
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function setupUploadZone(zoneId, target) {
+  const zone = document.getElementById(zoneId);
+
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('dragover');
+  });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) handleImageUpload(e.dataTransfer.files[0], target);
+  });
+  zone.addEventListener('click', () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.onchange = (e) => {
+      if (e.target.files.length) handleImageUpload(e.target.files[0], target);
+    };
+    input.click();
+  });
+}
+
+// ============================================================
+// TAB SYSTEM
+// ============================================================
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+  });
+});
+
+// ============================================================
+// CLIPBOARD PASTE (Ctrl+V)
+// ============================================================
+document.addEventListener('paste', (e) => {
+  const items = e.clipboardData && e.clipboardData.items;
+  if (!items) return;
+  for (const item of items) {
+    if (item.type.startsWith('image/')) {
+      e.preventDefault();
+      const file = item.getAsFile();
+      // Determine which tab is active
+      const activeTab = document.querySelector('.tab.active').dataset.tab;
+      const target = activeTab === 'logros' ? 'logros' : 'ops';
+      handleImageUpload(file, target);
+      break;
+    }
+  }
+});
+
+// ============================================================
+// INIT
+// ============================================================
+setupUploadZone('uploadLogros', 'logros');
+setupUploadZone('uploadOps', 'ops');
+
+document.getElementById('btnGenLogros').addEventListener('click', generateLogros);
+document.getElementById('btnGenOps').addEventListener('click', generateOps);
+document.getElementById('btnZipLogros').addEventListener('click', () => {
+  if (state.logros.results.length) downloadZip(state.logros.results, 'logros.zip');
+});
+document.getElementById('btnZipOps').addEventListener('click', () => {
+  if (state.ops.results.length) downloadZip(state.ops.results, 'operaciones.zip');
+});
+</script>
+</body>
+</html>

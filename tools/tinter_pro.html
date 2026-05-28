@@ -288,29 +288,79 @@ function tintGold(srcData) {
   return tintPixels(srcData, { r: 255, g: 200, b: 50 }, 0.85);
 }
 
-// Add border to sprite (expand canvas)
+// Parse hex color to {r,g,b}
+function hexToRgb(hex) {
+  hex = hex.replace('#','');
+  return {
+    r: parseInt(hex.substring(0,2), 16),
+    g: parseInt(hex.substring(2,4), 16),
+    b: parseInt(hex.substring(4,6), 16)
+  };
+}
+
+// Add outline border around sprite pixels (follows the shape)
+// borderWidth: 1 = 1px outline, 2 = 2px outline, etc.
 function addBorder(srcData, borderColor, borderWidth) {
+  borderWidth = Math.max(1, Math.round(borderWidth));
   const w = srcData.width;
   const h = srcData.height;
   const nw = w + borderWidth * 2;
   const nh = h + borderWidth * 2;
+  const color = typeof borderColor === 'string' ? hexToRgb(borderColor) : borderColor;
+
   const canvas = document.createElement('canvas');
   canvas.width = nw;
   canvas.height = nh;
   const ctx = canvas.getContext('2d');
 
-  // Draw border
-  ctx.fillStyle = borderColor;
-  ctx.fillRect(0, 0, nw, nh);
-
-  // Draw original on top
+  // Draw original centered (offset by borderWidth)
   const tmpCanvas = document.createElement('canvas');
   tmpCanvas.width = w;
   tmpCanvas.height = h;
   tmpCanvas.getContext('2d').putImageData(srcData, 0, 0);
   ctx.drawImage(tmpCanvas, borderWidth, borderWidth);
 
-  return ctx.getImageData(0, 0, nw, nh);
+  const outData = ctx.getImageData(0, 0, nw, nh);
+  const d = outData.data;
+  const src = srcData.data;
+
+  // For each pixel in the expanded canvas, check if it's transparent
+  // but adjacent to a non-transparent pixel from the original sprite
+  for (let y = 0; y < nh; y++) {
+    for (let x = 0; x < nw; x++) {
+      const idx = (y * nw + x) * 4;
+      if (d[idx + 3] > 0) continue; // skip non-transparent pixels
+
+      // Check if any neighbor within borderWidth is non-transparent in the ORIGINAL
+      let isBorder = false;
+      for (let dy = -borderWidth; dy <= borderWidth && !isBorder; dy++) {
+        for (let dx = -borderWidth; dx <= borderWidth && !isBorder; dx++) {
+          // Skip corners for a cleaner look (only check cardinal + diagonals at distance 1)
+          const dist = Math.abs(dx) + Math.abs(dy);
+          if (dist === 0 || dist > borderWidth) continue;
+
+          // Map back to original sprite coords
+          const sx = x - borderWidth - dx;
+          const sy = y - borderWidth - dy;
+          if (sx >= 0 && sx < w && sy >= 0 && sy < h) {
+            const si = (sy * w + sx) * 4;
+            if (src[si + 3] > 0) {
+              isBorder = true;
+            }
+          }
+        }
+      }
+
+      if (isBorder) {
+        d[idx]     = color.r;
+        d[idx + 1] = color.g;
+        d[idx + 2] = color.b;
+        d[idx + 3] = 255;
+      }
+    }
+  }
+
+  return outData;
 }
 
 // Add glow around edges
@@ -409,62 +459,68 @@ function tintSplit(srcData, colorA, colorB) {
   return data;
 }
 
-// Rainbow border (each side a different color)
+// Rainbow outline border (follows sprite shape)
 function addRainbowBorder(srcData, borderWidth) {
+  borderWidth = Math.max(1, Math.round(borderWidth));
   const w = srcData.width;
   const h = srcData.height;
   const nw = w + borderWidth * 2;
   const nh = h + borderWidth * 2;
+
   const canvas = document.createElement('canvas');
   canvas.width = nw;
   canvas.height = nh;
   const ctx = canvas.getContext('2d');
 
-  // Draw rainbow border
-  const colors = ['#ff3333', '#ff9933', '#ffff33', '#33ff33', '#3333ff', '#9933ff', '#ff33ff'];
-  // Top
-  for (let x = 0; x < nw; x++) {
-    const ci = Math.floor((x / nw) * colors.length) % colors.length;
-    ctx.fillStyle = colors[ci];
-    ctx.fillRect(x, 0, 1, borderWidth);
-  }
-  // Bottom
-  for (let x = 0; x < nw; x++) {
-    const ci = Math.floor((x / nw) * colors.length) % colors.length;
-    ctx.fillStyle = colors[ci];
-    ctx.fillRect(x, nh - borderWidth, 1, borderWidth);
-  }
-  // Left
-  for (let y = 0; y < nh; y++) {
-    const ci = Math.floor((y / nh) * colors.length) % colors.length;
-    ctx.fillStyle = colors[ci];
-    ctx.fillRect(0, y, borderWidth, 1);
-  }
-  // Right
-  for (let y = 0; y < nh; y++) {
-    const ci = Math.floor((y / nh) * colors.length) % colors.length;
-    ctx.fillStyle = colors[ci];
-    ctx.fillRect(nw - borderWidth, y, borderWidth, 1);
-  }
-
-  // Fill corners
-  for (let y = 0; y < nh; y++) {
-    for (let x = 0; x < nw; x++) {
-      if (x < borderWidth && y < borderWidth) continue;
-      if (x < borderWidth && y >= nh - borderWidth) continue;
-      if (x >= nw - borderWidth && y < borderWidth) continue;
-      if (x >= nw - borderWidth && y >= nh - borderWidth) continue;
-    }
-  }
-
-  // Draw original
   const tmpCanvas = document.createElement('canvas');
   tmpCanvas.width = w;
   tmpCanvas.height = h;
   tmpCanvas.getContext('2d').putImageData(srcData, 0, 0);
   ctx.drawImage(tmpCanvas, borderWidth, borderWidth);
 
-  return ctx.getImageData(0, 0, nw, nh);
+  const outData = ctx.getImageData(0, 0, nw, nh);
+  const d = outData.data;
+  const src = srcData.data;
+
+  const rainbowColors = [
+    {r:255,g:51,b:51}, {r:255,g:153,b:51}, {r:255,g:255,b:51},
+    {r:51,g:255,b:51}, {r:51,g:51,b:255}, {r:153,g:51,b:255}, {r:255,g:51,b:255}
+  ];
+
+  for (let y = 0; y < nh; y++) {
+    for (let x = 0; x < nw; x++) {
+      const idx = (y * nw + x) * 4;
+      if (d[idx + 3] > 0) continue;
+
+      let isBorder = false;
+      for (let dy = -borderWidth; dy <= borderWidth && !isBorder; dy++) {
+        for (let dx = -borderWidth; dx <= borderWidth && !isBorder; dx++) {
+          const dist = Math.abs(dx) + Math.abs(dy);
+          if (dist === 0 || dist > borderWidth) continue;
+          const sx = x - borderWidth - dx;
+          const sy = y - borderWidth - dy;
+          if (sx >= 0 && sx < w && sy >= 0 && sy < h) {
+            const si = (sy * w + sx) * 4;
+            if (src[si + 3] > 0) isBorder = true;
+          }
+        }
+      }
+
+      if (isBorder) {
+        // Pick rainbow color based on position (angle from center)
+        const cx = nw / 2, cy = nh / 2;
+        const angle = (Math.atan2(y - cy, x - cx) / Math.PI + 1) / 2; // 0 to 1
+        const ci = Math.floor(angle * rainbowColors.length) % rainbowColors.length;
+        const c = rainbowColors[ci];
+        d[idx]     = c.r;
+        d[idx + 1] = c.g;
+        d[idx + 2] = c.b;
+        d[idx + 3] = 255;
+      }
+    }
+  }
+
+  return outData;
 }
 
 // Add "¡!" mark in pixel font

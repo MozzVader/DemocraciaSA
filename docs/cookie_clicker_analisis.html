@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cookie Clicker — Análisis para Democracia S.A.</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Segoe UI', Arial, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; line-height: 1.6; }
+h1 { text-align: center; color: #e94560; margin-bottom: 10px; font-size: 2em; }
+h2 { color: #0f3460; background: #16213e; padding: 12px 16px; border-radius: 8px; margin-top: 30px; border-left: 4px solid #e94560; }
+h3 { color: #e94560; margin-top: 20px; margin-bottom: 8px; }
+p, li { color: #ccc; }
+table { width: 100%; border-collapse: collapse; margin: 10px 0 20px 0; font-size: 14px; }
+th { background: #0f3460; color: #fff; padding: 8px 12px; text-align: left; position: sticky; top: 0; }
+td { padding: 6px 12px; border-bottom: 1px solid #333; }
+tr:nth-child(even) { background: #16213e; }
+tr:hover { background: #1a1a4e; }
+code { background: #333; padding: 2px 6px; border-radius: 4px; color: #e94560; font-size: 13px; }
+pre { background: #111; padding: 16px; border-radius: 8px; overflow-x: auto; margin: 10px 0; border: 1px solid #333; }
+pre code { background: none; color: #a8dadc; padding: 0; }
+.highlight { color: #ffd700; font-weight: bold; }
+.toc { background: #16213e; padding: 20px; border-radius: 8px; margin: 20px 0; }
+.toc a { color: #e94560; text-decoration: none; display: block; padding: 4px 0; }
+.toc a:hover { color: #ffd700; }
+.badge { display: inline-block; background: #e94560; color: #fff; padding: 2px 8px; border-radius: 12px; font-size: 12px; margin-left: 8px; }
+.formula-box { background: #16213e; border: 1px solid #e94560; padding: 16px; border-radius: 8px; margin: 10px 0; text-align: center; font-size: 18px; }
+.formula-box code { font-size: 18px; color: #ffd700; background: none; }
+.rec-box { background: #1b4332; border: 1px solid #40916c; padding: 12px 16px; border-radius: 8px; margin: 8px 0; }
+.rec-box strong { color: #52b788; }
+</style>
+</head>
+<body>
+
+<h1>🍪 Cookie Clicker — Análisis Completo para Democracia S.A.</h1>
+<p style="text-align:center;color:#888;">Fuente: <code>cc main.js</code> (17.359 líneas, ES5 JavaScript)</p>
+
+<div class="toc">
+<strong>Table of Contents:</strong>
+<a href="#edificios">1. Edificios (21 buildings)</a>
+<a href="#upgrades">2. Sistema de Upgrades (~650+)</a>
+<a href="#prestige">3. Sistema de Prestigio (Heavenly Chips)</a>
+<a href="#golden">4. Golden Cookies</a>
+<a href="#wrinklers">5. Wrinklers</a>
+<a href="#lumps">6. Sugar Lumps</a>
+<a href="#logros">7. Logros (~540+)</a>
+<a href="#minigames">8. Minigames (4)</a>
+<a href="#cps">9. Cálculo de CPS</a>
+<a href="#hallazgos">10. Hallazgos Clave para D.S.A.</a>
+<a href="#stats">11. Estadísticas Totales</a>
+<a href="#comparacion">12. Comparación con Democracia S.A.</a>
+</div>
+
+<h2 id="edificios">1. EDIFICIOS (21 buildings)</h2>
+
+<p>Cada edificio tiene su <strong>precio base</strong>, <strong>CPS base</strong>, y un factor de escalado de <strong>1.15</strong> por unidad comprada.</p>
+
+<h3>Constructor (línea 7982)</h3>
+<pre><code>Game.Object = function(name, commonName, desc, icon, iconColumn, art, price, cps, buyFunction)</code></pre>
+
+<h3>Fórmula de CPS automático (línea 8018)</h3>
+<pre><code>baseCps = Math.ceil((Math.pow(n, n*0.5+2)) * 10) / 10  // n = índice del edificio (0-19)</code></pre>
+
+<h3>Fórmula de precio automático (línea 8024)</h3>
+<pre><code>basePrice = (n + 9 + (n&lt;5 ? 0 : Math.pow(n-5, 1.75)*5)) * Math.pow(10, n) * Math.max(1, n-14)
+// Multiplicadores extra: id>=16 *=10, id>=17 *=10, id>=18 *=10, id>=19 *=20</code></pre>
+
+<h3>Tabla completa</h3>
+<table>
+<tr><th>ID</th><th>Edificio</th><th>Precio Base</th><th>CPS Base</th><th>Minigame</th></tr>
+<tr><td>0</td><td>Cursor</td><td>15</td><td>0.1</td><td>—</td></tr>
+<tr><td>1</td><td>Grandma</td><td>100</td><td>1</td><td>—</td></tr>
+<tr><td>2</td><td>Farm</td><td>1,100</td><td>8</td><td>Garden</td></tr>
+<tr><td>3</td><td>Mine</td><td>12,000</td><td>47</td><td>—</td></tr>
+<tr><td>4</td><td>Factory</td><td>130,000</td><td>260</td><td>—</td></tr>
+<tr><td>5</td><td>Bank</td><td>1.4M</td><td>1,400</td><td>Stock Market</td></tr>
+<tr><td>6</td><td>Temple</td><td>20M</td><td>7,800</td><td>Pantheon</td></tr>
+<tr><td>7</td><td>Wizard tower</td><td>330M</td><td>44,000</td><td>Grimoire</td></tr>
+<tr><td>8</td><td>Shipment</td><td>5.1B</td><td>260,000</td><td>—</td></tr>
+<tr><td>9</td><td>Alchemy lab</td><td>75B</td><td>1.6M</td><td>—</td></tr>
+<tr><td>10</td><td>Portal</td><td>1T</td><td>10M</td><td>—</td></tr>
+<tr><td>11</td><td>Time machine</td><td>14T</td><td>65M</td><td>—</td></tr>
+<tr><td>12</td><td>Antimatter condenser</td><td>170T</td><td>430M</td><td>—</td></tr>
+<tr><td>13</td><td>Prism</td><td>2.1Qa</td><td>2.9B</td><td>—</td></tr>
+<tr><td>14</td><td>Chancemaker</td><td>26Qa</td><td>21B</td><td>—</td></tr>
+<tr><td>15</td><td>Fractal engine</td><td>310Qa</td><td>150B</td><td>—</td></tr>
+<tr><td>16</td><td>Javascript console</td><td>71Qi</td><td>1.1T</td><td>—</td></tr>
+<tr><td>17</td><td>Idleverse</td><td>12Sx</td><td>8.3T</td><td>—</td></tr>
+<tr><td>18</td><td>Cortex baker</td><td>~1.9Sx</td><td>64T</td><td>—</td></tr>
+<tr><td>19</td><td>You</td><td>~540Sx</td><td>510T</td><td>—</td></tr>
+</table>
+
+<h3>Fórmulas clave</h3>
+<div class="formula-box"><code>Precio = basePrice × 1.15<sup>cantidad</sup></code></div>
+<ul>
+<li><strong>Venta:</strong> devuelve 25% del costo (mejorable con auras a 50%)</li>
+<li><strong>CPS por nivel:</strong> baseCps × (1 + nivel × 0.01) — cada nivel = +1%</li>
+<li><strong>Factor de escalado:</strong> Game.priceIncrease = 1.15 (línea 7972)</li>
+</ul>
+
+<h2 id="upgrades">2. SISTEMA DE UPGRADES (~650+ upgrades)</h2>
+<p>CC tiene <strong>5 mecanismos distintos</strong> para crear upgrades:</p>
+
+<h3>A. Tiered Upgrades (por edificio, ×2 eficiencia) <span class="badge">~175+</span></h3>
+<pre><code>Game.TieredUpgrade = function(name, desc, building, tier)
+// Cost = building.basePrice × Game.Tiers[tier].price
+// Auto-unlocks at Game.Tiers[tier].unlock buildings owned
+// Effect: building is 2× as efficient</code></pre>
+
+<table>
+<tr><th>Tier</th><th>Nombre</th><th>Desbloquea a</th><th>Multiplicador de precio</th></tr>
+<tr><td>1</td><td>Plain</td><td>1 edificio</td><td>×10</td></tr>
+<tr><td>2</td><td>Berrylium</td><td>5</td><td>×50</td></tr>
+<tr><td>3</td><td>Blueberrylium</td><td>25</td><td>×500</td></tr>
+<tr><td>4</td><td>Chalcedhoney</td><td>50</td><td>×50,000</td></tr>
+<tr><td>5</td><td>Buttergold</td><td>100</td><td>×5M</td></tr>
+<tr><td>6</td><td>Sugarmuck</td><td>150</td><td>×500M</td></tr>
+<tr><td>7</td><td>Jetmint</td><td>200</td><td>×500B</td></tr>
+<tr><td>8</td><td>Cherrysilver</td><td>250</td><td>×500T</td></tr>
+<tr><td>9</td><td>Hazelrald</td><td>300</td><td>×500Qa</td></tr>
+<tr><td>10</td><td>Mooncandy</td><td>350</td><td>×500Qi</td></tr>
+<tr><td>11</td><td>Astrofudge</td><td>400</td><td>×5Sx</td></tr>
+<tr><td>synergy1</td><td>Synergy I</td><td>15 de cada uno</td><td>×200,000</td></tr>
+<tr><td>synergy2</td><td>Synergy II</td><td>75 de cada uno</td><td>×200B</td></tr>
+<tr><td>fortune</td><td>Fortune</td><td>tick-based</td><td>~7.7×10²⁵</td></tr>
+</table>
+
+<div class="rec-box"><strong>Para D.S.A.:</strong> Cada uno de tus 19 generadores podría tener 5-7 tiers que dupliquen su eficiencia, desbloqueados al tener X cantidad.</div>
+
+<h3>B. Cookie Upgrades (~150+, multiplicadores de CPS) <span class="badge">~150+</span></h3>
+<pre><code>Game.NewUpgradeCookie = function(obj)
+// obj: {name, desc, power (CpS %), price, icon, require (parent), season, locked}
+// Auto-pushes to Game.UnlockAt for cookie-earned unlocking</code></pre>
+<p>Cada uno da un % de CpS bonus. Se desbloquean por hitos de cookies totales ganadas. Forman <strong>cadenas</strong> donde comprar uno desbloquea el siguiente.</p>
+<p><strong>Cadenas principales:</strong> Base cookies (~50+), Halloween (drops), Christmas (drops), Valentine, Macaron, British tea biscuit, Brand biscuit, Butter cookie, Pastries, Butter biscuits (achievement rewards), Garden drops</p>
+
+<div class="rec-box"><strong>Para D.S.A.:</strong> Upgrades que den +1% o +2% de PpS, desbloqueados al pasar ciertos umbrales de pesos.</div>
+
+<h3>C. Grandma Synergies (18 upgrades)</h3>
+<pre><code>Game.GrandmaSynergy = function(name, desc, building)
+// Effect: "X grandmas are twice as efficient; Y gain +1% CpS per X grandma"</code></pre>
+<table>
+<tr><th>Nombre</th><th>Edificio</th></tr>
+<tr><td>Farmer grandmas</td><td>Farm</td></tr>
+<tr><td>Miner grandmas</td><td>Mine</td></tr>
+<tr><td>Worker grandmas</td><td>Factory</td></tr>
+<tr><td>Cosmic grandmas</td><td>Shipment</td></tr>
+<tr><td>Transmuted grandmas</td><td>Alchemy lab</td></tr>
+<tr><td>Altered grandmas</td><td>Portal</td></tr>
+<tr><td>Grandmas' grandmas</td><td>Time machine</td></tr>
+<tr><td>Antigrandmas</td><td>Antimatter condenser</td></tr>
+<tr><td>Rainbow grandmas</td><td>Prism</td></tr>
+<tr><td>Banker grandmas</td><td>Bank</td></tr>
+<tr><td>Priestess grandmas</td><td>Temple</td></tr>
+<tr><td>Witch grandmas</td><td>Wizard tower</td></tr>
+<tr><td>Lucky grandmas</td><td>Chancemaker</td></tr>
+<tr><td>Metagrandmas</td><td>Fractal engine</td></tr>
+<tr><td>Binary grandmas</td><td>Javascript console</td></tr>
+<tr><td>Alternate grandmas</td><td>Idleverse</td></tr>
+<tr><td>Brainy grandmas</td><td>Cortex baker</td></tr>
+<tr><td>Clone grandmas</td><td>You</td></tr>
+</table>
+
+<div class="rec-box"><strong>Para D.S.A.:</strong> Los <strong>Militantes</strong> podrían tener sinergias con TODOS los demás edificios — "Militantes son ×2 eficientes; [Edificio] gana +1% por cada Militante".</div>
+
+<h3>D. Synergy Upgrades (~40+, entre dos edificios)</h3>
+<pre><code>Game.SynergyUpgrade = function(name, desc, building1, building2, tier)
+// Effect: B1 gains +5% CpS per B2; B2 gains +0.1% CpS per B1
+// Requires: Synergies Vol. I (15 each) or Vol. II (75 each)</code></pre>
+
+<p><strong>Synergy I</strong> (requiere 15 de cada edificio):</p>
+<table>
+<tr><th>Nombre</th><th>Edificio 1</th><th>Edificio 2</th></tr>
+<tr><td>Future almanacs</td><td>Farm</td><td>Time machine</td></tr>
+<tr><td>Seismic magic</td><td>Mine</td><td>Wizard tower</td></tr>
+<tr><td>Quantum electronics</td><td>Factory</td><td>Antimatter condenser</td></tr>
+<tr><td>Contracts from beyond</td><td>Bank</td><td>Portal</td></tr>
+<tr><td>Paganism</td><td>Temple</td><td>Portal</td></tr>
+<tr><td>Arcane knowledge</td><td>Wizard tower</td><td>Alchemy lab</td></tr>
+<tr><td>Fossil fuels</td><td>Shipment</td><td>Mine</td></tr>
+<tr><td>Primordial ores</td><td>Alchemy lab</td><td>Mine</td></tr>
+<tr><td>Infernal crops</td><td>Portal</td><td>Farm</td></tr>
+<tr><td>Relativistic parsec-skipping</td><td>Time machine</td><td>Shipment</td></tr>
+<tr><td>Extra physics funding</td><td>Antimatter condenser</td><td>Bank</td></tr>
+<tr><td>Light magic</td><td>Prism</td><td>Wizard tower</td></tr>
+<tr><td>Gemmed talismans</td><td>Chancemaker</td><td>Mine</td></tr>
+<tr><td>Recursive mirrors</td><td>Fractal engine</td><td>Prism</td></tr>
+<tr><td>Mice clicking mice</td><td>Fractal engine</td><td>Cursor</td></tr>
+<tr><td>Script grannies</td><td>Javascript console</td><td>Grandma</td></tr>
+<tr><td>Perforated mille-feuille cosmos</td><td>Idleverse</td><td>Portal</td></tr>
+<tr><td>Thoughts &amp; prayers</td><td>Cortex baker</td><td>Temple</td></tr>
+<tr><td>Accelerated development</td><td>You</td><td>Time machine</td></tr>
+</table>
+
+<div class="rec-box"><strong>Para D.S.A.:</strong> Sinergias temáticas argentinas: Municipio ↔ Banco Público, Ministerio ↔ Congreso, FMI ↔ Banco Central, Campaña ↔ Militante, Embajada ↔ FMI, etc.</div>
+
+<h3>E. Kitten Upgrades (12, escalan con logros)</h3>
+<p>Descripción: "Cookie production multiplier +X% (milk-powered)". Escala con total de leche (= logros / 25).</p>
+<table>
+<tr><th>#</th><th>Nombre</th><th>Costo</th><th>Tier</th></tr>
+<tr><td>1</td><td>Kitten helpers</td><td>9M</td><td>1</td></tr>
+<tr><td>2</td><td>Kitten workers</td><td>9B</td><td>2</td></tr>
+<tr><td>3</td><td>Kitten engineers</td><td>9T</td><td>3</td></tr>
+<tr><td>4</td><td>Kitten overseers</td><td>9Qa</td><td>4</td></tr>
+<tr><td>5</td><td>Kitten managers</td><td>9Qi</td><td>5</td></tr>
+<tr><td>6</td><td>Kitten accountants</td><td>9Sx</td><td>6</td></tr>
+<tr><td>7</td><td>Kitten specialists</td><td>9Sp</td><td>7</td></tr>
+<tr><td>8</td><td>Kitten experts</td><td>9Oc</td><td>8</td></tr>
+<tr><td>9</td><td>Kitten consultants</td><td>9No</td><td>9</td></tr>
+<tr><td>10</td><td>Kitten assistants to the regional manager</td><td>9Dc</td><td>10</td></tr>
+<tr><td>11</td><td>Kitten marketeers</td><td>9Tc</td><td>11</td></tr>
+<tr><td>12</td><td>Kitten analysts</td><td>9Qd</td><td>12</td></tr>
+</table>
+
+<div class="rec-box"><strong>Para D.S.A.:</strong> La futura <strong>popularidad</strong> podría funcionar igual — más logros = más popularidad = bonus más fuerte.</div>
+
+<h3>F. Clicking / Mouse Upgrades (12 tiers)</h3>
+<table>
+<tr><th>Nombre</th><th>Costo</th><th>Efecto</th></tr>
+<tr><td>Plastic mouse</td><td>50K</td><td>+1% clicking power</td></tr>
+<tr><td>Iron mouse</td><td>5M</td><td>+1% clicking power</td></tr>
+<tr><td>Titanium mouse</td><td>500M</td><td>+1% clicking power</td></tr>
+<tr><td>Adamantium mouse</td><td>50B</td><td>+1% clicking power</td></tr>
+<tr><td>Unobtainium mouse</td><td>5T</td><td>+1% clicking power</td></tr>
+<tr><td>Eludium mouse</td><td>500T</td><td>+1% clicking power</td></tr>
+<tr><td>Wishalloy mouse</td><td>50Qa</td><td>+1% clicking power</td></tr>
+<tr><td>Fantasteel mouse</td><td>5Qi</td><td>+1% clicking power</td></tr>
+<tr><td>Nevercrack mouse</td><td>500Qi</td><td>+1% clicking power</td></tr>
+<tr><td>Armythril mouse</td><td>50Sx</td><td>+1% clicking power</td></tr>
+<tr><td>Technobsidian mouse</td><td>5Sp</td><td>+1% clicking power</td></tr>
+<tr><td>Plasmarble mouse</td><td>500Sp</td><td>+1% clicking power</td></tr>
+</table>
+
+<h3>G. Grandma Research Chain (Tech Tree)</h3>
+<table>
+<tr><th>Nombre</th><th>Costo</th><th>Efecto</th><th>Desbloquea</th></tr>
+<tr><td>Bingo center/Research facility</td><td>1Qa</td><td>Grandmas ×4; habilita research</td><td>Specialized chocolate chips</td></tr>
+<tr><td>Specialized chocolate chips</td><td>1Qa</td><td>Cookie prod. +1%</td><td>Designer cocoa beans</td></tr>
+<tr><td>Designer cocoa beans</td><td>2Qa</td><td>Cookie prod. +2%</td><td>Ritual rolling pins</td></tr>
+<tr><td>Ritual rolling pins</td><td>4Qa</td><td>Grandmas ×2</td><td>Underworld ovens</td></tr>
+<tr><td>Underworld ovens</td><td>8Qa</td><td>Cookie prod. +3%</td><td>One mind</td></tr>
+<tr><td>One mind</td><td>16Qa</td><td>+0.02 base CpS por grandma; elderWrath=1</td><td>Exotic nuts</td></tr>
+<tr><td>Exotic nuts</td><td>32Qa</td><td>Cookie prod. +4%</td><td>Communal brainsweep</td></tr>
+<tr><td>Communal brainsweep</td><td>64Qa</td><td>+0.02 base CpS por grandma; elderWrath=2</td><td>Arcane sugar</td></tr>
+<tr><td>Arcane sugar</td><td>128Qa</td><td>Cookie prod. +5%</td><td>Elder Pact</td></tr>
+<tr><td>Elder Pact</td><td>256Qa</td><td>+0.05 base CpS por portal; elderWrath=3</td><td>—</td></tr>
+</table>
+
+<div class="rec-box"><strong>Para D.S.A.:</strong> Cadena de investigación del Ministerio que desbloquee mecánicas progresivamente.</div>
+
+<h2 id="prestige">3. SISTEMA DE PRESTIGE (Heavenly Chips)</h2>
+
+<h3>Fórmula (líneas 4185-4188)</h3>
+<div class="formula-box"><code>Prestige = floor((cookiesTotales / 10<sup>12</sup>)<sup>1/3</sup>)</code></div>
+<pre><code>Game.HowMuchPrestige = function(cookies) {
+    return Math.pow(cookies / 1000000000000, 1/3);  // raíz cúbica de (trillones)
+};</code></pre>
+
+<h3>Heavenly Multiplier (se puede desbloquear hasta +100%)</h3>
+<table>
+<tr><th>Upgrade</th><th>Costo (HC)</th><th>Bonus</th></tr>
+<tr><td>Heavenly chip secret</td><td>11</td><td>+5%</td></tr>
+<tr><td>Heavenly cookie stand</td><td>1,111</td><td>+25%</td></tr>
+<tr><td>Heavenly bakery</td><td>111,111</td><td>+25%</td></tr>
+<tr><td>Heavenly confectionery</td><td>11,111,111</td><td>+25%</td></tr>
+<tr><td>Heavenly key</td><td>1,111,111,111</td><td>+25%</td></tr>
+</table>
+
+<h3>Ranuras permanentes (5 slots)</h3>
+<table>
+<tr><th>Nombre</th><th>Costo (HC)</th></tr>
+<tr><td>Permanent upgrade slot I</td><td>100</td></tr>
+<tr><td>Permanent upgrade slot II</td><td>20,000</td></tr>
+<tr><td>Permanent upgrade slot III</td><td>3,000,000</td></tr>
+<tr><td>Permanent upgrade slot IV</td><td>400,000,000</td></tr>
+<tr><td>Permanent upgrade slot V</td><td>50,000,000,000</td></tr>
+</table>
+
+<h3>Dos caminos de prestigio</h3>
+<p><strong>Camino Angelical:</strong> Angels (+10%) → Archangels (+10%) → Virtues (+10%) → Dominions (+10%) → Cherubim (+10%) → Seraphim (+10%) → God (+10%) = +75% total (más +15% si 100 de todo)</p>
+<p><strong>Camino Demoníaco:</strong> Belphegor (+2%/min) → Mammon (+4%) → Abaddon (+8%) → Satan (+16%) → Asmodeus (+32%) → Beelzebub (+64%) → Lucifer (+128%)</p>
+
+<div class="rec-box"><strong>Para D.S.A.:</strong> Tu fórmula <code>dólares = floor(sqrt(pesosTotales / 1e12))</code> es más generosa que CC (raíz cuadrada vs raíz cúbica). Los Dólares podrían usarse en la Casa de Cambio.</div>
+
+<h2 id="golden">4. GOLDEN COOKIES</h2>
+<p><strong>Tiempo base de spawn:</strong> 5-15 minutos. Fórmula pesada hacia el máximo: <code>random() < ((time - min)/(max - min))^5</code></p>
+
+<table>
+<tr><th>Efecto</th><th>Probabilidad</th><th>Duración</th><th>Multiplicador</th></tr>
+<tr><td>Frenzy</td><td>Siempre en pool</td><td>77s</td><td class="highlight">×7 CpS</td></tr>
+<tr><td>Lucky</td><td>Siempre en pool</td><td>Instantáneo</td><td>+15% banco o 15min CpS</td></tr>
+<tr><td>Ruin (wrath)</td><td>Siempre en wrath</td><td>Instantáneo</td><td>−5% banco o 10min CpS</td></tr>
+<tr><td>Clot (wrath)</td><td>Siempre en wrath</td><td>66s</td><td>×0.5 CpS</td></tr>
+<tr><td>Blood frenzy (wrath)</td><td>30%</td><td>6s</td><td class="highlight">×666 CpS</td></tr>
+<tr><td>Click frenzy</td><td>10%</td><td>13s</td><td class="highlight">×777 clicks</td></tr>
+<tr><td>Dragon Harvest</td><td>Con aura</td><td>60s</td><td>×15 CpS</td></tr>
+<tr><td>Dragonflight</td><td>Con aura</td><td>10s</td><td class="highlight">×1111 clicks</td></tr>
+<tr><td>Cookie chain</td><td>3%</td><td>Apilado</td><td>Dígitos crecientes</td></tr>
+<tr><td>Cookie storm</td><td>3%</td><td>7s</td><td>Spawns many mini-GCs</td></tr>
+<tr><td>Cursed finger (wrath)</td><td>10%</td><td>10s</td><td>Next click = 10s CpS</td></tr>
+<tr><td>Building special</td><td>25% (≥10)</td><td>30s</td><td>×(amount/10+1) un edificio</td></tr>
+<tr><td>Free sugar lump</td><td>0.05%</td><td>Instantáneo</td><td>+1 sugar lump</td></tr>
+</table>
+
+<div class="rec-box"><strong>Para D.S.A.:</strong> Telegramas con efectos similares — "Frenesí Popular" (×7 PpS), "Auge Electoral" (×777 clicks), "Dinero del FMI" (bonus instantáneo).</div>
+
+<h2 id="wrinklers">5. WRINKLERS</h2>
+<pre><code>suckRate = 1/20;  // Cada wrinkler come 5% del CpS
+cpsSucked = min(1, sucking * suckRate);  // Cap al 100%</code></pre>
+<ul>
+<li><strong>Hard limit:</strong> 14 (normal max 10, 12 con Elder spice)</li>
+<li><strong>Shiny wrinklers:</strong> 1/100 chance (dan ×3 al explotar)</li>
+<li>Solo aparecen durante Grandmapocalipsis (elderWrath > 0)</li>
+<li>Al explotarlos devuelven lo comido + interés (Sacrilegious corruption: +5%)</li>
+</ul>
+
+<div class="rec-box"><strong>Para D.S.A.:</strong> La inflación como Wrinklers — se come % del PpS pero al "controlarla" (Banco Central) recuperás con intereses.</div>
+
+<h2 id="lumps">6. SUGAR LUMPS</h2>
+<p><strong>Tiempos:</strong> Mature = 20h, Ripe = 23h, Overripe = +1h</p>
+<table>
+<tr><th>Tipo</th><th>Probabilidad</th><th>Efecto</th></tr>
+<tr><td>Normal</td><td>~87.7%</td><td>+1 lump</td></tr>
+<tr><td>Bifurcated</td><td>~10%</td><td>50% chance de +2</td></tr>
+<tr><td>Golden</td><td>0.3%</td><td>+2-7 lumps, double cookies</td></tr>
+<tr><td>Meaty</td><td>10% × elderWrath</td><td>+0 a 2</td></tr>
+<tr><td>Caramelized</td><td>2%</td><td>+1-3, refills cooldowns</td></tr>
+</table>
+<p><strong>Usos:</strong> Building levels (+1% CpS), minigame refills, Pantheon swaps, Sugar baking (+1% CpS per lump)</p>
+
+<h2 id="logros">7. LOGROS (~540+ achievements)</h2>
+
+<h3>Funciones generadoras</h3>
+<pre><code>// 1. Bank Achievement (cookies totales en ascensión)
+// threshold = 10^floor(index × 1.5 + 2)  → 47 logros
+
+// 2. CPS Achievement  
+// threshold = 10^floor(index × 1.2)  → 48 logros
+
+// 3. Tiered Achievement (cantidad de un edificio)
+// Tiers 1-15, unlock amounts 1 → 700  → ~244 logros
+
+// 4. Production Achievement (producción de un edificio)
+// pow = 10^(12 + buildingIndex + tierOffset), 3 tiers  → ~60 logros</code></pre>
+
+<table>
+<tr><th>#</th><th>Categoría</th><th>Cantidad</th><th>Descripción</th></tr>
+<tr><td>1</td><td>Bank (cookies en ascensión)</td><td>47</td><td>Umbrales 1 → 10^65+</td></tr>
+<tr><td>2</td><td>CPS</td><td>48</td><td>1/s → 10^38/s</td></tr>
+<tr><td>3</td><td>Clicking</td><td>15</td><td>1K → 10^31 clicks</td></tr>
+<tr><td>4</td><td>Cursor milestones</td><td>14</td><td>1 → 1,000 cursors</td></tr>
+<tr><td>5</td><td>Tiered building</td><td>~244</td><td>14 tiers × 19 edificios</td></tr>
+<tr><td>6</td><td>Production</td><td>~60</td><td>3 tiers × 19 edificios</td></tr>
+<tr><td>7</td><td>Level 10</td><td>20</td><td>1 por edificio</td></tr>
+<tr><td>8</td><td>Ascension</td><td>21</td><td>Prestige milestones</td></tr>
+<tr><td>9</td><td>Golden cookie</td><td>8</td><td>7 → 7777 GC</td></tr>
+<tr><td>10</td><td>Building totals</td><td>7</td><td>100 → 10,000</td></tr>
+<tr><td>11</td><td>Upgrades bought</td><td>9</td><td>20 → 700</td></tr>
+<tr><td>12</td><td>"X of everything"</td><td>15</td><td>100 → 700 de cada</td></tr>
+<tr><td>13-26</td><td>Seasonal, Easter, Wrinkler, Sugar, Garden, Spells, Stock, Misc, Shadow...</td><td>~50+</td><td>Condiciones especiales</td></tr>
+</table>
+
+<h2 id="minigames">8. MINIGAMES (4)</h2>
+<table>
+<tr><th>Edificio</th><th>Minigame</th><th>Mecánica</th></tr>
+<tr><td>Farm</td><td>Garden</td><td>Plantar cosechas para bonuses</td></tr>
+<tr><td>Bank</td><td>Stock Market</td><td>Comprar/vender bienes</td></tr>
+<tr><td>Temple</td><td>Pantheon</td><td>Adorar dioses con 3 slots</td></tr>
+<tr><td>Wizard tower</td><td>Grimoire</td><td>Lanzar hechizos (usa CpS como "magia")</td></tr>
+</table>
+
+<h2 id="cps">9. CÁLCULO DE CPS (fórmula completa)</h2>
+<p>La función <code>CalculateGains</code> (línea 5155) calcula el CPS final:</p>
+<ol>
+<li><strong>Minigame effects</strong> — todos los minigames aplican sus effs multiplicativos</li>
+<li><strong>Prestige:</strong> <code>mult += prestige × 0.01 × heavenlyPower × heavenlyMult</code></li>
+<li><strong>Global multipliers:</strong> cookie upgrades, christmas, dragon, dioses, santa</li>
+<li><strong>Milk &amp; Kittens:</strong> <code>milkProgress = AchievementsOwned / 25</code>, kitten upgrades multiplican</li>
+<li><strong>Building CPS:</strong> <code>storedCps = cps(me) × (1 + level × 0.01) × buildMult</code></li>
+<li><strong>Egg multipliers:</strong> 12 eggs ×1.01 = ×1.12, Century egg hasta ×1.10</li>
+<li><strong>Sugar baking:</strong> <code>mult ×= 1 + min(100, lumps) × 0.01</code></li>
+<li><strong>Dragon &amp; Buffs:</strong> auras, wrinklers, Elder Covenant, Golden Switch, Veil</li>
+</ol>
+
+<h2 id="hallazgos">10. HALLAZGOS CLAVE PARA DEMOCRACIA S.A.</h2>
+
+<div class="rec-box"><strong>1. Tiered Upgrades por generador:</strong> 5-7 niveles, ×2 eficiencia, desbloqueados por cantidad. Core del progression.</div>
+<div class="rec-box"><strong>2. Sinergias entre edificios:</strong> Temáticas. Municipio+Ministerio, FMI+Banco Central. Dos tiers (15 y 75).</div>
+<div class="rec-box"><strong>3. Upgrades tipo "cookie":</strong> +1%/+2% PpS, desbloqueados por hitos de pesos. Recompensa "suave".</div>
+<div class="rec-box"><strong>4. Telegramas (GC-equivalent):</strong> Efectos aleatorios: Frenzy (×7), Click Boost (×777), bonus instantáneo.</div>
+<div class="rec-box"><strong>5. Popularidad (Kitten-equivalent):</strong> Multiplicador que escala con logros desbloqueados.</div>
+<div class="rec-box"><strong>6. Permanent upgrade slots:</strong> En prestigio, 3-5 slots para mantener upgrades entre resets.</div>
+<div class="rec-box"><strong>7. Inflación (Wrinkler-equivalent):</strong> Se come % PpS, al controlarla recuperás con intereses.</div>
+<div class="rec-box"><strong>8. Militante Synergies:</strong> Conectado con todos los demás generadores (como Grandma en CC).</div>
+<div class="rec-box"><strong>9. Tech Tree:</strong> Cadena de investigación del Ministerio que desbloquee mecánicas una por una.</div>
+<div class="rec-box"><strong>10. Fortune Upgrades:</strong> +7% eficiencia y -7% precio por edificio, desbloqueado por tiempo de juego.</div>
+
+<h2 id="stats">11. ESTADÍSTICAS TOTALES DE CC</h2>
+<table>
+<tr><th>Elemento</th><th>Cantidad</th></tr>
+<tr><td>Edificios</td><td>21</td></tr>
+<tr><td>Upgrades totales</td><td>~650+</td></tr>
+<tr><td>Logros totales</td><td>~540+</td></tr>
+<tr><td>Minigames</td><td>4</td></tr>
+<tr><td>Temporadas</td><td>5</td></tr>
+<tr><td>Dioses (Panteón)</td><td>13+</td></tr>
+<tr><td>Hechizos (Grimoire)</td><td>12+</td></tr>
+<tr><td>Tipos de Sugar Lump</td><td>5</td></tr>
+<tr><td>Efectos de Golden Cookie</td><td>15+</td></tr>
+</table>
+
+<h2 id="comparacion">12. COMPARACIÓN CON DEMOCRACIA S.A.</h2>
+<table>
+<tr><th>Mecánica</th><th>Cookie Clicker</th><th>Democracia S.A.</th></tr>
+<tr><td>Moneda</td><td>Cookies</td><td>Pesos</td></tr>
+<tr><td>Prestige</td><td>Heavenly Chips (raíz cúbica)</td><td>Dólares (raíz cuadrada — más generosa)</td></tr>
+<tr><td>Tienda de prestige</td><td>—</td><td>Casa de Cambio</td></tr>
+<tr><td>Logros</td><td>~540+</td><td>120 + 190 pendientes</td></tr>
+<tr><td>Upgrades</td><td>~650+</td><td>No implementado aún</td></tr>
+<tr><td>Generadores</td><td>21</td><td>19</td></tr>
+<tr><td>Factor de precio</td><td>×1.15</td><td>¿</td></tr>
+<tr><td>Efectos aleatorios</td><td>Golden Cookies</td><td>¿Telegramas?</td></tr>
+<tr><td>Teatro político</td><td>—</td><td>Calidad Democrática</td></tr>
+<tr><td>Inflación</td><td>— (Wrinklers se asemejan)</td><td>Planeado (mecánica real)</td></tr>
+<tr><td>Minigames</td><td>4</td><td>No implementado aún</td></tr>
+</table>
+
+<p style="text-align:center; color:#555; margin-top:40px;">Análisis generado por Super Z a partir de cc main.js (17,359 líneas)</p>
+
+</body>
+</html>

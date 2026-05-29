@@ -6,7 +6,20 @@
 var Save = (() => {
 
   var SAVE_KEY = 'democracia_sa_save';
-  var VERSION = 2;
+  var VERSION = 3;
+  var dataInicioTimestamp = null; // timestamp de primera sesión
+
+  function getInicioTimestamp() {
+    if (!dataInicioTimestamp) {
+      // Si no hay timestamp, usar ahora (primera vez)
+      dataInicioTimestamp = Date.now();
+    }
+    return dataInicioTimestamp;
+  }
+
+  function setInicioTimestamp(ts) {
+    dataInicioTimestamp = ts;
+  }
 
   function getBilletesState() {
     var panel = document.getElementById('panel-center');
@@ -35,6 +48,8 @@ var Save = (() => {
         notacion: Formato.getNotacion(),
         billetes: getBilletesState(),
         logros: (typeof Logros !== 'undefined' && Logros.getDesbloqueados) ? Logros.getDesbloqueados() : [],
+        operaciones: (typeof Operaciones !== 'undefined' && Operaciones.getCompradas) ? Operaciones.getCompradas() : [],
+        inicioTimestamp: dataInicioTimestamp,
         generadores: generadores.map(function (g) {
           return {
             id: g.id,
@@ -82,6 +97,16 @@ var Save = (() => {
         Logros.restore(data.logros);
       }
 
+      // Restaurar operaciones compradas
+      if (data.operaciones && typeof Operaciones !== 'undefined' && Operaciones.restore) {
+        Operaciones.restore(data.operaciones);
+      }
+
+      // Restaurar timestamp de inicio
+      if (data.inicioTimestamp) {
+        Save.setInicioTimestamp(data.inicioTimestamp);
+      }
+
       return true;
     } catch (e) {
       console.error('Error al cargar save:', e);
@@ -101,6 +126,8 @@ var Save = (() => {
     save: save,
     load: load,
     reset: reset,
+    getInicioTimestamp: getInicioTimestamp,
+    setInicioTimestamp: setInicioTimestamp,
   };
 
 })();

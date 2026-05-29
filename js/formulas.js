@@ -52,14 +52,20 @@ const Formulas = (() => {
   }
 
   /**
-   * PPS total del juego (solo generadores base, sin upgrades por ahora).
+   * PPS total del juego con multiplicadores de operaciones.
    * @param {Array} generadores - Array de generadores con .cantidad y .ppsBase
    * @returns {number}
    */
   function ppsTotal(generadores) {
     var total = 0;
     for (var i = 0; i < generadores.length; i++) {
-      total += generadores[i].cantidad * generadores[i].ppsBase;
+      var base = generadores[i].cantidad * generadores[i].ppsBase;
+      // Aplicar multiplicador de operaciones si existe
+      var mult = 1;
+      if (typeof Operaciones !== 'undefined' && Operaciones.getMultiplier) {
+        mult = Operaciones.getMultiplier(generadores[i].id);
+      }
+      total += base * mult;
     }
     return total;
   }

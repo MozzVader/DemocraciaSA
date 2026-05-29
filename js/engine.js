@@ -94,6 +94,11 @@ var Game = (() => {
       if (typeof Logros !== 'undefined' && Logros.tick) {
         Logros.tick();
       }
+
+      // Actualizar operaciones (check desbloqueos, refrescar UI)
+      if (typeof Operaciones !== 'undefined' && Operaciones.actualizarUI) {
+        Operaciones.actualizarUI();
+      }
     }
 
     // 6. Tick billetes (cada tick)
@@ -189,6 +194,13 @@ var Game = (() => {
   function setCantidad(qty) {
     cantidadCompra = qty;
     UI.actualizar(); // refresca precios mostrados
+  }
+
+  // ── Gastar pesos ──────────────────────────────────────────────
+  function gastar(cantidad) {
+    if (pesos < cantidad) return false;
+    pesos -= cantidad;
+    return true;
   }
 
   // ── Getters ───────────────────────────────────────────────────
@@ -300,6 +312,11 @@ var Game = (() => {
       Logros.limpiar();
     }
 
+    // Limpiar operaciones
+    if (typeof Operaciones !== 'undefined' && Operaciones.limpiar) {
+      Operaciones.limpiar();
+    }
+
     // Re-render y actualizar
     UI.renderGeneradores();
     UI.actualizar();
@@ -360,6 +377,7 @@ var Game = (() => {
     init: init,
     click: click,
     comprar: comprar,
+    gastar: gastar,
     getPesos: getPesos,
     getPesosTotales: getPesosTotales,
     getPesosPorClic: getPesosPorClic,

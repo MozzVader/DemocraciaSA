@@ -34,8 +34,18 @@ document.addEventListener('DOMContentLoaded', function () {
     Logros.init();
   }
 
+  // 2.6. Inicializar estadísticas (antes del motor para estar listo)
+  if (typeof Estadisticas !== 'undefined' && Estadisticas.init) {
+    Estadisticas.init();
+  }
+
   // 3. Inicializar motor (clona generadores, carga save, arranca loop, setup click)
   Game.init();
+
+  // 3.5. Inicializar operaciones (después del motor para acceder a generadores)
+  if (typeof Operaciones !== 'undefined' && Operaciones.init) {
+    Operaciones.init();
+  }
 
   // 4. Inicializar calidad democrática (fluctuación random)
   if (typeof Calidad !== 'undefined' && Calidad.init) {
@@ -47,4 +57,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 6. Primer refresh de UI
   UI.actualizar();
+
+  // 7. Render de estadísticas cuando se abre el modal
+  setupStatsModalRefresh();
 });
+
+// ── Renderizar stats al abrir el modal ──────────────────────────
+function setupStatsModalRefresh() {
+  // Usar MutationObserver para detectar cuando se abre el modal
+  var statsModal = document.getElementById('modal-stats');
+  if (!statsModal) return;
+
+  // Observar cambios de clase en el modal de stats
+  var observer = new MutationObserver(function (mutations) {
+    for (var i = 0; i < mutations.length; i++) {
+      if (mutations[i].attributeName === 'class') {
+        if (statsModal.classList.contains('open')) {
+          if (typeof Estadisticas !== 'undefined' && Estadisticas.render) {
+            Estadisticas.render();
+          }
+        }
+      }
+    }
+  });
+
+  observer.observe(statsModal, { attributes: true });
+}

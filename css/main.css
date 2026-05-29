@@ -647,6 +647,8 @@ body {
   height: 10rem;
   border-radius: 50%;
   cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -673,6 +675,8 @@ body {
   width: 6rem;
   height: 6rem;
   pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 @media (min-width: 768px) {

@@ -65,6 +65,8 @@ var Logros = (() => {
     for (var i = 0; i < LOGROS_DATA.length; i++) {
       var logro = LOGROS_DATA[i];
       if (desbloqueados[logro.id]) continue;
+      // Saltar logros manuales (telegramas meta, etc.) — se otorgan via grant()
+      if (logro.cond.stat === '_manual') continue;
 
       var statVal = getStatValue(logro.cond.stat);
       if (statVal >= logro.cond.val) {

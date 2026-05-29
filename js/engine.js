@@ -68,8 +68,12 @@ var Game = (() => {
 
   // ── Game Loop ─────────────────────────────────────────────────
   function gameTick() {
-    // 1. Calcular PPS
+    // 1. Calcular PPS (base) y aplicar buffs de telegramas
     var pps = Formulas.ppsTotal(generadores);
+    if (typeof Telegramas !== 'undefined') {
+      pps *= Telegramas.getPPSMult();
+      Telegramas.tick();
+    }
     var delta = pps * TICK_SEG;
 
     // 2. Generar pesos
@@ -217,12 +221,23 @@ var Game = (() => {
     if (typeof Operaciones !== 'undefined' && Operaciones.getClickBonus) {
       bonus = Operaciones.getClickBonus();
     }
-    return base + bonus;
+    var click = base + bonus;
+    // Aplicar buffs de telegramas
+    if (typeof Telegramas !== 'undefined') {
+      click *= Telegramas.getClickMult();
+    }
+    return click;
   }
   function getClicsTotales() { return clicsTotales; }
   function getPesosPorClicTotales() { return pesosPorClicTotales; }
   function getTiempoJugado() { return tiempoJugado; }
-  function getPPS() { return Formulas.ppsTotal(generadores); }
+  function getPPS() {
+    var pps = Formulas.ppsTotal(generadores);
+    if (typeof Telegramas !== 'undefined') {
+      pps *= Telegramas.getPPSMult();
+    }
+    return pps;
+  }
   function getGeneradores() { return generadores; }
   function getCantidadCompra() { return cantidadCompra; }
   function getUltimaVisibilidad() { return ultimaVisibilidad; }
@@ -297,6 +312,22 @@ var Game = (() => {
     };
   }
 
+  // ── Agregar pesos (para telegramas y efectos instantáneos) ──
+  function agregarPesos(cantidad) {
+    pesos += cantidad;
+    pesosTotales += cantidad;
+  }
+
+  // ── Quitar pesos (efectos negativos, clamped a 0) ───────────
+  function quitarPesos(cantidad) {
+    pesos = Math.max(0, pesos - cantidad);
+  }
+
+  // ── Exponer actualizarEtapas (para telegramas) ─────────────────
+  function _actualizarEtapas() {
+    actualizarEtapas();
+  }
+
   // ── Reset del juego ──────────────────────────────────────────
   function resetJuego() {
     pesos = 0;
@@ -327,6 +358,11 @@ var Game = (() => {
     // Limpiar operaciones
     if (typeof Operaciones !== 'undefined' && Operaciones.limpiar) {
       Operaciones.limpiar();
+    }
+
+    // Limpiar telegramas
+    if (typeof Telegramas !== 'undefined' && Telegramas.limpiar) {
+      Telegramas.limpiar();
     }
 
     // Re-render y actualizar
@@ -404,6 +440,9 @@ var Game = (() => {
     applyOfflineProgress: applyOfflineProgress,
     getUltimaVisibilidad: getUltimaVisibilidad,
     setUltimaVisibilidad: setUltimaVisibilidad,
+    agregarPesos: agregarPesos,
+    quitarPesos: quitarPesos,
+    _actualizarEtapas: _actualizarEtapas,
     _restore: restore,
   };
 

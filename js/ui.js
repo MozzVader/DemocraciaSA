@@ -105,7 +105,7 @@ var UI = (() => {
   function actualizar() {
     var generadores = Game.getGeneradores();
     var pesos = Game.getPesos();
-    var pps = Formulas.ppsTotal(generadores);
+    var pps = Game.getPPS();
     var cantidadCompra = Game.getCantidadCompra();
 
     // Dinero principal

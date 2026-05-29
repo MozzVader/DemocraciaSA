@@ -175,3 +175,109 @@
 .logros-toast-close:hover {
   opacity: 1;
 }
+
+/* ---- Telegrama: entrada tipo fax desde la derecha ---- */
+
+.telegrama-entrando {
+  transform: translateX(110%);
+  opacity: 0;
+}
+
+.telegrama:not(.telegrama-entrando):not(.telegrama-saliendo) {
+  transform: translateX(0);
+  opacity: 1;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+              opacity 0.4s ease;
+}
+
+.telegrama-saliendo {
+  transform: translateX(110%);
+  opacity: 0;
+  transition: transform 0.35s cubic-bezier(0.55, 0, 1, 0.45),
+              opacity 0.35s ease;
+}
+
+/* ---- Telegrama: timer urgente (< 10s) ---- */
+
+.telegrama-timer-urgente {
+  color: #ef4444 !important;
+  animation: timerPulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes timerPulse {
+  from { opacity: 1; }
+  to   { opacity: 0.5; }
+}
+
+/* ---- Telegrama: tipo-specific borders ---- */
+
+.telegrama-bueno {
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+.telegrama-bueno::before {
+  background: linear-gradient(90deg, transparent, #22c55e, transparent);
+}
+
+.telegrama-bueno .telegrama-badge {
+  color: #22c55e;
+}
+
+.telegrama-bueno .telegrama-pulse {
+  background: #22c55e;
+}
+
+.telegrama-malo {
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.telegrama-malo::before {
+  background: linear-gradient(90deg, transparent, #ef4444, transparent);
+}
+
+.telegrama-malo .telegrama-badge {
+  color: #ef4444;
+}
+
+.telegrama-malo .telegrama-pulse {
+  background: #ef4444;
+}
+
+.telegrama-meta {
+  border-color: rgba(167, 139, 250, 0.2);
+}
+
+.telegrama-meta::before {
+  background: linear-gradient(90deg, transparent, #a78bfa, transparent);
+}
+
+.telegrama-meta .telegrama-badge {
+  color: #a78bfa;
+}
+
+.telegrama-meta .telegrama-pulse {
+  background: #a78bfa;
+}
+
+/* ---- Telegrama: toast variant ---- */
+
+.telegrama-toast {
+  border-left-width: 3px;
+}
+
+/* ---- Doric column glow (telegrama cooldown) ---- */
+
+.doric-column.doric-glow {
+  animation: doricGlow 2s ease-out;
+}
+
+@keyframes doricGlow {
+  0% {
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5),
+                0 0 40px rgba(212, 175, 55, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 rgba(212, 175, 55, 0),
+                0 0 0 rgba(212, 175, 55, 0);
+  }
+}

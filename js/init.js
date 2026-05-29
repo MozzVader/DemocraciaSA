@@ -54,6 +54,11 @@ document.addEventListener('DOMContentLoaded', function () {
     Calidad.init();
   }
 
+  // 4.5. Inicializar telegramas (después del motor para acceder a Game)
+  if (typeof Telegramas !== 'undefined' && Telegramas.init) {
+    Telegramas.init();
+  }
+
   // 5. Render de generadores con datos reales del motor
   UI.renderGeneradores();
 

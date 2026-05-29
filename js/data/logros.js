@@ -133,4 +133,13 @@ var LOGROS_DATA = [
   { id: 119, nombre: 'Empiezo a sospechar que usas autoclicker',     desc: 'Genera 1 nonillón de Pesos sólo clickeando.',      cat: 'clics', icono: 'click-19', cond: { stat: 'clics', val: 1e54 } },
   { id: 120, nombre: 'Hay un click más allá de este click',          desc: 'Genera 10 nonillones de Pesos sólo clickeando.',     cat: 'clics', icono: 'click-20', cond: { stat: 'clics', val: 1e55 } },
 
+  // ── Categoría: Easter Eggs (telegramas meta) ─────────────
+  // Se otorgan manualmente al aceptar ciertos telegramas meta.
+  // No tienen condición automática — el módulo Telegramas llama Logros.grant(id)
+  { id: 121, nombre: 'No la ven',                                   desc: 'Recibiste un telegrama que dice "No la ven".',       cat: 'easter', icono: 'easter-1', cond: { stat: '_manual', val: 0 } },
+  { id: 122, nombre: 'Es Cine',                                     desc: '"Definitivamente, es cine".',                          cat: 'easter', icono: 'easter-2', cond: { stat: '_manual', val: 0 } },
+  { id: 123, nombre: 'TMAP',                                        desc: '"Todo marcha acorde al Plan".',                       cat: 'easter', icono: 'easter-3', cond: { stat: '_manual', val: 0 } },
+  { id: 124, nombre: 'El Coco',                                     desc: '"Tenés que cerrar el estadio..."',                     cat: 'easter', icono: 'easter-4', cond: { stat: '_manual', val: 0 } },
+  { id: 125, nombre: 'ANULO MUFA.',                                  desc: '"ANULO MUFA."',                                      cat: 'easter', icono: 'easter-5', cond: { stat: '_manual', val: 0 } },
+
 ];

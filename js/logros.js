@@ -325,11 +325,17 @@ var Logros = (() => {
     return LOGROS_DATA.length;
   }
 
+  // ── Grant manual (para telegramas meta, etc.) ──────────────────
+  function grant(id) {
+    desbloquear(id);
+  }
+
   // ── API pública ───────────────────────────────────────────────
   return {
     init: init,
     tick: tick,
     render: render,
+    grant: grant,
     getDesbloqueados: getDesbloqueados,
     getTotal: getTotal,
     restore: restore,

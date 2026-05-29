@@ -1,13 +1,14 @@
 # Logros — Reference
 
 > **Archivo:** `js/data/logros.js`
-> **Total:** 120 logros | **Próximo ID disponible:** 121
+> **Total:** 125 logros | **Próximo ID disponible:** 126
 
 ## Resumen por categoría
 
 | Categoría | IDs | Cantidad | Prefijo icono |
 |-----------|-----|----------|---------------|
 | Clics (Lifetime) | 101-120 | 20 | click-1..20 |
+| easter | 121-125 | 5 | easter-1..5 |
 | Pesos en una run | 1-50 | 50 | peso-1..50 |
 | Pesos Por Segundo | 51-100 | 50 | pps-1..50 |
 
@@ -35,6 +36,16 @@
 | 118 | El dedo omnisciente | `click-18` | Genera 100 octillones de Pesos sólo clickeando. |
 | 119 | Empiezo a sospechar que usas autoclicker | `click-19` | Genera 1 nonillón de Pesos sólo clickeando. |
 | 120 | Hay un click más allá de este click | `click-20` | Genera 10 nonillones de Pesos sólo clickeando. |
+
+## easter (`easter`)
+
+| ID | Nombre | Icono | Condición |
+|----|--------|-------|-----------|
+| 121 | No la ven | `easter-1` | Recibiste un telegrama que dice "No la ven". |
+| 122 | Es Cine | `easter-2` | "Definitivamente, es cine". |
+| 123 | TMAP | `easter-3` | "Todo marcha acorde al Plan". |
+| 124 | El Coco | `easter-4` | "Tenés que cerrar el estadio..." |
+| 125 | ANULO MUFA. | `easter-5` | "ANULO MUFA." |
 
 ## Pesos en una run (`pesos`)
 

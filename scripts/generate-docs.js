@@ -27,6 +27,7 @@ function loadData(filename, varName) {
     case 'OPERACIONES_CLICK_DATA':  result = typeof OPERACIONES_CLICK_DATA !== 'undefined' ? OPERACIONES_CLICK_DATA : []; break;
     case 'EVENTOS_DATA':            result = typeof EVENTOS_DATA !== 'undefined' ? EVENTOS_DATA : []; break;
     case 'NOTICIAS_DATA':           result = typeof NOTICIAS_DATA !== 'undefined' ? NOTICIAS_DATA : []; break;
+    case 'TELEGRAMAS_DATA':         result = typeof TELEGRAMAS_DATA !== 'undefined' ? TELEGRAMAS_DATA : []; break;
     default: result = [];
   }
   return Array.isArray(result) ? result : [];
@@ -191,6 +192,62 @@ function generateOperacionesClick(data) {
   return md;
 }
 
+// ── Generador: Telegramas ──────────────────────────────────
+
+function generateTelegramas(data) {
+  if (!data.length) return null;
+
+  // Agrupar por tipo
+  const byType = {};
+  data.forEach(t => {
+    const tipo = t.tipo || 'otro';
+    if (!byType[tipo]) byType[tipo] = [];
+    byType[tipo].push(t);
+  });
+
+  let md = '# Telegramas — Reference\n\n';
+  md += '> **Archivo:** `js/data/telegramas.js`\n';
+  md += '> **Total:** ' + data.length + ' telegramas\n';
+  md += '> **Spawn:** buenos (peso 10) + malos (peso 10) + meta (peso 1)\n';
+  md += '> **Timer:** 20s base para responder | Rechazar = sin efecto\n\n';
+
+  md += '## Resumen por tipo\n\n';
+  md += '| Tipo | Cantidad | Spawn peso | IDs |\n';
+  md += '|------|----------|------------|-----|\n';
+  const labels = { bueno: 'Bueno', malo: 'Malo', meta: 'Meta' };
+  Object.keys(byType).sort().forEach(tipo => {
+    const items = byType[tipo];
+    const minId = Math.min(...items.map(t => t.id));
+    const maxId = Math.max(...items.map(t => t.id));
+    md += '| ' + (labels[tipo] || tipo) + ' | ' + items.length + ' | peso ' + items[0].peso + ' c/u | ' + minId + '-' + maxId + ' |\n';
+  });
+  md += '\n';
+
+  md += '## Detalle completo\n\n';
+  md += '| ID | Texto | Tipo | Efecto | Req Gen |\n';
+  md += '|----|-------|------|--------|---------|\n';
+  data.forEach(t => {
+    let efectoStr = '-';
+    if (t.efecto) {
+      const e = t.efecto;
+      switch (e.tipo) {
+        case 'clickMult':         efectoStr = 'Click x' + e.mult + ' / ' + e.duracion + 's'; break;
+        case 'ppsMult':            efectoStr = 'PpS x' + e.mult + ' / ' + e.duracion + 's'; break;
+        case 'instantGenPPS':      efectoStr = 'Instant x' + e.mult + ' PpS gen-' + e.genId; break;
+        case 'instantPesosPercent':efectoStr = '+' + e.percent + '% pesos actuales'; break;
+        case 'addGenerator':       efectoStr = '+' + e.cantidad + ' gen-' + e.genId; break;
+        case 'removePesosPercent': efectoStr = '-' + e.percent + '% pesos actuales'; break;
+        case 'removePesosAcumPercent': efectoStr = '-' + e.percent + '% pesos acumulados'; break;
+        case 'achievement':        efectoStr = 'Logro #' + e.logroId; break;
+      }
+    }
+    md += '| ' + t.id + ' | ' + t.texto + ' | ' + t.tipo + ' | ' + efectoStr + ' | ' + (t.reqGenId !== undefined ? t.reqGenId : '-') + ' |\n';
+  });
+
+  md += '\n';
+  return md;
+}
+
 // ── Generador: Eventos ──────────────────────────────────────
 
 function generateEventos(data) {
@@ -263,6 +320,13 @@ function generateIndex(sections) {
   md += '- **Precio:** trigger x 50\n';
   md += '- **Bonus:** +1% del PpS al valor del click\n';
   md += '- **Iconos:** `assets/operaciones/click-{tier}.png`\n\n';
+  md += '### Telegramas\n';
+  md += '- **IDs:** 1 a 45\n';
+  md += '- **Tipos:** bueno (25), malo (5), meta (15)\n';
+  md += '- **Pesos spawn:** bueno=10, malo=10, meta=1 (meta ~4.8%)\n';
+  md += '- **Timer:** 20s base para responder\n';
+  md += '- **Rechazar:** sin efecto\n';
+  md += '- **Efectos:** clickMult, ppsMult, instantGenPPS, instantPesosPercent, addGenerator, removePesosPercent, removePesosAcumPercent, achievement, none\n\n';
   md += '### Generadores\n';
   md += '- **IDs:** 0-based (0 a 18)\n';
   md += '- **Precio:** se escala con `FACTOR_PRECIO` por cada unidad comprada\n';
@@ -312,6 +376,15 @@ function main() {
   if (clickOpsMd) {
     fs.writeFileSync(path.join(DOCS, 'OPERACIONES_CLICK.md'), clickOpsMd, 'utf8');
     console.log('  OPERACIONES_CLICK.md — ' + clickOps.length + ' operaciones click');
+  }
+
+  // Telegramas
+  const telegramas = loadData('telegramas.js', 'TELEGRAMAS_DATA');
+  const telegramasMd = generateTelegramas(telegramas);
+  sections.push({ title: 'Telegramas', file: 'TELEGRAMAS.md', count: telegramas.length });
+  if (telegramasMd) {
+    fs.writeFileSync(path.join(DOCS, 'TELEGRAMAS.md'), telegramasMd, 'utf8');
+    console.log('  TELEGRAMAS.md — ' + telegramas.length + ' telegramas');
   }
 
   // Eventos

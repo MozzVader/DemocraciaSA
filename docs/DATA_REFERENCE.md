@@ -5,10 +5,11 @@
 
 ## Secciones
 
-- [Logros](LOGROS.md) — 120 registros
+- [Logros](LOGROS.md) — 125 registros
 - [Generadores](GENERADORES.md) — 19 registros
 - [Operaciones (generadores)](OPERACIONES.md) — 190 registros
 - [Operaciones Click](OPERACIONES_CLICK.md) — 19 registros
+- [Telegramas](TELEGRAMAS.md) — 45 registros
 - [Eventos](EVENTOS.md) — 0 registros
 - [Noticias](NOTICIAS.md) — 24 registros
 
@@ -35,6 +36,14 @@
 - **Precio:** trigger x 50
 - **Bonus:** +1% del PpS al valor del click
 - **Iconos:** `assets/operaciones/click-{tier}.png`
+
+### Telegramas
+- **IDs:** 1 a 45
+- **Tipos:** bueno (25), malo (5), meta (15)
+- **Pesos spawn:** bueno=10, malo=10, meta=1 (meta ~4.8%)
+- **Timer:** 20s base para responder
+- **Rechazar:** sin efecto
+- **Efectos:** clickMult, ppsMult, instantGenPPS, instantPesosPercent, addGenerator, removePesosPercent, removePesosAcumPercent, achievement, none
 
 ### Generadores
 - **IDs:** 0-based (0 a 18)

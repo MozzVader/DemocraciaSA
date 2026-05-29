@@ -45,6 +45,8 @@ document.addEventListener('DOMContentLoaded', function () {
   // 3.5. Inicializar operaciones (después del motor para acceder a generadores)
   if (typeof Operaciones !== 'undefined' && Operaciones.init) {
     Operaciones.init();
+    // Conectar multiplicador de operaciones con el sistema de fórmulas
+    Formulas.setMultFn(function(genId) { return Operaciones.getMultiplier(genId); });
   }
 
   // 4. Inicializar calidad democrática (fluctuación random)

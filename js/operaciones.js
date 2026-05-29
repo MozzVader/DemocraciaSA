@@ -59,7 +59,7 @@ var Operaciones = (() => {
 
   // ── Verificar si una operación click está desbloqueada ────────
   function isClickUnlocked(clickOp) {
-    return Game.getPesosPorClic() >= clickOp.trigger;
+    return Game.getPesosPorClicTotales() >= clickOp.trigger;
   }
 
   // ── Renderizar lista completa de operaciones disponibles ─────

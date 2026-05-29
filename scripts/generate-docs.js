@@ -21,11 +21,12 @@ function loadData(filename, varName) {
   eval(src.replace('const ', 'var '));   // permitir const → var
   // la variable queda en scope
   switch (varName) {
-    case 'LOGROS_DATA':   result = LOGROS_DATA; break;
-    case 'GENERADORES':   result = GENERADORES; break;
-    case 'OPERACIONES':   result = typeof OPERACIONES !== 'undefined' ? OPERACIONES : []; break;
-    case 'EVENTOS_DATA':  result = typeof EVENTOS_DATA !== 'undefined' ? EVENTOS_DATA : []; break;
-    case 'NOTICIAS_DATA': result = typeof NOTICIAS_DATA !== 'undefined' ? NOTICIAS_DATA : []; break;
+    case 'LOGROS_DATA':             result = LOGROS_DATA; break;
+    case 'GENERADORES':             result = GENERADORES; break;
+    case 'OPERACIONES_DATA':        result = typeof OPERACIONES_DATA !== 'undefined' ? OPERACIONES_DATA : []; break;
+    case 'OPERACIONES_CLICK_DATA':  result = typeof OPERACIONES_CLICK_DATA !== 'undefined' ? OPERACIONES_CLICK_DATA : []; break;
+    case 'EVENTOS_DATA':            result = typeof EVENTOS_DATA !== 'undefined' ? EVENTOS_DATA : []; break;
+    case 'NOTICIAS_DATA':           result = typeof NOTICIAS_DATA !== 'undefined' ? NOTICIAS_DATA : []; break;
     default: result = [];
   }
   return Array.isArray(result) ? result : [];
@@ -130,19 +131,60 @@ function generateGeneradores(data) {
   return md;
 }
 
-// ── Generador: Operaciones ──────────────────────────────────
+// ── Generador: Operaciones (generadores) ────────────────────────
 
 function generateOperaciones(data) {
   if (!data.length) return null;
 
+  // Agrupar por generador
+  const byGen = {};
+  data.forEach(op => {
+    const g = op.genId !== undefined ? op.genId : -1;
+    if (!byGen[g]) byGen[g] = [];
+    byGen[g].push(op);
+  });
+
   let md = '# Operaciones — Reference\n\n';
   md += '> **Archivo:** `js/data/operaciones.js`\n';
-  md += '> **Total:** ' + data.length + ' operaciones\n\n';
+  md += '> **Total:** ' + data.length + ' operaciones (tiered por generador)\n';
+  md += '> **Mecánica:** Cada compra da **x2 PpS** al generador correspondiente\n\n';
 
-  md += '| ID | Nombre | Descripción |\n';
-  md += '|----|--------|-------------|\n';
+  md += '## Resumen\n\n';
+  md += '| Generador ID | Cantidad | Rango de IDs |\n';
+  md += '|-------------|----------|-------------|\n';
+  Object.keys(byGen).sort((a,b) => a - b).forEach(gid => {
+    const items = byGen[gid];
+    const minId = items[0].id;
+    const maxId = items[items.length - 1].id;
+    md += '| ' + gid + ' | ' + items.length + ' | ' + minId + '-' + maxId + ' |\n';
+  });
+  md += '\n';
+
+  md += '## Detalle completo\n\n';
+  md += '| ID | Nombre | Gen ID | Trigger | Precio | Bonus | Icono |\n';
+  md += '|----|--------|--------|---------|--------|-------|-------|\n';
   data.forEach(op => {
-    md += '| ' + op.id + ' | ' + op.nombre + ' | ' + (op.desc || '-') + ' |\n';
+    md += '| ' + op.id + ' | ' + op.nombre + ' | ' + (op.genId !== undefined ? op.genId : '-') + ' | ' + fmtNum(op.trigger) + ' | ' + fmtNum(op.precio) + ' | ' + (op.bonusText || '-') + ' | `' + (op.icono || '-') + '` |\n';
+  });
+
+  md += '\n';
+  return md;
+}
+
+// ── Generador: Operaciones Click ───────────────────────────────
+
+function generateOperacionesClick(data) {
+  if (!data.length) return null;
+
+  let md = '# Operaciones Click — Reference\n\n';
+  md += '> **Archivo:** `js/data/operacionesClick.js`\n';
+  md += '> **Total:** ' + data.length + ' operaciones click\n';
+  md += '> **Mecánica:** Cada compra suma **+1% del PpS** al valor del click\n\n';
+
+  md += '| ID | Nombre | Trigger (pesos/click) | Precio | Bonus | Icono |\n';
+  md += '|----|--------|---------------------|--------|-------|-------|\n';
+  data.forEach(op => {
+    md += '| ' + op.id + ' | ' + op.nombre + ' | ' + fmtNum(op.trigger) + ' | ' + fmtNum(op.precio) + ' | ' + (op.bonusText || '-') + ' | `' + (op.icono || '-') + '` |\n';
   });
 
   md += '\n';
@@ -208,6 +250,19 @@ function generateIndex(sections) {
   md += '- **Categorías:** cada una tiene un `cat` único y un prefijo de icono\n';
   md += '- **Condiciones:** `{ stat, val }` — el stat se compara con `>=` contra `val`\n';
   md += '- **Stats disponibles:** `pesosTotales`, `pps`, `clics`, `clicsTotales`, `tiempoJugado`\n\n';
+  md += '### Operaciones (generadores)\n';
+  md += '- **IDs:** secuenciales globales (1 a 190)\n';
+  md += '- **10 tiers por generador** (Patacón → Dólar Blue)\n';
+  md += '- **Trigger:** se desbloquea cuando el generador tiene >= `trigger` unidades\n';
+  md += '- **Precio:** escalado según tier y generador\n';
+  md += '- **Bonus:** x2 PpS al generador correspondiente\n';
+  md += '- **Iconos:** `assets/operaciones/{icono}.png`\n\n';
+  md += '### Operaciones Click\n';
+  md += '- **IDs:** 1001 a 1019\n';
+  md += '- **Trigger:** se desbloquea cuando pesos por click >= `trigger`\n';
+  md += '- **Precio:** trigger x 50\n';
+  md += '- **Bonus:** +1% del PpS al valor del click\n';
+  md += '- **Iconos:** `assets/operaciones/click-{tier}.png`\n\n';
   md += '### Generadores\n';
   md += '- **IDs:** 0-based (0 a 18)\n';
   md += '- **Precio:** se escala con `FACTOR_PRECIO` por cada unidad comprada\n';
@@ -241,13 +296,22 @@ function main() {
     console.log('  GENERADORES.md — ' + gens.length + ' generadores');
   }
 
-  // Operaciones
-  const ops = loadData('operaciones.js', 'OPERACIONES');
+  // Operaciones (generadores)
+  const ops = loadData('operaciones.js', 'OPERACIONES_DATA');
   const opsMd = generateOperaciones(ops);
-  sections.push({ title: 'Operaciones', file: 'OPERACIONES.md', count: ops.length });
+  sections.push({ title: 'Operaciones (generadores)', file: 'OPERACIONES.md', count: ops.length });
   if (opsMd) {
     fs.writeFileSync(path.join(DOCS, 'OPERACIONES.md'), opsMd, 'utf8');
     console.log('  OPERACIONES.md — ' + ops.length + ' operaciones');
+  }
+
+  // Operaciones Click
+  const clickOps = loadData('operacionesClick.js', 'OPERACIONES_CLICK_DATA');
+  const clickOpsMd = generateOperacionesClick(clickOps);
+  sections.push({ title: 'Operaciones Click', file: 'OPERACIONES_CLICK.md', count: clickOps.length });
+  if (clickOpsMd) {
+    fs.writeFileSync(path.join(DOCS, 'OPERACIONES_CLICK.md'), clickOpsMd, 'utf8');
+    console.log('  OPERACIONES_CLICK.md — ' + clickOps.length + ' operaciones click');
   }
 
   // Eventos

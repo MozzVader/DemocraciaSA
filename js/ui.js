@@ -171,7 +171,7 @@ var UI = (() => {
         var $cost2 = card.querySelector('.gen-cost');
         if ($cost2) $cost2.textContent = '$ ' + Formato.numero(gen.precioBase);
         var $output2 = card.querySelector('.gen-output');
-        if ($output2) $output2.textContent = '+' + Formato.numero(gen.ppsBase) + '/s';
+        if ($output2) $output2.textContent = '+' + Formato.numero(gen.ppsBase * Formulas.getMult(gen.id)) + '/s';
         continue;
       }
 
@@ -199,7 +199,7 @@ var UI = (() => {
         $cost.textContent = '$ ' + Formato.numero(precio);
       }
       if ($output) {
-        var ppsGen = gen.ppsBase * qty;
+        var ppsGen = gen.ppsBase * qty * Formulas.getMult(gen.id);
         $output.textContent = '+' + Formato.numero(ppsGen) + '/s';
       }
 

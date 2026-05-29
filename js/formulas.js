@@ -5,6 +5,28 @@
 
 const Formulas = (() => {
 
+  // ── Multiplicador por operaciones (inyectado por Operaciones module) ──
+  var _getMultFn = null;
+
+  /**
+   * Registra la función que devuelve el multiplicador de un generador.
+   * Operaciones module debe llamar: Formulas.setMultFn(function(genId) { ... })
+   * @param {function} fn - Recibe genId, devuelve number (ej: 2, 4, 8...)
+   */
+  function setMultFn(fn) {
+    _getMultFn = fn;
+  }
+
+  /**
+   * Devuelve el multiplicador actual de un generador.
+   * Si no hay módulo de operaciones cargado, retorna 1.
+   * @param {number} genId
+   * @returns {number}
+   */
+  function getMult(genId) {
+    return _getMultFn ? _getMultFn(genId) : 1;
+  }
+
   /**
    * Precio de la próxima unidad de un generador.
    * precio = precioBase * FACTOR_PRECIO ^ cantidad
@@ -52,31 +74,25 @@ const Formulas = (() => {
   }
 
   /**
-   * PPS total del juego con multiplicadores de operaciones.
-   * @param {Array} generadores - Array de generadores con .cantidad y .ppsBase
+   * PPS total del juego (generadores base × multiplicador de operaciones).
+   * @param {Array} generadores - Array de generadores con .cantidad, .ppsBase, .id
    * @returns {number}
    */
   function ppsTotal(generadores) {
     var total = 0;
     for (var i = 0; i < generadores.length; i++) {
-      var base = generadores[i].cantidad * generadores[i].ppsBase;
-      // Aplicar multiplicador de operaciones si existe
-      var mult = 1;
-      if (typeof Operaciones !== 'undefined' && Operaciones.getMultiplier) {
-        mult = Operaciones.getMultiplier(generadores[i].id);
-      }
-      total += base * mult;
+      total += generadores[i].cantidad * generadores[i].ppsBase * getMult(generadores[i].id);
     }
     return total;
   }
 
   /**
-   * PPS individual de un generador (cantidad * ppsBase).
+   * PPS individual de un generador (cantidad × ppsBase × multiplicador).
    * @param {object} gen
    * @returns {number}
    */
   function ppsGenerador(gen) {
-    return gen.cantidad * gen.ppsBase;
+    return gen.cantidad * gen.ppsBase * getMult(gen.id);
   }
 
   // ── API pública ───────────────────────────────────────────────
@@ -86,6 +102,8 @@ const Formulas = (() => {
     maxComprable,
     ppsTotal,
     ppsGenerador,
+    setMultFn,
+    getMult,
   };
 
 })();

@@ -26,6 +26,7 @@ var Telegramas = (() => {
   // ── Estado: Timer ──────────────────────────────────────────────
   var timerRestante = 0;
   var timerIntervalId = null;
+  var spawnTimeoutId = null;  // timeout para pre-spawn glow → render
 
   // ── DOM refs ──────────────────────────────────────────────────
   var $area = null;
@@ -121,16 +122,22 @@ var Telegramas = (() => {
   // ── Spawn ────────────────────────────────────────────────────
   function spawn() {
     if (activo) return;
+    activo = true;  // bloquear inmediatamente para evitar double spawn
+
+    // Pre-spawn glow en columna dórica (aviso visual)
+    triggerCooldownGlow();
 
     telegramaActual = seleccionar();
-    activo = true;
     primerSpawnDone = true;
 
-    renderTelegrama(telegramaActual);
-
-    timerRestante = TIMER_SECONDS;
-    timerIntervalId = setInterval(tickTimer, 1000);
-    updateTimerDisplay();
+    // Delay breve para que el glow sea visible antes de que entre el telegrama
+    spawnTimeoutId = setTimeout(function () {
+      spawnTimeoutId = null;
+      renderTelegrama(telegramaActual);
+      timerRestante = TIMER_SECONDS;
+      timerIntervalId = setInterval(tickTimer, 1000);
+      updateTimerDisplay();
+    }, 1500);
   }
 
   // ── Render telegrama en el DOM ───────────────────────────────
@@ -223,13 +230,13 @@ var Telegramas = (() => {
       showToast('Telegrama rechazado.', 'neutral');
     }
 
-    // Animación de salida
+    // Animación de salida (fade, no slide)
     var el = document.getElementById('telegrama-activo');
     if (el) {
       el.classList.add('telegrama-saliendo');
       setTimeout(function () {
         if ($area) $area.innerHTML = '';
-      }, 400);
+      }, 600);
     } else {
       if ($area) $area.innerHTML = '';
     }
@@ -238,9 +245,6 @@ var Telegramas = (() => {
     activo = false;
     telegramaActual = null;
     tiempoDesdeResolucion = 0;
-
-    // Glow en columna derecha
-    triggerCooldownGlow();
   }
 
   // ── Aplicar efecto ────────────────────────────────────────────
@@ -404,16 +408,19 @@ var Telegramas = (() => {
       setTimeout(function () {
         if (toast.parentNode) toast.parentNode.removeChild(toast);
       }, 350);
-    }, 3500);
+    }, 7000);
   }
 
-  // ── Cooldown glow en columna dórica derecha ──────────────────
+  // ── Glow en columna dórica derecha (pre-spawn warning) ────────
   function triggerCooldownGlow() {
     if (!$doricRight) return;
+    $doricRight.classList.remove('doric-glow');
+    // Force reflow para reiniciar la animación
+    void $doricRight.offsetWidth;
     $doricRight.classList.add('doric-glow');
     setTimeout(function () {
       if ($doricRight) $doricRight.classList.remove('doric-glow');
-    }, 2000);
+    }, 2500);
   }
 
   // ── Limpiar (reset del juego) ─────────────────────────────────
@@ -421,6 +428,10 @@ var Telegramas = (() => {
     if (timerIntervalId) {
       clearInterval(timerIntervalId);
       timerIntervalId = null;
+    }
+    if (spawnTimeoutId) {
+      clearTimeout(spawnTimeoutId);
+      spawnTimeoutId = null;
     }
     buffs = [];
     activo = false;

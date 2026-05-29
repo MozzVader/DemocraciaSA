@@ -91,7 +91,7 @@ var Estadisticas = (() => {
       { label: 'Partida iniciada', value: diasAtras, icon: '\u{1F4C5}' },
       { label: 'Generadores comprados', value: Formato.numero(gensComprados, 0), icon: '\u{1F3DB}\u{FE0F}' },
       { label: 'Pesos por segundo', value: Formato.numero(pps) + (multPorcentaje > 0 ? ' (mult: +' + multPorcentaje + '%)' : ''), icon: '\u26A1' },
-      { label: 'Pesos por click', value: Formato.numero(clickPower), icon: '\u{1F446}' },
+      { label: 'Pesos por click', value: '$ ' + Formato.numero(clickPower), icon: '\u{1F446}' },
       { label: 'Clicks al Sol de Mayo', value: Formato.numero(clics, 0), icon: '\u{2600}\u{FE0F}' },
       { label: 'Pesos generados a mano', value: '$ ' + Formato.numero(pesosPorClicTotales), icon: '\u{270B}' },
       { label: 'Clicks de Telegramas', value: telegramasClicks + ' (en total: ' + telegramasClicks + ')', icon: '\u{1F4E8}' },
@@ -113,30 +113,64 @@ var Estadisticas = (() => {
     return html;
   }
 
+  // ── Obtener datos de operación por ID (busca en ambas listas) ──
+  function getOpDataById(id) {
+    for (var j = 0; j < OPERACIONES_DATA.length; j++) {
+      if (OPERACIONES_DATA[j].id === id) return OPERACIONES_DATA[j];
+    }
+    if (typeof OPERACIONES_CLICK_DATA !== 'undefined') {
+      for (var j = 0; j < OPERACIONES_CLICK_DATA.length; j++) {
+        if (OPERACIONES_CLICK_DATA[j].id === id) return OPERACIONES_CLICK_DATA[j];
+      }
+    }
+    return null;
+  }
+
   // ── Sección: Operaciones Compradas ────────────────────────────
   function renderOpsCompradas() {
     var compradas = [];
+    var compradasClick = [];
     if (typeof Operaciones !== 'undefined' && Operaciones.getCompradas) {
       var ids = Operaciones.getCompradas();
       for (var i = 0; i < ids.length; i++) {
-        for (var j = 0; j < OPERACIONES_DATA.length; j++) {
-          if (OPERACIONES_DATA[j].id === ids[i]) {
-            compradas.push(OPERACIONES_DATA[j]);
-            break;
-          }
+        var opData = getOpDataById(ids[i]);
+        if (!opData) continue;
+        if (ids[i] >= 1000) {
+          compradasClick.push(opData);
+        } else {
+          compradas.push(opData);
         }
       }
     }
 
     var html = '<div class="stats-section">';
-    html += '<h3 class="stats-section-title">\u{1F527} Operaciones compradas (' + compradas.length + ')</h3>';
+    html += '<h3 class="stats-section-title">\u{1F527} Operaciones de Generador (' + compradas.length + ')</h3>';
 
     if (compradas.length === 0) {
-      html += '<p class="stats-empty">Todav\u00EDa no compraste ninguna operaci\u00F3n.</p>';
+      html += '<p class="stats-empty">Todav\u00EDa no compraste ninguna operaci\u00F3n de generador.</p>';
     } else {
       html += '<div class="ops-grid">';
       for (var i = 0; i < compradas.length; i++) {
         var op = compradas[i];
+        html += '<div class="op-item unlocked" data-op-id="' + op.id + '" data-op-name="' + op.nombre.replace(/"/g, '&quot;') + '" data-op-bonus="' + op.bonusText.replace(/"/g, '&quot;') + '">';
+        html += '  <span class="logro-icon"><img src="' + ICON_PATH + op.icono + '.png" alt="" onerror="this.outerHTML=\'' + ICON_FALLBACK + '\'"></span>';
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+
+    html += '</div>';
+
+    // Sección click ops
+    html += '<div class="stats-section">';
+    html += '<h3 class="stats-section-title">\u{1F446} Operaciones Click (' + compradasClick.length + ')</h3>';
+
+    if (compradasClick.length === 0) {
+      html += '<p class="stats-empty">Todav\u00EDa no compraste ninguna operaci\u00F3n click.</p>';
+    } else {
+      html += '<div class="ops-grid">';
+      for (var i = 0; i < compradasClick.length; i++) {
+        var op = compradasClick[i];
         html += '<div class="op-item unlocked" data-op-id="' + op.id + '" data-op-name="' + op.nombre.replace(/"/g, '&quot;') + '" data-op-bonus="' + op.bonusText.replace(/"/g, '&quot;') + '">';
         html += '  <span class="logro-icon"><img src="' + ICON_PATH + op.icono + '.png" alt="" onerror="this.outerHTML=\'' + ICON_FALLBACK + '\'"></span>';
         html += '</div>';

@@ -1,6 +1,7 @@
 // ============================================
 // DEMOCRACIA S.A. V1 — Módulo de Operaciones
 // Tienda dinámica, compra, PpS multiplier
+// + Operaciones Click (boost al valor del click)
 // ============================================
 
 var Operaciones = (() => {
@@ -49,11 +50,16 @@ var Operaciones = (() => {
     return null;
   }
 
-  // ── Verificar si una operación está desbloqueada (trigger cumplido) ──
+  // ── Verificar si una operación de generador está desbloqueada ──
   function isUnlocked(op) {
     var gen = getGenById(op.genId);
     if (!gen) return false;
     return gen.cantidad >= op.trigger;
+  }
+
+  // ── Verificar si una operación click está desbloqueada ────────
+  function isClickUnlocked(clickOp) {
+    return Game.getPesosPorClic() >= clickOp.trigger;
   }
 
   // ── Renderizar lista completa de operaciones disponibles ─────
@@ -62,21 +68,22 @@ var Operaciones = (() => {
 
     $list.innerHTML = '';
 
-    var totalUnlocked = 0;
-    var totalAvailable = 0;
-
+    // Operaciones de generador
     for (var i = 0; i < OPERACIONES_DATA.length; i++) {
       var op = OPERACIONES_DATA[i];
-
-      // Saltar compradas
       if (compradas[op.id]) continue;
-
-      // Saltar si no está desbloqueada
       if (!isUnlocked(op)) continue;
+      $list.appendChild(crearCard(op));
+    }
 
-      totalAvailable++;
-      var card = crearCard(op);
-      $list.appendChild(card);
+    // Operaciones click (mezcladas en la misma lista)
+    if (typeof OPERACIONES_CLICK_DATA !== 'undefined') {
+      for (var i = 0; i < OPERACIONES_CLICK_DATA.length; i++) {
+        var cop = OPERACIONES_CLICK_DATA[i];
+        if (compradas[cop.id]) continue;
+        if (!isClickUnlocked(cop)) continue;
+        $list.appendChild(crearCard(cop));
+      }
     }
 
     actualizarCounter();
@@ -121,10 +128,19 @@ var Operaciones = (() => {
 
     // Verificar cuántas deberían ser visibles
     var expectedCount = 0;
+
     for (var i = 0; i < OPERACIONES_DATA.length; i++) {
       var op = OPERACIONES_DATA[i];
       if (compradas[op.id]) continue;
       if (isUnlocked(op)) expectedCount++;
+    }
+
+    if (typeof OPERACIONES_CLICK_DATA !== 'undefined') {
+      for (var i = 0; i < OPERACIONES_CLICK_DATA.length; i++) {
+        var cop = OPERACIONES_CLICK_DATA[i];
+        if (compradas[cop.id]) continue;
+        if (isClickUnlocked(cop)) expectedCount++;
+      }
     }
 
     // Si hay diferencia (se desbloquearon nuevas operaciones), re-render completo
@@ -158,10 +174,16 @@ var Operaciones = (() => {
     if (!$counter) return;
 
     var compradasCount = Object.keys(compradas).length;
-    // Calcular total de operaciones desbloqueadas (incluyendo compradas)
+
+    // Calcular total desbloqueados (gen ops + click ops)
     var totalUnlocked = 0;
     for (var i = 0; i < OPERACIONES_DATA.length; i++) {
       if (isUnlocked(OPERACIONES_DATA[i])) totalUnlocked++;
+    }
+    if (typeof OPERACIONES_CLICK_DATA !== 'undefined') {
+      for (var i = 0; i < OPERACIONES_CLICK_DATA.length; i++) {
+        if (isClickUnlocked(OPERACIONES_CLICK_DATA[i])) totalUnlocked++;
+      }
     }
 
     $counter.textContent = compradasCount + '/' + totalUnlocked;
@@ -190,10 +212,15 @@ var Operaciones = (() => {
     UI.actualizar();
   }
 
-  // ── Obtener operación por ID ─────────────────────────────────
+  // ── Obtener operación por ID (busca en ambas listas) ──────────
   function getOpById(id) {
     for (var i = 0; i < OPERACIONES_DATA.length; i++) {
       if (OPERACIONES_DATA[i].id === id) return OPERACIONES_DATA[i];
+    }
+    if (typeof OPERACIONES_CLICK_DATA !== 'undefined') {
+      for (var i = 0; i < OPERACIONES_CLICK_DATA.length; i++) {
+        if (OPERACIONES_CLICK_DATA[i].id === id) return OPERACIONES_CLICK_DATA[i];
+      }
     }
     return null;
   }
@@ -208,6 +235,19 @@ var Operaciones = (() => {
       }
     }
     return Math.pow(2, count);
+  }
+
+  // ── Bonus de click de operaciones click ─────────────────────
+  // Suma de todas las ops click compradas × PpS × 0.01
+  function getClickBonus() {
+    if (typeof OPERACIONES_CLICK_DATA === 'undefined') return 0;
+
+    var pps = Game.getPPS();
+    var count = 0;
+    for (var i = 0; i < OPERACIONES_CLICK_DATA.length; i++) {
+      if (compradas[OPERACIONES_CLICK_DATA[i].id]) count++;
+    }
+    return count * pps * 0.01;
   }
 
   // ── Multiplicador total (para display) ───────────────────────
@@ -323,6 +363,25 @@ var Operaciones = (() => {
     return Object.keys(compradas).length;
   }
 
+  // Contar ops de generador compradas (para stats)
+  function getCompradasGenCount() {
+    var count = 0;
+    for (var i = 0; i < OPERACIONES_DATA.length; i++) {
+      if (compradas[OPERACIONES_DATA[i].id]) count++;
+    }
+    return count;
+  }
+
+  // Contar ops click compradas (para stats)
+  function getCompradasClickCount() {
+    if (typeof OPERACIONES_CLICK_DATA === 'undefined') return 0;
+    var count = 0;
+    for (var i = 0; i < OPERACIONES_CLICK_DATA.length; i++) {
+      if (compradas[OPERACIONES_CLICK_DATA[i].id]) count++;
+    }
+    return count;
+  }
+
   // ── API pública ───────────────────────────────────────────────
   return {
     init: init,
@@ -330,9 +389,12 @@ var Operaciones = (() => {
     actualizarUI: actualizarUI,
     comprar: comprar,
     getMultiplier: getMultiplier,
+    getClickBonus: getClickBonus,
     getMultiplicadorTotal: getMultiplicadorTotal,
     getCompradas: getCompradas,
     getCompradasCount: getCompradasCount,
+    getCompradasGenCount: getCompradasGenCount,
+    getCompradasClickCount: getCompradasClickCount,
     restore: restore,
     limpiar: limpiar,
   };

@@ -116,7 +116,7 @@ var UI = (() => {
     // Rate
     if ($moneyRate) {
       var clickPower = Game.getPesosPorClic();
-      $moneyRate.textContent = '+' + Formato.numero(pps) + '/s \u00B7 ' + clickPower + '/click';
+      $moneyRate.textContent = '+' + Formato.numero(pps) + '/s \u00B7 $' + Formato.numero(clickPower) + '/click';
     }
 
     // Actualizar cada card

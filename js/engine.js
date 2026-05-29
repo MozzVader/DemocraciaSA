@@ -113,7 +113,7 @@ var Game = (() => {
 
   // ── Click Handler ─────────────────────────────────────────────
   function click(pesosGanados) {
-    var ganancia = pesosGanados || pesosPorClic;
+    var ganancia = pesosGanados || getPesosPorClic();
     pesos += ganancia;
     pesosTotales += ganancia;
     clicsTotales++;
@@ -206,7 +206,19 @@ var Game = (() => {
   // ── Getters ───────────────────────────────────────────────────
   function getPesos() { return pesos; }
   function getPesosTotales() { return pesosTotales; }
-  function getPesosPorClic() { return pesosPorClic; }
+  /**
+   * Click power dinámico.
+   * click = base(1) + bonus click-ops (cantCompradas × PpS × 0.01)
+   * Futuro: multiplicar por telegramas bonuses.
+   */
+  function getPesosPorClic() {
+    var base = 1;
+    var bonus = 0;
+    if (typeof Operaciones !== 'undefined' && Operaciones.getClickBonus) {
+      bonus = Operaciones.getClickBonus();
+    }
+    return base + bonus;
+  }
   function getClicsTotales() { return clicsTotales; }
   function getPesosPorClicTotales() { return pesosPorClicTotales; }
   function getTiempoJugado() { return tiempoJugado; }
@@ -326,7 +338,7 @@ var Game = (() => {
   function spawnClickFloat(e, container) {
     var el = document.createElement('span');
     el.className = 'click-float';
-    el.textContent = '+$' + Formato.numero(pesosPorClic);
+    el.textContent = '+$' + Formato.numero(getPesosPorClic());
 
     // Posición relativa al contenedor (clicker-area)
     var area = container.closest('.clicker-area') || container;
@@ -351,9 +363,10 @@ var Game = (() => {
     var clickerBtn = document.querySelector('.clicker-btn');
     if (clickerBtn) {
       clickerBtn.addEventListener('click', function (e) {
-        click();
+        var ganancia = getPesosPorClic();
+        click(ganancia);
         spawnClickFloat(e, clickerBtn);
-        Billetes.spawnClick(pesosPorClic);
+        Billetes.spawnClick(ganancia);
       });
     }
 

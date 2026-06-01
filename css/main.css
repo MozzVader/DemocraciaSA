@@ -281,15 +281,16 @@ body {
     padding: 0;
     gap: 0;
   }
+}
 
-  .panel-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    overflow-y: auto;
-    padding: 1rem 0.75rem 0;
-    position: relative;
-  }
+/* Center panel: always centered (mobile + desktop) */
+.panel-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow-y: auto;
+  padding: 1rem 0.75rem 0;
+  position: relative;
 }
 
 /* Panels */
@@ -649,6 +650,7 @@ body {
   cursor: pointer;
   user-select: none;
   -webkit-user-select: none;
+  touch-action: manipulation;
   display: flex;
   align-items: center;
   justify-content: center;

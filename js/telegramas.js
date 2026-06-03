@@ -230,6 +230,11 @@ var Telegramas = (() => {
       showToast('Telegrama rechazado.', 'neutral');
     }
 
+    // Forzar actualización inmediata de la UI (no esperar al próximo tick de 1s)
+    if (typeof UI !== 'undefined' && UI.actualizar) UI.actualizar();
+    if (typeof Game !== 'undefined' && Game._actualizarEtapas) Game._actualizarEtapas();
+    if (typeof Operaciones !== 'undefined' && Operaciones.actualizarUI) Operaciones.actualizarUI();
+
     // Animación de salida (fade, no slide)
     var el = document.getElementById('telegrama-activo');
     if (el) {

@@ -478,25 +478,39 @@ var UI = (() => {
       upgrades: document.getElementById('panel-upgrades'),
     };
 
+    var panelOrder = ['generators', 'center', 'upgrades'];
+
+    // ── Cambiar panel activo ──
+    function switchPanel(panelName) {
+      if (!mobileTabs) return;
+      var idx = panelOrder.indexOf(panelName);
+      if (idx === -1) return;
+
+      mobileTabs.querySelectorAll('.mobile-tab').forEach(function (t) {
+        t.classList.remove('active');
+        if (t.dataset.panel === panelName) t.classList.add('active');
+      });
+
+      Object.entries(panels).forEach(function (entry) {
+        var name = entry[0];
+        var el = entry[1];
+        if (el) {
+          el.classList.toggle('mobile-active', name === panelName);
+        }
+      });
+    }
+
+    // Obtener panel activo actual
+    function getActivePanel() {
+      var activeTab = mobileTabs ? mobileTabs.querySelector('.mobile-tab.active') : null;
+      return activeTab ? activeTab.dataset.panel : panelOrder[0];
+    }
+
     if (mobileTabs) {
       mobileTabs.addEventListener('click', function (e) {
         var tab = e.target.closest('.mobile-tab');
         if (!tab) return;
-
-        var panelName = tab.dataset.panel;
-
-        mobileTabs.querySelectorAll('.mobile-tab').forEach(function (t) {
-          t.classList.remove('active');
-        });
-        tab.classList.add('active');
-
-        Object.entries(panels).forEach(function (entry) {
-          var name = entry[0];
-          var el = entry[1];
-          if (el) {
-            el.classList.toggle('mobile-active', name === panelName);
-          }
-        });
+        switchPanel(tab.dataset.panel);
       });
     }
 
@@ -504,6 +518,48 @@ var UI = (() => {
     if (panels.generators && window.innerWidth < 1024) {
       panels.generators.classList.add('mobile-active');
     }
+
+    // ── Swipe horizontal para cambiar de sección ──
+    var swipeStartX = 0;
+    var swipeStartY = 0;
+    var swipeTracking = false;
+    var SWIPE_MIN_X = 50;   // px mínimos horizontales
+    var SWIPE_MAX_Y = 75;   // px máximos verticales (para no interferir con scroll vertical)
+
+    document.addEventListener('touchstart', function (e) {
+      if (window.innerWidth >= 1024) return;
+      var touch = e.touches[0];
+      swipeStartX = touch.clientX;
+      swipeStartY = touch.clientY;
+      swipeTracking = true;
+    }, { passive: true });
+
+    document.addEventListener('touchend', function (e) {
+      if (!swipeTracking || window.innerWidth >= 1024) {
+        swipeTracking = false;
+        return;
+      }
+      swipeTracking = false;
+
+      var touch = e.changedTouches[0];
+      var deltaX = touch.clientX - swipeStartX;
+      var deltaY = touch.clientY - swipeStartY;
+
+      // Si el movimiento vertical es mayor que el horizontal, es scroll, no swipe
+      if (Math.abs(deltaX) < SWIPE_MIN_X) return;
+      if (Math.abs(deltaY) > SWIPE_MAX_Y) return;
+
+      var current = getActivePanel();
+      var idx = panelOrder.indexOf(current);
+
+      if (deltaX > 0 && idx > 0) {
+        // Swipe derecha → panel anterior
+        switchPanel(panelOrder[idx - 1]);
+      } else if (deltaX < 0 && idx < panelOrder.length - 1) {
+        // Swipe izquierda → panel siguiente
+        switchPanel(panelOrder[idx + 1]);
+      }
+    }, { passive: true });
 
     // Resize handler (using the same panels reference)
     setupResize(panels);

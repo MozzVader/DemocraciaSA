@@ -205,6 +205,9 @@ var Operaciones = (() => {
     // Registrar compra
     compradas[id] = Date.now();
 
+    // Ocultar tooltip (la card va a desaparecer sin disparar mouseout)
+    hideTooltip();
+
     // Re-render (la card desaparece)
     render();
 

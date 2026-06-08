@@ -25,6 +25,12 @@ var Game = (() => {
   var loopId = null;
   var ultimaVisibilidad = 0;  // timestamp de ultima vez que la pestaña fue visible
 
+  // DOM refs para efectos de frenzy
+  var $clickerArea = null;
+  var $panelCenter = null;
+  var $buffTimer = null;
+  var $buffTimerTime = null;
+
   // Generadores: clon de GENERADORES con .cantidad y .etapa agregados
   // Etapas de develado:
   //   0 = oculto (no aparece en la lista)
@@ -58,6 +64,12 @@ var Game = (() => {
     // Cargar save si existe
     Save.load();
 
+    // Cache de refs para frenzy visuals
+    $clickerArea = document.querySelector('.clicker-area');
+    $panelCenter = document.getElementById('panel-center');
+    $buffTimer = document.getElementById('buff-timer');
+    $buffTimerTime = document.getElementById('buff-timer-time');
+
     // Arrancar loop
     ultimoSave = Date.now();
     ultimaVisibilidad = Date.now();
@@ -74,6 +86,7 @@ var Game = (() => {
     if (typeof Telegramas !== 'undefined') {
       pps *= Telegramas.getPPSMult();
       Telegramas.tick();
+      updateFrenzyVisuals();
     }
     var delta = pps * TICK_SEG;
 
@@ -407,6 +420,53 @@ var Game = (() => {
     setTimeout(function () {
       if (el.parentNode) el.parentNode.removeChild(el);
     }, 1000);
+  }
+
+  // ── Frenzy Visual Feedback ───────────────────────────────────
+  // Toggles .frenzy-active on clicker-area and panel-center,
+  // updates buff countdown timer display
+  function updateFrenzyVisuals() {
+    var hasBuff = Telegramas.hasActiveBuffs();
+
+    // Toggle glow + shine on clicker area
+    if ($clickerArea) {
+      if (hasBuff) {
+        if (!$clickerArea.classList.contains('frenzy-active')) {
+          $clickerArea.classList.add('frenzy-active');
+        }
+      } else {
+        $clickerArea.classList.remove('frenzy-active');
+      }
+    }
+
+    // Toggle glow on panel center
+    if ($panelCenter) {
+      if (hasBuff) {
+        if (!$panelCenter.classList.contains('frenzy-active')) {
+          $panelCenter.classList.add('frenzy-active');
+        }
+      } else {
+        $panelCenter.classList.remove('frenzy-active');
+      }
+    }
+
+    // Update countdown timer
+    if ($buffTimer) {
+      if (hasBuff) {
+        if (!$buffTimer.classList.contains('visible')) {
+          $buffTimer.classList.add('visible');
+        }
+        if ($buffTimerTime) {
+          var rem = Telegramas.getBuffTimeRemaining();
+          var mins = Math.floor(rem / 60);
+          var secs = Math.ceil(rem % 60);
+          if (secs === 60) { mins++; secs = 0; }
+          $buffTimerTime.textContent = mins + ':' + (secs < 10 ? '0' : '') + secs;
+        }
+      } else {
+        $buffTimer.classList.remove('visible');
+      }
+    }
   }
 
   // ── Setup eventos ─────────────────────────────────────────────

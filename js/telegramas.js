@@ -103,6 +103,14 @@ var Telegramas = (() => {
     return buffs.length > 0;
   }
 
+  function getBuffTimeRemaining() {
+    var max = 0;
+    for (var i = 0; i < buffs.length; i++) {
+      if (buffs[i].restante > max) max = buffs[i].restante;
+    }
+    return max;
+  }
+
   // ── Agregar buff ──────────────────────────────────────────────
   function addBuff(tipo, mult, duracion) {
     buffs.push({ tipo: tipo, mult: mult, restante: duracion });
@@ -491,6 +499,7 @@ var Telegramas = (() => {
     getClickMult: getClickMult,
     getPPSMult: getPPSMult,
     hasActiveBuffs: hasActiveBuffs,
+    getBuffTimeRemaining: getBuffTimeRemaining,
     getAceptados: getAceptados,
     getRechazados: getRechazados,
     limpiar: limpiar,

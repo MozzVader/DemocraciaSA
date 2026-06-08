@@ -679,6 +679,7 @@ input, textarea, [contenteditable="true"] {
   transition: transform 0.1s ease;
   padding: 0;
   outline: none;
+  z-index: 2;
 }
 
 .clicker-btn:hover {

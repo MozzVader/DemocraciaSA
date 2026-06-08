@@ -500,6 +500,7 @@ var Telegramas = (() => {
     getPPSMult: getPPSMult,
     hasActiveBuffs: hasActiveBuffs,
     getBuffTimeRemaining: getBuffTimeRemaining,
+    addBuff: addBuff,
     getAceptados: getAceptados,
     getRechazados: getRechazados,
     limpiar: limpiar,

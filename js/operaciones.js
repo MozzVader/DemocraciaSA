@@ -240,6 +240,17 @@ var Operaciones = (() => {
     return Math.pow(2, count);
   }
 
+  // Cantidad de operaciones de generador compradas para un gen específico
+  function getGenOpsCount(genId) {
+    var count = 0;
+    for (var i = 0; i < OPERACIONES_DATA.length; i++) {
+      if (OPERACIONES_DATA[i].genId === genId && compradas[OPERACIONES_DATA[i].id]) {
+        count++;
+      }
+    }
+    return count;
+  }
+
   // ── Bonus de click de operaciones click ─────────────────────
   // Suma de todas las ops click compradas × PpS × 0.01
   function getClickBonus() {
@@ -394,6 +405,7 @@ var Operaciones = (() => {
     getMultiplier: getMultiplier,
     getClickBonus: getClickBonus,
     getMultiplicadorTotal: getMultiplicadorTotal,
+    getGenOpsCount: getGenOpsCount,
     getCompradas: getCompradas,
     getCompradasCount: getCompradasCount,
     getCompradasGenCount: getCompradasGenCount,

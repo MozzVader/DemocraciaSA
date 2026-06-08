@@ -11,6 +11,7 @@ var UI = (() => {
   var $moneyAmount = null; // .money-amount
   var $moneyRate = null;   // .money-rate
   var $infoMoney = null;   // .info-money (container para notation toast)
+  var $genTooltip = null;  // tooltip de generadores (appendeado a body)
 
   // Cache de cards renderizadas por id de generador
   var genCards = {};
@@ -25,12 +26,19 @@ var UI = (() => {
     $moneyRate = document.querySelector('.money-rate');
     $infoMoney = document.querySelector('.info-money');
 
+    // Crear tooltip de generadores (appendeado a body para escapar overflow)
+    $genTooltip = document.createElement('div');
+    $genTooltip.className = 'gen-tooltip';
+    $genTooltip.style.display = 'none';
+    document.body.appendChild($genTooltip);
+
     // NOTA: renderGeneradores() se llama DESPUÉS de Game.init() en init.js
     setupModals();
     setupMobileTabs();  // este llama a setupResize(panels) internamente
     setupNewsTicker();
     setupNotationClick();
     setupOpciones();
+    setupGenTooltip();
   }
 
   // ── Render de Generadores ─────────────────────────────────────
@@ -663,12 +671,102 @@ var UI = (() => {
     }, 400);
   }
 
+  // ── Tooltip de generadores ──────────────────────────────────
+  function setupGenTooltip() {
+    if (!$genBody) return;
+
+    $genBody.addEventListener('mouseover', function (e) {
+      var card = e.target.closest('.gen-card');
+      if (!card) return;
+      // Solo mostrar tooltip para generadores visibles (etapa >= 2)
+      if (card.classList.contains('hidden') || card.classList.contains('gen-mystery')) return;
+      showGenTooltip(card);
+    });
+
+    $genBody.addEventListener('mouseout', function (e) {
+      var card = e.target.closest('.gen-card');
+      if (!card) return;
+      var related = e.relatedTarget;
+      if (related && card.contains(related)) return;
+      hideGenTooltip();
+    });
+
+    // Ocultar al scroll
+    $genBody.addEventListener('scroll', hideGenTooltip);
+  }
+
+  function showGenTooltip(card) {
+    if (!$genTooltip) return;
+
+    var genId = parseInt(card.dataset.id, 10);
+    var gen = null;
+    var generadores = Game.getGeneradores();
+    for (var i = 0; i < generadores.length; i++) {
+      if (generadores[i].id === genId) { gen = generadores[i]; break; }
+    }
+    if (!gen) return;
+
+    var qty = gen.cantidad;
+    var mult = Formulas.getMult(gen.id);
+    var ppsUnitario = gen.ppsBase * mult;
+    var ppsTotal = ppsUnitario * qty;
+
+    // Contar operaciones de generador compradas para este gen
+    var opsCount = 0;
+    if (typeof Operaciones !== 'undefined' && Operaciones.getGenOpsCount) {
+      opsCount = Operaciones.getGenOpsCount(genId);
+    }
+
+    // Construir contenido
+    var html = '<div class="gen-tooltip-title">' + gen.nombre + '</div>';
+    html += '<div class="gen-tooltip-row"><span class="gen-tooltip-label">PpS total:</span> <span class="gen-tooltip-value">' + Formato.numero(ppsTotal) + '/s</span></div>';
+    html += '<div class="gen-tooltip-row"><span class="gen-tooltip-label">PpS por unidad:</span> <span class="gen-tooltip-value">' + Formato.numero(ppsUnitario) + '/s</span></div>';
+    html += '<div class="gen-tooltip-row"><span class="gen-tooltip-label">Cantidad:</span> <span class="gen-tooltip-value">' + qty + '</span></div>';
+    if (mult > 1) {
+      html += '<div class="gen-tooltip-row"><span class="gen-tooltip-label">Mult. ops:</span> <span class="gen-tooltip-value gen-tooltip-mult">' + Formato.numero(mult) + 'x</span></div>';
+    }
+    if (opsCount > 0) {
+      html += '<div class="gen-tooltip-row"><span class="gen-tooltip-label">Ops compradas:</span> <span class="gen-tooltip-value">' + opsCount + '</span></div>';
+    }
+
+    $genTooltip.innerHTML = html;
+    $genTooltip.style.display = 'block';
+
+    // Posicionar a la derecha de la card
+    var cardRect = card.getBoundingClientRect();
+    var tooltipRect = $genTooltip.getBoundingClientRect();
+
+    var top = cardRect.top + (cardRect.height / 2) - (tooltipRect.height / 2);
+    var left = cardRect.right + 8;
+
+    // Fallback: si no hay espacio a la derecha, poner a la izquierda
+    if (left + tooltipRect.width > window.innerWidth - 10) {
+      left = cardRect.left - tooltipRect.width - 8;
+    }
+
+    // Clamp vertical
+    if (top < 10) top = 10;
+    if (top + tooltipRect.height > window.innerHeight - 10) {
+      top = window.innerHeight - tooltipRect.height - 10;
+    }
+
+    $genTooltip.style.top = top + 'px';
+    $genTooltip.style.left = left + 'px';
+  }
+
+  function hideGenTooltip() {
+    if ($genTooltip) {
+      $genTooltip.style.display = 'none';
+    }
+  }
+
   // ── API pública ───────────────────────────────────────────────
   return {
     init: init,
     actualizar: actualizar,
     renderGeneradores: renderGeneradores,
     showOfflineNotification: showOfflineNotification,
+    hideGenTooltip: hideGenTooltip,
   };
 
 })();

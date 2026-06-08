@@ -248,7 +248,7 @@
 
 .clicker-shine {
   position: absolute;
-  inset: -3rem;
+  inset: -4.5rem;
   border-radius: 50%;
   background: url('../assets/brillo-shine.png') center center no-repeat;
   background-size: contain;
@@ -260,7 +260,7 @@
 
 @media (min-width: 768px) {
   .clicker-shine {
-    inset: -3.75rem;
+    inset: -5.625rem;
   }
 }
 

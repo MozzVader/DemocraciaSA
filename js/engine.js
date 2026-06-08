@@ -218,16 +218,26 @@ var Game = (() => {
   function getPesosTotales() { return pesosTotales; }
   /**
    * Click power dinámico.
-   * click = base(1) + bonus click-ops (cantCompradas × PpS × 0.01)
-   * Futuro: multiplicar por telegramas bonuses.
+   * click = militanteClickPower (efficiency × (1 + territorial)) + clickOpsBonus
+   * militanteClickPower proviene de ops Militante duales (Thousand Fingers)
+   * clickOpsBonus = cantClickOps × PpS × 0.01
    */
   function getPesosPorClic() {
     var base = 1;
-    var bonus = 0;
-    if (typeof Operaciones !== 'undefined' && Operaciones.getClickBonus) {
-      bonus = Operaciones.getClickBonus();
+
+    // Bonus dual de ops Militante (click ×2 efficiency + territorial)
+    if (typeof Operaciones !== 'undefined' && Operaciones.getMilitanteClickPower) {
+      base = Operaciones.getMilitanteClickPower();
     }
-    var click = base + bonus;
+
+    // Bonus de ops click (+1% PpS cada una)
+    var clickBonus = 0;
+    if (typeof Operaciones !== 'undefined' && Operaciones.getClickBonus) {
+      clickBonus = Operaciones.getClickBonus();
+    }
+
+    var click = base + clickBonus;
+
     // Aplicar buffs de telegramas
     if (typeof Telegramas !== 'undefined') {
       click *= Telegramas.getClickMult();

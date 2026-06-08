@@ -27,6 +27,25 @@ const Formulas = (() => {
     return _getMultFn ? _getMultFn(genId) : 1;
   }
 
+  // ── Bonus territorial para Militante (inyectado por Operaciones) ──
+  var _getTerrBonusFn = null;
+
+  /**
+   * Registra la función que devuelve el bonus territorial.
+   * @param {function} fn - No recibe args, devuelve number
+   */
+  function setTerrBonusFn(fn) {
+    _getTerrBonusFn = fn;
+  }
+
+  /**
+   * Devuelve el bonus territorial actual para Militante.
+   * @returns {number}
+   */
+  function getTerrBonus() {
+    return _getTerrBonusFn ? _getTerrBonusFn() : 0;
+  }
+
   /**
    * Precio de la próxima unidad de un generador.
    * precio = precioBase * FACTOR_PRECIO ^ cantidad
@@ -75,24 +94,38 @@ const Formulas = (() => {
 
   /**
    * PPS total del juego (generadores base × multiplicador de operaciones).
+   * Para Militante (id=0): suma el bonus territorial antes de multiplicar.
    * @param {Array} generadores - Array de generadores con .cantidad, .ppsBase, .id
    * @returns {number}
    */
   function ppsTotal(generadores) {
     var total = 0;
+    var terrBonus = getTerrBonus();
     for (var i = 0; i < generadores.length; i++) {
-      total += generadores[i].cantidad * generadores[i].ppsBase * getMult(generadores[i].id);
+      var g = generadores[i];
+      var mult = getMult(g.id);
+      if (g.id === 0) {
+        // Militante: incluye bonus territorial
+        total += (g.cantidad * g.ppsBase + terrBonus) * mult;
+      } else {
+        total += g.cantidad * g.ppsBase * mult;
+      }
     }
     return total;
   }
 
   /**
-   * PPS individual de un generador (cantidad × ppsBase × multiplicador).
+   * PPS individual de un generador.
+   * Para Militante (id=0): incluye bonus territorial.
    * @param {object} gen
    * @returns {number}
    */
   function ppsGenerador(gen) {
-    return gen.cantidad * gen.ppsBase * getMult(gen.id);
+    var mult = getMult(gen.id);
+    if (gen.id === 0) {
+      return (gen.cantidad * gen.ppsBase + getTerrBonus()) * mult;
+    }
+    return gen.cantidad * gen.ppsBase * mult;
   }
 
   // ── API pública ───────────────────────────────────────────────
@@ -104,6 +137,8 @@ const Formulas = (() => {
     ppsGenerador,
     setMultFn,
     getMult,
+    setTerrBonusFn,
+    getTerrBonus,
   };
 
 })();

@@ -6,7 +6,7 @@
 var Save = (() => {
 
   var SAVE_KEY = 'democracia_sa_save';
-  var VERSION = 3;
+  var VERSION = 4;
   var dataInicioTimestamp = null; // timestamp de primera sesión
 
   function getInicioTimestamp() {
@@ -97,9 +97,13 @@ var Save = (() => {
         Logros.restore(data.logros);
       }
 
-      // Restaurar operaciones compradas
+      // Restaurar operaciones compradas (con migración v3→v4)
       if (data.operaciones && typeof Operaciones !== 'undefined' && Operaciones.restore) {
-        Operaciones.restore(data.operaciones);
+        var ops = data.operaciones;
+        if (data.version < 4) {
+          ops = migrateOpsV3toV4(ops);
+        }
+        Operaciones.restore(ops);
       }
 
       // Restaurar timestamp de inicio
@@ -120,6 +124,29 @@ var Save = (() => {
     } catch (e) {
       // ignore
     }
+  }
+
+  // ── Migración de ops v3 → v4 ───────────────────────────────
+  // v3: Militante ops ids 1-10 (×2 simples), Puntero+ ids 11-190
+  // v4: Militante ops ids 1-15 (Thousand Fingers), Puntero+ ids 16-195
+  // Acción: eliminar viejas ops Militante (1-10), renumerar resto (+5)
+  function migrateOpsV3toV4(ops) {
+    var migrated = [];
+    for (var i = 0; i < ops.length; i++) {
+      var id = ops[i];
+      if (id >= 1 && id <= 10) {
+        // Vieja op Militante: eliminar (ya no existe)
+        continue;
+      }
+      if (id >= 11 && id <= 190) {
+        // Op gen no-militante: renumerar +5
+        migrated.push(id + 5);
+      } else {
+        // Click ops (1000+): sin cambios
+        migrated.push(id);
+      }
+    }
+    return migrated;
   }
 
   return {

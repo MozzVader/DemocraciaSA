@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', function () {
     Operaciones.init();
     // Conectar multiplicador de operaciones con el sistema de fórmulas
     Formulas.setMultFn(function(genId) { return Operaciones.getMultiplier(genId); });
+    // Conectar bonus territorial Militante (Thousand Fingers)
+    Formulas.setTerrBonusFn(function() { return Operaciones.getTerritorialBonus(); });
   }
 
   // 4. Inicializar calidad democrática (fluctuación random)

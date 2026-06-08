@@ -228,9 +228,68 @@ var Operaciones = (() => {
     return null;
   }
 
+  // ── Militante: ops duales (Thousand Fingers) ───────────────
+  // IDs 1-3: eficiencia ×2 (click + militante PpS)
+  // ID 4: Militancia Territorial (+0.1 por gen no-militante)
+  // IDs 5-15: multiplicadores territoriales (×5, ×10, ×20...)
+  var MIL_ID_EFF = [1, 2, 3];       // ops de eficiencia
+  var MIL_ID_TERR = 4;                 // op base territorial
+  var MIL_ID_TMULT = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]; // multiplicadores
+  var MIL_TMULT_VALS = { 5: 5, 6: 10, 7: 20, 8: 20, 9: 20, 10: 20, 11: 20, 12: 20, 13: 20, 14: 20, 15: 20 };
+
+  // ── Contar ops de eficiencia Militante compradas ──────────────
+  function getMilitanteEffCount() {
+    var count = 0;
+    for (var i = 0; i < MIL_ID_EFF.length; i++) {
+      if (compradas[MIL_ID_EFF[i]]) count++;
+    }
+    return count;
+  }
+
+  // ── Multiplicador de eficiencia Militante (2^count) ──────────
+  function getMilitanteEffMult() {
+    return Math.pow(2, getMilitanteEffCount());
+  }
+
+  // ── ¿Compró la op base Territorial? ────────────────────────────
+  function hasMilitanciaTerritorial() {
+    return !!compradas[MIL_ID_TERR];
+  }
+
+  // ── Multiplicador total de Militancia Territorial ─────────────
+  function getTerritorialMult() {
+    var mult = 1;
+    for (var i = 0; i < MIL_ID_TMULT.length; i++) {
+      if (compradas[MIL_ID_TMULT[i]]) {
+        mult *= (MIL_TMULT_VALS[MIL_ID_TMULT[i]] || 20);
+      }
+    }
+    return mult;
+  }
+
+  // ── Bonus territorial total (para click y militante PpS) ──────
+  // = 0.1 × sum(cantidad de gens no-militante) × territorialMult
+  function getTerritorialBonus() {
+    if (!hasMilitanciaTerritorial()) return 0;
+    var gens = Game.getGeneradores();
+    var nonMilTotal = 0;
+    for (var i = 0; i < gens.length; i++) {
+      if (gens[i].id !== 0) { // no contar militante (id 0)
+        nonMilTotal += gens[i].cantidad;
+      }
+    }
+    return 0.1 * nonMilTotal * getTerritorialMult();
+  }
+
   // ── Multiplicador de PpS para un generador ───────────────────
-  // Cada operación comprada da x2, así que con N ops = 2^N
+  // Para Militante (genId=0): usa efficiency mult
+  // Para los demás: 2^count (como antes)
   function getMultiplier(genId) {
+    if (genId === 0) {
+      // Militante: efficiency ×2 por cada op de eficiencia comprada
+      return getMilitanteEffMult();
+    }
+    // Generadores normales: cada op da ×2
     var count = 0;
     for (var i = 0; i < OPERACIONES_DATA.length; i++) {
       if (OPERACIONES_DATA[i].genId === genId && compradas[OPERACIONES_DATA[i].id]) {
@@ -262,6 +321,14 @@ var Operaciones = (() => {
       if (compradas[OPERACIONES_CLICK_DATA[i].id]) count++;
     }
     return count * pps * 0.01;
+  }
+
+  // ── Click power proveniente de ops Militante (dual) ───────────
+  // Usa efficiency mult + territorial bonus
+  function getMilitanteClickPower() {
+    var eff = getMilitanteEffMult();
+    var terr = getTerritorialBonus();
+    return eff * (1 + terr);
   }
 
   // ── Multiplicador total (para display) ───────────────────────
@@ -404,6 +471,9 @@ var Operaciones = (() => {
     comprar: comprar,
     getMultiplier: getMultiplier,
     getClickBonus: getClickBonus,
+    getMilitanteClickPower: getMilitanteClickPower,
+    getMilitanteEffMult: getMilitanteEffMult,
+    getTerritorialBonus: getTerritorialBonus,
     getMultiplicadorTotal: getMultiplicadorTotal,
     getGenOpsCount: getGenOpsCount,
     getCompradas: getCompradas,

@@ -7,7 +7,7 @@
 
 - [Logros](LOGROS.md) — 125 registros
 - [Generadores](GENERADORES.md) — 19 registros
-- [Operaciones (generadores)](OPERACIONES.md) — 190 registros
+- [Operaciones (generadores)](OPERACIONES.md) — 195 registros
 - [Operaciones Click](OPERACIONES_CLICK.md) — 19 registros
 - [Telegramas](TELEGRAMAS.md) — 45 registros
 - [Eventos](EVENTOS.md) — 0 registros

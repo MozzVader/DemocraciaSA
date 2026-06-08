@@ -109,6 +109,13 @@ var UI = (() => {
     return card;
   }
 
+  // ── Actualizar solo dinero (200ms, liviano) ──────────────────
+  function actualizarDinero() {
+    if ($moneyAmount) {
+      $moneyAmount.textContent = '$ ' + Formato.numero(Game.getPesos());
+    }
+  }
+
   // ── Actualizar UI (se llama cada segundo) ────────────────────
   function actualizar() {
     var generadores = Game.getGeneradores();
@@ -764,6 +771,7 @@ var UI = (() => {
   return {
     init: init,
     actualizar: actualizar,
+    actualizarDinero: actualizarDinero,
     renderGeneradores: renderGeneradores,
     showOfflineNotification: showOfflineNotification,
     hideGenTooltip: hideGenTooltip,

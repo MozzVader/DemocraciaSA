@@ -8,7 +8,8 @@ var Game = (() => {
   // ── Config ────────────────────────────────────────────────────
   var TICK_MS = 100;            // 10 ticks por segundo
   var TICK_SEG = 0.1;           // segundos por tick
-  var UI_REFRESH_TICKS = 10;    // actualizar UI cada 1 segundo
+  var UI_REFRESH_TICKS = 10;    // actualizar UI completa cada 1 segundo
+  var MONEY_REFRESH_TICKS = 2;  // actualizar dinero cada 200ms
   var AUTO_SAVE_MS = 30000;     // guardar cada 30s
   var OFFLINE_MAX_SEG = 7200;  // maximo offline: 2 horas
 
@@ -91,7 +92,12 @@ var Game = (() => {
     // 4. Tick counter
     tickCount++;
 
-    // 5. Actualizar etapas, UI y logros cada segundo
+    // 5. Actualizar dinero rápido (200ms)
+    if (tickCount % MONEY_REFRESH_TICKS === 0) {
+      UI.actualizarDinero();
+    }
+
+    // 6. Actualizar UI completa cada segundo (etapas, generadores, ops, logros)
     if (tickCount % UI_REFRESH_TICKS === 0) {
       actualizarEtapas();
       UI.actualizar();

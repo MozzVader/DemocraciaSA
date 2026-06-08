@@ -17,6 +17,10 @@ var Telegramas = (() => {
   // ── Estado: Buffs activos ─────────────────────────────────────
   var buffs = [];   // { tipo: 'clickMult'|'ppsMult', mult, restante (segundos) }
 
+  // ── Estado: Contadores ──────────────────────────────────────────
+  var aceptados = 0;
+  var rechazados = 0;
+
   // ── Estado: Spawn ──────────────────────────────────────────────
   var activo = false;              // hay un telegrama mostrándose?
   var telegramaActual = null;      // referencia al telegrama mostrado
@@ -222,12 +226,15 @@ var Telegramas = (() => {
 
     if (aceptado && tel.efecto) {
       aplicarEfecto(tel);
+      aceptados++;
     } else if (aceptado && !tel.efecto) {
       // Meta sin efecto, flavor text
       showToast('Telegrama recibido.', 'meta');
+      aceptados++;
     } else {
       // Rechazado
       showToast('Telegrama rechazado.', 'neutral');
+      rechazados++;
     }
 
     // Forzar actualización inmediata de la UI (no esperar al próximo tick de 1s)
@@ -439,6 +446,8 @@ var Telegramas = (() => {
       spawnTimeoutId = null;
     }
     buffs = [];
+    aceptados = 0;
+    rechazados = 0;
     activo = false;
     telegramaActual = null;
     tiempoDesdeResolucion = 0;
@@ -471,6 +480,10 @@ var Telegramas = (() => {
     return '?';
   }
 
+  // ── Getters contadores ───────────────────────────────────────
+  function getAceptados() { return aceptados; }
+  function getRechazados() { return rechazados; }
+
   // ── API pública ──────────────────────────────────────────────
   return {
     init: init,
@@ -478,6 +491,8 @@ var Telegramas = (() => {
     getClickMult: getClickMult,
     getPPSMult: getPPSMult,
     hasActiveBuffs: hasActiveBuffs,
+    getAceptados: getAceptados,
+    getRechazados: getRechazados,
     limpiar: limpiar,
   };
 

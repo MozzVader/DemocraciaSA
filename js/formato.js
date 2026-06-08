@@ -91,9 +91,11 @@ const Formato = (() => {
 
     // Menor a mil: sin sufijo
     if (n < 1000) {
-      return decimales != null
-        ? n.toFixed(decimales)
-        : Math.floor(n).toString();
+      if (decimales != null) return n.toFixed(decimales);
+      // Auto: hasta 2 decimales para valores chicos, floor para >= 10
+      if (n === 0) return '0';
+      if (n < 10) return n.toFixed(1);
+      return Math.floor(n).toString();
     }
 
     switch (_notacion) {

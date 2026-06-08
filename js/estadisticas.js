@@ -81,8 +81,13 @@ var Estadisticas = (() => {
       else diasAtras = 'hace ' + diffDias + ' d\u00EDas';
     }
 
-    // Clicks de telegramas (placeholder пока no existe módulo)
-    var telegramasClicks = 0;
+    // Telegramas aceptados/rechazados
+    var telAceptados = 0;
+    var telRechazados = 0;
+    if (typeof Telegramas !== 'undefined') {
+      telAceptados = Telegramas.getAceptados();
+      telRechazados = Telegramas.getRechazados();
+    }
 
     var stats = [
       { label: 'Pesos acumulados', value: '$ ' + Formato.numero(pesos), icon: '\u{1F4B5}' },
@@ -94,7 +99,8 @@ var Estadisticas = (() => {
       { label: 'Pesos por click', value: '$ ' + Formato.numero(clickPower), icon: '\u{1F446}' },
       { label: 'Clicks al Sol de Mayo', value: Formato.numero(clics, 0), icon: '\u{2600}\u{FE0F}' },
       { label: 'Pesos generados a mano', value: '$ ' + Formato.numero(pesosPorClicTotales), icon: '\u{270B}' },
-      { label: 'Clicks de Telegramas', value: telegramasClicks + ' (en total: ' + telegramasClicks + ')', icon: '\u{1F4E8}' },
+      { label: 'Telegramas aceptados', value: telAceptados, icon: '\u{2705}' },
+      { label: 'Telegramas rechazados', value: telRechazados, icon: '\u{274C}' },
     ];
 
     var html = '<div class="stats-section">';

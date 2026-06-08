@@ -32,6 +32,14 @@ body {
   /* Safe area para phones con notch/barra */
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Re-habilitar selección solo en inputs y áreas editables */
+input, textarea, [contenteditable="true"] {
+  user-select: text;
+  -webkit-user-select: text;
 }
 
 ::selection {

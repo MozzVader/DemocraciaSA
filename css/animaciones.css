@@ -74,7 +74,7 @@
 
 .logros-toast-container {
   position: fixed;
-  bottom: 1.25rem;
+  bottom: 3.5rem;
   right: 1.25rem;
   display: flex;
   flex-direction: column;
@@ -88,6 +88,7 @@
   align-items: center;
   gap: 0.625rem;
   padding: 0.625rem 0.75rem;
+  cursor: pointer;
   background: rgba(14, 20, 36, 0.92);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
@@ -137,7 +138,7 @@
 }
 
 .logros-toast-name {
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: 700;
   color: #d4af37;
   line-height: 1.3;
@@ -147,7 +148,7 @@
 }
 
 .logros-toast-desc {
-  font-size: 0.625rem;
+  font-size: 0.6875rem;
   color: #94a3b8;
   margin-top: 0.0625rem;
   line-height: 1.4;

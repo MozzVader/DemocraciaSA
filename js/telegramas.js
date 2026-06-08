@@ -416,6 +416,11 @@ var Telegramas = (() => {
       if (toast.parentNode) toast.parentNode.removeChild(toast);
     });
 
+    // Click en cualquier parte del toast para cerrar
+    toast.addEventListener('click', function () {
+      if (toast.parentNode) toast.parentNode.removeChild(toast);
+    });
+
     container.appendChild(toast);
 
     requestAnimationFrame(function () {

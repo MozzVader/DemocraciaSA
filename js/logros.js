@@ -181,6 +181,11 @@ var Logros = (() => {
       cerrarToast(toast);
     });
 
+    // Click en cualquier parte del toast para cerrar
+    toast.addEventListener('click', function () {
+      cerrarToast(toast);
+    });
+
     $toastContainer.appendChild(toast);
 
     // Trigger animación de entrada
